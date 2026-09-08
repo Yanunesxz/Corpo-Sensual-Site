@@ -1,26 +1,178 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Identidade visual da Corpo Sensual.
+  Todas as cores e fontes do site saem daqui: use as classes utilitárias
+  geradas (bg-cream, text-ink, text-brand, font-display...) em vez de
+  valores soltos nos componentes.
+*/
+@theme {
+  --color-cream: #faf7f2;
+  --color-cream-dark: #f1ebe2;
+  --color-ink: #1c1917;
+  --color-ink-soft: #6b635b;
+  --color-line: #e7e0d6;
+  --color-brand: #7a1f3d;
+  --color-brand-dark: #5e1730;
+  --color-gold: #b8865b;
+  --color-rose: #f1dedb;
+  --color-sky: #dce7f0;
+  --color-butter: #f6e7a6;
+
+  --font-display: var(--font-bodoni), "Bodoni MT", "Didot", "Times New Roman", serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: white;
+}
+
+/* Título com o estilo editorial do site */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+/* Rótulo pequeno em caixa alta acima dos títulos */
+.eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/*
+  Animação de entrada (ver components/reveal.tsx).
+  Só esconde o conteúdo quando o JavaScript está ativo (classe "js" no <html>),
+  e mesmo assim tem um limite: se o observador não disparar em 1,5s, o
+  conteúdo aparece sozinho. Sem JS ou em conexão lenta nada fica invisível.
+*/
+.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+  animation: reveal-safety 0.45s ease-out 1.5s forwards;
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+@keyframes reveal-safety {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Faixa rolante de diferenciais (ver components/marquee.tsx) */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  animation: marquee 60s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+  .marquee {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Campos de formulário */
+.field {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  color: var(--color-ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.field:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 12%, transparent);
+}
+.field[aria-invalid="true"] {
+  border-color: #b3261e;
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.9rem 1.75rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+  min-height: 44px;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--color-brand);
+  color: white;
+}
+.btn-primary:hover {
+  background: var(--color-brand-dark);
+}
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.btn-outline {
+  border: 1px solid var(--color-ink);
+  color: var(--color-ink);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: var(--color-ink);
+  color: white;
+}
+.btn-light {
+  background: white;
+  color: var(--color-ink);
+}
+.btn-light:hover {
+  background: var(--color-cream-dark);
 }

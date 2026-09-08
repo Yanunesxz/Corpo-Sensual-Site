@@ -22,6 +22,7 @@
 
 # misc
 .DS_Store
+Thumbs.db
 *.pem
 
 # debug
@@ -30,11 +31,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (o .env.example é versionado como modelo)
 .env*
+!.env.example
 
 # vercel
 .vercel
+
+# supabase cli (estado local)
+/supabase/.temp
+/supabase/.branches
 
 # typescript
 *.tsbuildinfo
