@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getHomeData } from "@/lib/data";
-import { site } from "@/lib/site";
+import { seasonLabel, site } from "@/lib/site";
 import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { Reveal } from "@/components/reveal";
@@ -44,7 +44,7 @@ const structure = [
 export default async function HomePage() {
   const { currentCollection, categories, newProducts, featuredProducts } = await getHomeData();
   const collectionHref = currentCollection ? `/colecoes/${currentCollection.slug}` : "/colecoes";
-  const heroImage = currentCollection?.hero_image_url ?? "/images/hero-verao.jpg";
+  const heroImage = currentCollection?.hero_image_url ?? "/images/colecoes/frescor-2.jpg";
 
   return (
     <>
@@ -61,7 +61,7 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/30 to-ink/25" aria-hidden />
         <div className="relative mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-8 md:pb-24">
           <p className="eyebrow text-butter">
-            {currentCollection ? `Coleção ${currentCollection.season === "verao" ? "Verão" : currentCollection.season === "inverno" ? "Inverno" : ""} ${currentCollection.year ?? ""}`.trim() : "Moda íntima"}
+            {currentCollection ? `Nova coleção · ${seasonLabel(currentCollection.season, currentCollection.year)}` : "Moda íntima"}
           </p>
           <h1 className="display mt-4 max-w-4xl text-5xl leading-[0.95] md:text-7xl lg:text-8xl">
             {currentCollection?.name ?? site.name}

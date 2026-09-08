@@ -120,7 +120,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 | Tabela | Uso |
 | --- | --- |
 | `categories` | Gestante, Masculino, Juvenil, Robes... |
-| `collections` | Coleções por temporada. A primeira ativa (menor `sort_order`) vira o hero da home |
+| `collections` | Coleções por temporada. A primeira ativa (menor `sort_order`) vira o hero da home. `gallery_urls` guarda as fotos de campanha |
 | `products` | Peças. `is_new` aparece em "Chegou agora", `is_featured` em "Em destaque" |
 | `product_images` | Fotos de cada peça (URL do Storage ou caminho em `/public/images`) |
 | `leads` | Cadastros dos formulários, com UTM e status de atendimento |
@@ -130,6 +130,18 @@ Bucket de Storage `produtos` (público) para as fotos.
 ### Segurança (RLS)
 
 A chave pública usada no site só consegue **ler registros ativos** de catálogo e **inserir** leads. Não lê, altera nem apaga leads. Gestão de conteúdo e leitura de leads são feitas pelo painel do Supabase (Table Editor).
+
+### Onde estão as fotos originais
+
+| Conteúdo | Origem |
+| --- | --- |
+| Campanhas Frescor (verão 2026) e Entrelaços (inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
+| Fotos por referência, Inverno 2026 (`0981.jpeg`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS INVERNO 2026` |
+| Fotos por referência, Verão 2027 (`1035.pdf`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS VERÃO 2027` (PDF, converter para JPG) |
+| Fotos 2025 (RAW `.CR2`, precisam de revelação) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS 2025` |
+| Recortes com fundo transparente (`CS-040.png`...) | `\\192.168.0.2\#Corpo Sensual\FUNDO TRANSPARENTE (PNG)1` |
+
+Depois de copiar fotos novas para `public/images/`, rode `npm run imagens` para reduzir o tamanho. Fotos com fundo transparente só compensam em PNG se a transparência for usada; caso contrário, salve como JPG.
 
 ### Gerenciando o conteúdo no dia a dia
 

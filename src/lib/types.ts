@@ -22,6 +22,8 @@ export type Collection = {
   headline: string | null;
   description: string | null;
   hero_image_url: string | null;
+  /** Fotos de campanha exibidas na página da coleção. */
+  gallery_urls: string[];
   active: boolean;
   sort_order: number;
 };

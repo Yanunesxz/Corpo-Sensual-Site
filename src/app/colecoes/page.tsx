@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCollections } from "@/lib/data";
+import { seasonLabel } from "@/lib/site";
 import { SectionHeading } from "@/components/section-heading";
 import { Reveal } from "@/components/reveal";
 import { ArrowRight } from "@/components/icons";
@@ -12,8 +13,6 @@ export const metadata: Metadata = {
   title: "Coleções",
   description: "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual.",
 };
-
-const seasonLabel = { verao: "Verão", inverno: "Inverno", atemporal: "Atemporal" } as const;
 
 export default async function ColecoesPage() {
   const collections = await getCollections();
@@ -35,9 +34,7 @@ export default async function ColecoesPage() {
                 )}
                 <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/20 to-transparent" aria-hidden />
                 <div className="absolute inset-x-0 bottom-0 p-7">
-                  <p className="eyebrow text-butter">
-                    {seasonLabel[c.season]} {c.year ?? ""}
-                  </p>
+                  <p className="eyebrow text-butter">{seasonLabel(c.season, c.year)}</p>
                   <p className="display mt-2 text-3xl md:text-4xl">{c.name}</p>
                   {c.headline && <p className="mt-2 max-w-md text-sm text-white/80">{c.headline}</p>}
                   <span className="mt-4 inline-flex items-center gap-2 text-sm">

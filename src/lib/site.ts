@@ -29,7 +29,21 @@ export const site = {
     { href: "/colecoes", label: "Coleções" },
     { href: "/fabrica-de-pijamas", label: "Para lojistas" },
   ],
+  /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
+  commercial: {
+    exclusive: "Venda exclusiva para lojas físicas com CNPJ ativo.",
+    minOrder: "Investimento mínimo de R$ 1.200,00",
+    installments: "Parcelamento em até 6x sem juros no cartão",
+    freeShipping: "Frete grátis a partir de R$ 1.200,00",
+    freeShippingNote: "Consulte as condições de frete grátis para a sua região.",
+  },
 } as const;
+
+/** Rótulo de temporada usado em títulos e etiquetas. */
+export function seasonLabel(season: "verao" | "inverno" | "atemporal", year?: number | null): string {
+  const base = season === "verao" ? "Primavera / Verão" : season === "inverno" ? "Outono / Inverno" : "Atemporal";
+  return year ? `${base} ${year}` : base;
+}
 
 export function whatsappLink(message: string): string {
   if (!site.contact.whatsappUrl) return "";

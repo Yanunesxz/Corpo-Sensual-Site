@@ -48,6 +48,7 @@ create table if not exists public.collections (
   headline       text,
   description    text,
   hero_image_url text,
+  gallery_urls   text[] not null default '{}',   -- fotos de campanha da coleção
   active         boolean not null default true,
   sort_order     integer not null default 0,
   created_at     timestamptz not null default now(),

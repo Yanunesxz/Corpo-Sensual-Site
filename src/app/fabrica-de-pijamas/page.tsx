@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/section-heading";
 import { Steps } from "@/components/steps";
 import { LeadForm } from "@/components/lead-form";
+import { CommercialTerms } from "@/components/commercial-terms";
 import { Reveal } from "@/components/reveal";
 import { Check } from "@/components/icons";
 
@@ -31,7 +32,7 @@ export default function FabricaPage() {
   return (
     <>
       <section className="relative isolate overflow-hidden bg-ink text-white">
-        <Image src="/images/novidade-2.jpg" alt="" fill sizes="100vw" className="object-cover object-[center_20%] opacity-40" priority />
+        <Image src="/images/colecoes/frescor-3.jpg" alt="" fill sizes="100vw" className="object-cover object-[center_30%] opacity-40" priority />
         <div className="absolute inset-0 bg-linear-to-r from-ink via-ink/80 to-ink/30" aria-hidden />
         <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-36 md:grid-cols-[1.1fr_1fr] md:px-8 md:pb-28 md:pt-48">
           <Reveal>
@@ -61,6 +62,10 @@ export default function FabricaPage() {
             </div>
           </Reveal>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 pt-16 md:px-8 md:pt-24">
+        <CommercialTerms />
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">

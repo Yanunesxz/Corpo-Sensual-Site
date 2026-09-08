@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} | Moda íntima, pijamas e camisolas`,
     description: site.description,
-    images: [{ url: "/images/hero-verao.jpg", width: 1202, height: 720, alt: site.name }],
+    images: [{ url: "/images/colecoes/frescor-2.jpg", width: 1600, height: 1067, alt: site.name }],
   },
   robots: { index: true, follow: true },
 };

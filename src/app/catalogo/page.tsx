@@ -3,6 +3,7 @@ import Image from "next/image";
 import { SectionHeading } from "@/components/section-heading";
 import { Steps } from "@/components/steps";
 import { LeadForm } from "@/components/lead-form";
+import { CommercialTerms } from "@/components/commercial-terms";
 import { Reveal } from "@/components/reveal";
 
 export const metadata: Metadata = {
@@ -31,8 +32,12 @@ export default function CatalogoPage() {
         </Reveal>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pb-16 md:px-8">
+      <section className="mx-auto max-w-7xl px-5 pb-10 md:px-8">
         <Steps steps={steps} />
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 pb-16 md:px-8">
+        <CommercialTerms />
       </section>
 
       <section className="mx-auto max-w-7xl px-5 pb-24 md:px-8">
