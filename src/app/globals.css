@@ -59,26 +59,18 @@ body {
 
 /*
   Animação de entrada (ver components/reveal.tsx).
-  Só esconde o conteúdo quando o JavaScript está ativo (classe "js" no <html>),
-  e mesmo assim tem um limite: se o observador não disparar em 1,5s, o
-  conteúdo aparece sozinho. Sem JS ou em conexão lenta nada fica invisível.
+  Só esconde o conteúdo quando o JavaScript está ativo (classe "js" no <html>).
+  O componente adiciona "is-visible" quando o elemento entra na tela ou, no
+  máximo, 1,5s depois de montar. Sem JS nada fica invisível.
 */
 .js .reveal {
   opacity: 0;
   transform: translateY(14px);
   transition: opacity 0.45s ease-out, transform 0.45s ease-out;
-  animation: reveal-safety 0.45s ease-out 1.5s forwards;
 }
 .js .reveal.is-visible {
   opacity: 1;
   transform: none;
-  animation: none;
-}
-@keyframes reveal-safety {
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* Faixa rolante de diferenciais (ver components/marquee.tsx) */
@@ -102,7 +94,6 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
-    animation: none;
   }
   .marquee {
     animation: none;

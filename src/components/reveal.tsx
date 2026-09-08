@@ -21,15 +21,16 @@ export function Reveal({ children, className = "", delay = 0, as: Tag = "div" }:
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
+    const show = () => el.classList.add("is-visible");
     if (!("IntersectionObserver" in window)) {
-      el.classList.add("is-visible");
+      show();
       return;
     }
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            el.classList.add("is-visible");
+            show();
             observer.disconnect();
           }
         }
@@ -37,7 +38,12 @@ export function Reveal({ children, className = "", delay = 0, as: Tag = "div" }:
       { rootMargin: "0px 0px -10% 0px", threshold: 0.1 },
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    // Garantia: mesmo que o observador não dispare, nada fica invisível por muito tempo.
+    const safety = window.setTimeout(show, 1500);
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(safety);
+    };
   }, []);
 
   return (
