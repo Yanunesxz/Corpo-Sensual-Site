@@ -136,12 +136,22 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 | Conteúdo | Origem |
 | --- | --- |
 | Campanhas Frescor (verão 2026) e Entrelaços (inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
+| 10 referências mais vendidas (`public/images/produtos/<ref>.jpg`) | Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026) + fotos de estúdio de `CATALOGO\FOTOS\FOTOS 2024\FOTOS - REF VERÃO 2024`, recorte PNG (0848) e página do catálogo Verão 2027 em PDF (1043) |
+| Logo (monograma CS) | `\\192.168.0.2\SetorX\Yan\IMG SYS\corpo-sensual-logo.png`, usado como ícone do site em `src/app/icon.png` |
 | Fotos por referência, Inverno 2026 (`0981.jpeg`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS INVERNO 2026` |
 | Fotos por referência, Verão 2027 (`1035.pdf`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS VERÃO 2027` (PDF, converter para JPG) |
 | Fotos 2025 (RAW `.CR2`, precisam de revelação) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS 2025` |
 | Recortes com fundo transparente (`CS-040.png`...) | `\\192.168.0.2\#Corpo Sensual\FUNDO TRANSPARENTE (PNG)1` |
 
 Depois de copiar fotos novas para `public/images/`, rode `npm run imagens` para reduzir o tamanho. Fotos com fundo transparente só compensam em PNG se a transparência for usada; caso contrário, salve como JPG.
+
+**Foto de produto nova:** o site usa fotos de estúdio em 4:5 (1200x1500) com fundo branco. Para preparar a foto de uma referência a partir do arquivo do servidor:
+
+```bash
+node scripts/foto-produto.mjs 0810 "caminho\para\0810.jpg"
+```
+
+Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--recorte`. Para páginas de catálogo em PDF, converta a página para PNG e use `--cortar-topo=0.27` para remover o cabeçalho com a referência e as cores. O resultado vai para `public/images/produtos/<ref>.jpg`; depois cadastre a peça em `products` e a foto em `product_images` (ou em `src/lib/fallback-data.ts` enquanto o banco não existe).
 
 ### Gerenciando o conteúdo no dia a dia
 
@@ -166,7 +176,7 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 
 ## Checklist antes de trocar o domínio
 
-- [ ] Supabase configurado e `seed.sql` substituído pelas peças reais
+- [ ] Supabase configurado e `seed.sql` executado (já traz as 10 referências mais vendidas)
 - [ ] Fotos das peças enviadas para o Storage
 - [ ] `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_INSTAGRAM` e `NEXT_PUBLIC_EMAIL` preenchidos no Vercel
 - [ ] Textos de `src/lib/content/politicas.ts` revisados pelo responsável jurídico

@@ -4,14 +4,15 @@
 -- As imagens apontam para /public/images; troque pelas URLs do Storage
 -- (bucket "produtos") conforme for subindo as fotos.
 --
--- Coleções e fotos de campanha são reais (Frescor e Entrelaços, 2026).
--- Os PRODUTOS são provisórios: substitua pelas 10 referências mais vendidas.
+-- Coleções e fotos de campanha: Frescor e Entrelaços (2026).
+-- Produtos: as 10 referências mais vendidas de 01/07 a 09/09/2026, segundo o
+-- relatório "Ranking de vendas Corpo Sensual" do ERP. sort_order = posição.
 -- =============================================================================
 
 insert into public.categories (id, slug, name, image_url, sort_order) values
   ('a0000000-0000-4000-8000-000000000001', 'feminino',  'Feminino',  '/images/colecoes/frescor-4.jpg',    1),
   ('a0000000-0000-4000-8000-000000000002', 'masculino', 'Masculino', '/images/categoria-2.jpg',           2),
-  ('a0000000-0000-4000-8000-000000000003', 'juvenil',   'Juvenil',   '/images/colecoes/entrelacos-3.jpg', 3),
+  ('a0000000-0000-4000-8000-000000000003', 'infantil',  'Infantil',  '/images/colecoes/entrelacos-3.jpg', 3),
   ('a0000000-0000-4000-8000-000000000004', 'gestante',  'Gestante',  '/images/categoria-1.jpg',           4)
 on conflict (slug) do nothing;
 
@@ -42,25 +43,26 @@ insert into public.collections (id, slug, name, season, year, headline, descript
   )
 on conflict (slug) do nothing;
 
--- Produtos provisórios (trocar pelas referências reais)
-insert into public.products (id, ref, slug, name, description, category_id, collection_id, is_new, is_featured, sort_order) values
-  ('c0000000-0000-4000-8000-000000000001', 'CS-0001', 'pijama-curto-renda',     'Pijama curto com renda',  'Modelagem alinhada, tecido leve e respirável.',    'a0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001', true,  false, 1),
-  ('c0000000-0000-4000-8000-000000000002', 'CS-0002', 'camisola-alcinha',       'Camisola de alcinha',     'Tecnologia anti-pilling e caimento perfeito.',     'a0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001', true,  false, 2),
-  ('c0000000-0000-4000-8000-000000000003', 'CS-0003', 'pijama-longo-estampado', 'Pijama longo estampado',  'Um dos mais vendidos, agora com nova modelagem.',  'a0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', false, true,  3),
-  ('c0000000-0000-4000-8000-000000000004', 'CS-0004', 'robe-cetim',             'Robe em cetim',           'Leve e flexível para as noites de verão.',         'a0000000-0000-4000-8000-000000000001', 'b0000000-0000-4000-8000-000000000001', false, true,  4),
-  ('c0000000-0000-4000-8000-000000000005', 'CS-0005', 'conjunto-masculino',     'Conjunto masculino',      'Linha completa para a temporada de verão.',        'a0000000-0000-4000-8000-000000000002', 'b0000000-0000-4000-8000-000000000001', false, false, 5),
-  ('c0000000-0000-4000-8000-000000000006', 'CS-0006', 'camisola-gestante',      'Camisola gestante',       'Conforto para todas as fases.',                    'a0000000-0000-4000-8000-000000000004', 'b0000000-0000-4000-8000-000000000001', false, false, 6)
+-- Top 10 do ranking de vendas (jul-set/2026)
+insert into public.products (ref, slug, name, description, category_id, collection_id, is_featured, sort_order)
+select v.ref, v.slug, v.name, v.description, c.id, 'b0000000-0000-4000-8000-000000000001', v.sort_order <= 5, v.sort_order
+from (values
+  ('0810', 'short-doll-regata-mescla-infantil',       'Short doll regata mescla infantil',          'Regata em malha mescla com short estampado. Linha infantil feminina.',            'infantil',  1),
+  ('0118', 'short-doll-regata-infantil',              'Short doll regata infantil',                 'Regata estampada com short liso. Linha infantil feminina.',                      'infantil',  2),
+  ('0130', 'pijama-bordado-manga-masculino',          'Pijama bordado de manga masculino',          'Camiseta de manga curta com bordado e short. Linha masculina.',                  'masculino', 3),
+  ('1043', 'pijama-alca-suede-liso',                  'Pijama de alça suede liso',                  'Blusa de alça e short em suede liso. Tamanhos P ao XG.',                         'feminino',  4),
+  ('0131', 'short-malha-masculino',                   'Short de malha masculino',                   'Short em malha estampada com cós elástico. Linha masculina.',                    'masculino', 5),
+  ('0848', 'pijama-regata-canelado',                  'Pijama regata canelado',                     'Regata e short em malha canelada com acabamento contrastante.',                  'feminino',  6),
+  ('0115', 'short-doll-alca-malha',                   'Short doll de alça em malha',                'Blusa de alça estampada com short liso em malha.',                               'feminino',  7),
+  ('2130', 'pijama-aberto-bordado-manga-masculino',   'Pijama aberto bordado de manga masculino',   'Camisa aberta de manga curta com bordado e short. Linha masculina.',             'masculino', 8),
+  ('0123', 'pijama-aberto-manga-bordado',             'Pijama aberto de manga bordado',             'Camisa aberta de manga curta com detalhes estampados e bermuda.',                'feminino',  9),
+  ('0550', 'short-liganete-masculino',                'Short liganete masculino',                   'Short estampado em liganete com cós elástico. Linha masculina.',                 'masculino', 10)
+) as v(ref, slug, name, description, category_slug, sort_order)
+join public.categories c on c.slug = v.category_slug
 on conflict (slug) do nothing;
 
 insert into public.product_images (product_id, url, alt, sort_order)
-select p.id, v.url, v.alt, 1
-from (values
-  ('pijama-curto-renda',     '/images/novidade-1.jpg',  'Pijama curto com renda'),
-  ('camisola-alcinha',       '/images/novidade-2.jpg',  'Camisola de alcinha'),
-  ('pijama-longo-estampado', '/images/destaque-1.jpg',  'Pijama longo estampado'),
-  ('robe-cetim',             '/images/destaque-2.jpg',  'Robe em cetim'),
-  ('conjunto-masculino',     '/images/categoria-2.jpg', 'Conjunto masculino'),
-  ('camisola-gestante',      '/images/categoria-1.jpg', 'Camisola gestante')
-) as v(slug, url, alt)
-join public.products p on p.slug = v.slug
-where not exists (select 1 from public.product_images i where i.product_id = p.id);
+select p.id, '/images/produtos/' || p.ref || '.jpg', p.name || ', ref. ' || p.ref, 1
+from public.products p
+where p.ref in ('0810','0118','0130','1043','0131','0848','0115','2130','0123','0550')
+  and not exists (select 1 from public.product_images i where i.product_id = p.id);

@@ -40,7 +40,7 @@ export default function SobrePage() {
           </p>
           <p className="mt-6 text-[15px] leading-relaxed text-ink-soft">
             A {site.legal.razaoSocial} nasceu em Muriaé, Minas Gerais, e cresceu junto com o polo de moda íntima da
-            região. Hoje desenvolvemos pijamas, camisolas, robes e linhas gestante, masculina e juvenil, vendidas em
+            região. Hoje desenvolvemos pijamas, camisolas, robes e linhas gestante, masculina e infantil, vendidas em
             lojas de todo o país por meio da nossa rede de representantes.
           </p>
           <p className="mt-4 text-[15px] leading-relaxed text-ink-soft">

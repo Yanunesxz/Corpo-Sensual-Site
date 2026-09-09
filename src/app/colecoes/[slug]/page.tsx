@@ -29,14 +29,19 @@ export default async function ColecaoPage({ params, searchParams }: Props) {
   const collection = await getCollectionBySlug(slug);
   if (!collection) notFound();
 
-  const [categories, products] = await Promise.all([
+  const [categories, ownProducts] = await Promise.all([
     getCategories(),
     getProducts({ collectionId: collection.id, categorySlug }),
   ]);
 
+  // Coleção sem peças cadastradas: mostra as mais vendidas para a página não ficar vazia.
+  const showingBestSellers = ownProducts.length === 0;
+  const products = showingBestSellers ? await getProducts({ categorySlug, limit: 10 }) : ownProducts;
+
   const base = `/colecoes/${collection.slug}`;
   const gallery = collection.gallery_urls ?? [];
   const activeCategory = categorySlug ? categories.find((c) => c.slug === categorySlug) : undefined;
+  const heading = activeCategory ? activeCategory.name : showingBestSellers ? "Mais vendidas" : "Referências";
 
   return (
     <>
@@ -89,10 +94,7 @@ export default async function ColecaoPage({ params, searchParams }: Props) {
 
       {/* Peças */}
       <section id="pecas" className="mx-auto max-w-[1600px] scroll-mt-20 px-5 py-14 md:px-8 md:py-20">
-        <SectionHeading
-          title={activeCategory ? activeCategory.name : "Referências"}
-          link={{ href: "/catalogo", label: "Receber catálogo completo" }}
-        />
+        <SectionHeading title={heading} link={{ href: "/catalogo", label: "Receber catálogo completo" }} />
 
         {categories.length > 0 && (
           <nav className="mt-6 flex flex-wrap gap-2" aria-label="Filtrar por categoria">

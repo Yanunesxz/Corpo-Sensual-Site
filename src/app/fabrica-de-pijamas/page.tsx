@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const benefits = [
   "Preço de fábrica, sem intermediários",
-  "Grade completa: feminino, masculino, juvenil e gestante",
+  "Grade completa: feminino, masculino, infantil e gestante",
   "Coleções novas a cada temporada",
   "Reposição rápida das referências que mais vendem",
   "Pedidos online pela plataforma B2B, com acompanhamento",

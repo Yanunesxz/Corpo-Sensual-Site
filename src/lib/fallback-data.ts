@@ -1,19 +1,18 @@
 import type { Category, Collection, Product } from "./types";
 
 /**
- * Dados de exemplo usados quando o Supabase ainda não está configurado
- * (ou quando uma consulta falha). Em produção, o conteúdo real vem das
- * tabelas do banco (ver supabase/seed.sql).
+ * Dados usados quando o Supabase ainda não está configurado (ou quando uma
+ * consulta falha). Em produção o conteúdo vem das tabelas (ver supabase/seed.sql).
  *
- * As coleções e fotos de campanha são reais (Frescor e Entrelaços, 2026).
- * Os PRODUTOS abaixo são provisórios: serão trocados pelas 10 referências
- * mais vendidas, com as fotos do catálogo.
+ * Produtos: as 10 referências mais vendidas de 01/07 a 09/09/2026, conforme o
+ * relatório "Ranking de vendas Corpo Sensual" do ERP. Fotos do servidor da
+ * empresa (CATALOGO\FOTOS), tratadas para 4:5 com scripts/foto-produto.mjs.
  */
 
 export const fallbackCategories: Category[] = [
   { id: "cat-feminino", slug: "feminino", name: "Feminino", description: null, image_url: "/images/colecoes/frescor-4.jpg", sort_order: 1, active: true },
   { id: "cat-masculino", slug: "masculino", name: "Masculino", description: null, image_url: "/images/categoria-2.jpg", sort_order: 2, active: true },
-  { id: "cat-juvenil", slug: "juvenil", name: "Juvenil", description: null, image_url: "/images/colecoes/entrelacos-3.jpg", sort_order: 3, active: true },
+  { id: "cat-infantil", slug: "infantil", name: "Infantil", description: null, image_url: "/images/colecoes/entrelacos-3.jpg", sort_order: 3, active: true },
   { id: "cat-gestante", slug: "gestante", name: "Gestante", description: null, image_url: "/images/categoria-1.jpg", sort_order: 4, active: true },
 ];
 
@@ -60,95 +59,36 @@ export const fallbackCollections: Collection[] = [
 
 const frescor = fallbackCollections[0].id;
 
-export const fallbackProducts: Product[] = [
-  {
-    id: "p-1",
-    ref: "CS-0001",
-    slug: "pijama-curto-renda",
-    name: "Pijama curto com renda",
-    description: "Modelagem alinhada, tecido leve e respirável.",
-    category_id: "cat-feminino",
-    collection_id: frescor,
-    is_new: true,
-    is_featured: false,
-    active: true,
-    sort_order: 1,
-    images: [{ id: "i-1", product_id: "p-1", url: "/images/novidade-1.jpg", alt: "Pijama curto com renda", sort_order: 1 }],
-    category: { slug: "feminino", name: "Feminino" },
-  },
-  {
-    id: "p-2",
-    ref: "CS-0002",
-    slug: "camisola-alcinha",
-    name: "Camisola de alcinha",
-    description: "Tecnologia anti-pilling e caimento perfeito.",
-    category_id: "cat-feminino",
-    collection_id: frescor,
-    is_new: true,
-    is_featured: false,
-    active: true,
-    sort_order: 2,
-    images: [{ id: "i-2", product_id: "p-2", url: "/images/novidade-2.jpg", alt: "Camisola de alcinha", sort_order: 1 }],
-    category: { slug: "feminino", name: "Feminino" },
-  },
-  {
-    id: "p-3",
-    ref: "CS-0003",
-    slug: "pijama-longo-estampado",
-    name: "Pijama longo estampado",
-    description: "Um dos mais vendidos, agora com nova modelagem.",
-    category_id: "cat-gestante",
-    collection_id: frescor,
-    is_new: false,
-    is_featured: true,
-    active: true,
-    sort_order: 3,
-    images: [{ id: "i-3", product_id: "p-3", url: "/images/destaque-1.jpg", alt: "Pijama longo estampado", sort_order: 1 }],
-    category: { slug: "gestante", name: "Gestante" },
-  },
-  {
-    id: "p-4",
-    ref: "CS-0004",
-    slug: "robe-cetim",
-    name: "Robe em cetim",
-    description: "Leve e flexível para as noites de verão.",
-    category_id: "cat-feminino",
-    collection_id: frescor,
-    is_new: false,
-    is_featured: true,
-    active: true,
-    sort_order: 4,
-    images: [{ id: "i-4", product_id: "p-4", url: "/images/destaque-2.jpg", alt: "Robe em cetim", sort_order: 1 }],
-    category: { slug: "feminino", name: "Feminino" },
-  },
-  {
-    id: "p-5",
-    ref: "CS-0005",
-    slug: "conjunto-masculino",
-    name: "Conjunto masculino",
-    description: "Linha completa para a temporada de verão.",
-    category_id: "cat-masculino",
-    collection_id: frescor,
-    is_new: false,
-    is_featured: false,
-    active: true,
-    sort_order: 5,
-    images: [{ id: "i-5", product_id: "p-5", url: "/images/categoria-2.jpg", alt: "Conjunto masculino", sort_order: 1 }],
-    category: { slug: "masculino", name: "Masculino" },
-  },
-  {
-    id: "p-6",
-    ref: "CS-0006",
-    slug: "camisola-gestante",
-    name: "Camisola gestante",
-    description: "Conforto para todas as fases.",
-    category_id: "cat-gestante",
-    collection_id: frescor,
-    is_new: false,
-    is_featured: false,
-    active: true,
-    sort_order: 6,
-    images: [{ id: "i-6", product_id: "p-6", url: "/images/categoria-1.jpg", alt: "Camisola gestante", sort_order: 1 }],
-    category: { slug: "gestante", name: "Gestante" },
-  },
+type Seed = { ref: string; slug: string; name: string; description: string; category: "feminino" | "masculino" | "infantil" | "gestante" };
+
+const categoryName = { feminino: "Feminino", masculino: "Masculino", infantil: "Infantil", gestante: "Gestante" } as const;
+
+// Ordem = posição no ranking de vendas.
+const seeds: Seed[] = [
+  { ref: "0810", slug: "short-doll-regata-mescla-infantil", name: "Short doll regata mescla infantil", description: "Regata em malha mescla com short estampado. Linha infantil feminina.", category: "infantil" },
+  { ref: "0118", slug: "short-doll-regata-infantil", name: "Short doll regata infantil", description: "Regata estampada com short liso. Linha infantil feminina.", category: "infantil" },
+  { ref: "0130", slug: "pijama-bordado-manga-masculino", name: "Pijama bordado de manga masculino", description: "Camiseta de manga curta com bordado e short. Linha masculina.", category: "masculino" },
+  { ref: "1043", slug: "pijama-alca-suede-liso", name: "Pijama de alça suede liso", description: "Blusa de alça e short em suede liso. Tamanhos P ao XG.", category: "feminino" },
+  { ref: "0131", slug: "short-malha-masculino", name: "Short de malha masculino", description: "Short em malha estampada com cós elástico. Linha masculina.", category: "masculino" },
+  { ref: "0848", slug: "pijama-regata-canelado", name: "Pijama regata canelado", description: "Regata e short em malha canelada com acabamento contrastante.", category: "feminino" },
+  { ref: "0115", slug: "short-doll-alca-malha", name: "Short doll de alça em malha", description: "Blusa de alça estampada com short liso em malha.", category: "feminino" },
+  { ref: "2130", slug: "pijama-aberto-bordado-manga-masculino", name: "Pijama aberto bordado de manga masculino", description: "Camisa aberta de manga curta com bordado e short. Linha masculina.", category: "masculino" },
+  { ref: "0123", slug: "pijama-aberto-manga-bordado", name: "Pijama aberto de manga bordado", description: "Camisa aberta de manga curta com detalhes estampados e bermuda.", category: "feminino" },
+  { ref: "0550", slug: "short-liganete-masculino", name: "Short liganete masculino", description: "Short estampado em liganete com cós elástico. Linha masculina.", category: "masculino" },
 ];
+
+export const fallbackProducts: Product[] = seeds.map((s, i) => ({
+  id: `p-${s.ref}`,
+  ref: s.ref,
+  slug: s.slug,
+  name: s.name,
+  description: s.description,
+  category_id: `cat-${s.category}`,
+  collection_id: frescor,
+  is_new: false,
+  is_featured: i < 5,
+  active: true,
+  sort_order: i + 1,
+  images: [{ id: `i-${s.ref}`, product_id: `p-${s.ref}`, url: `/images/produtos/${s.ref}.jpg`, alt: `${s.name}, ref. ${s.ref}`, sort_order: 1 }],
+  category: { slug: s.category, name: categoryName[s.category] },
+}));
