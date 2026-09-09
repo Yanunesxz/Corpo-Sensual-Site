@@ -14,7 +14,7 @@ const leadSchema = z.object({
     .string()
     .transform((v) => v.replace(/\D/g, ""))
     .refine((v) => v.length >= 10 && v.length <= 13, "Informe o WhatsApp com DDD."),
-  has_cnpj: z.enum(["sim", "nao"], { message: "Informe se possui CNPJ." }),
+  has_cnpj: z.enum(["sim", "nao"], { message: "Escolha uma opção." }),
   company: optionalText(120),
   city: optionalText(120),
   state: optionalText(2),
@@ -34,9 +34,25 @@ export type LeadFormState = {
   ok: boolean;
   message?: string;
   errors?: Partial<Record<string, string>>;
+  /** O que a pessoa digitou, devolvido para o formulário não apagar após um erro. */
+  values?: Partial<Record<"name" | "email" | "whatsapp" | "has_cnpj" | "company" | "city" | "state" | "message", string>>;
 };
 
 const nullIfEmpty = (v: string) => (v ? v : null);
+
+function echo(formData: FormData): LeadFormState["values"] {
+  const pick = (k: string) => String(formData.get(k) ?? "");
+  return {
+    name: pick("name"),
+    email: pick("email"),
+    whatsapp: pick("whatsapp"),
+    has_cnpj: pick("has_cnpj"),
+    company: pick("company"),
+    city: pick("city"),
+    state: pick("state"),
+    message: pick("message"),
+  };
+}
 
 /**
  * Recebe o formulário de lead, valida e grava no Supabase.
@@ -55,7 +71,7 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
       const key = String(issue.path[0] ?? "form");
       if (!errors[key]) errors[key] = issue.message;
     }
-    return { ok: false, message: "Confira os campos destacados.", errors };
+    return { ok: false, message: "Confira os campos destacados.", errors, values: echo(formData) };
   }
 
   const d = parsed.data;
@@ -66,7 +82,8 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     console.error("[leads] Supabase não configurado; lead não foi gravado.");
     return {
       ok: false,
-      message: "Nosso cadastro está temporariamente indisponível. Fale com a gente pelo WhatsApp ou tente de novo em instantes.",
+      message: "Nosso cadastro está temporariamente indisponível. Tente de novo em instantes ou use outro canal.",
+      values: echo(formData),
     };
   }
 
@@ -94,7 +111,8 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     console.error("[leads] erro ao gravar lead:", error.message);
     return {
       ok: false,
-      message: "Não conseguimos enviar seu cadastro. Tente novamente ou fale com a gente pelo WhatsApp.",
+      message: "Não conseguimos enviar seu cadastro. Tente novamente ou use outro canal.",
+      values: echo(formData),
     };
   }
 

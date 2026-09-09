@@ -49,7 +49,7 @@ export const politicas: Politica[] = [
       {
         heading: "Seus direitos",
         paragraphs: [
-          "Você pode solicitar a qualquer momento a confirmação, acesso, correção ou exclusão dos seus dados, além de revogar o consentimento. Basta entrar em contato pelos canais indicados no rodapé do site.",
+          "Você pode solicitar a qualquer momento a confirmação, acesso, correção ou exclusão dos seus dados, além de revogar o consentimento. Basta entrar em contato pela página de contato do site ou pelos canais indicados no rodapé.",
         ],
       },
       {
@@ -94,7 +94,7 @@ export const politicas: Politica[] = [
       {
         heading: "Defeitos de fabricação",
         paragraphs: [
-          "Peças com defeito de fabricação podem ser trocadas mediante comunicação ao representante ou ao nosso atendimento em até 30 dias após o recebimento, com foto do defeito e número do pedido.",
+          "Peças com defeito de fabricação podem ser trocadas mediante comunicação ao representante ou pela página de contato do site em até 30 dias após o recebimento, com foto do defeito e número do pedido.",
         ],
       },
       {

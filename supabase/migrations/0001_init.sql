@@ -48,6 +48,7 @@ create table if not exists public.collections (
   headline       text,
   description    text,
   hero_image_url text,
+  hero_mobile_url text,                          -- foto vertical para o hero no celular
   gallery_urls   text[] not null default '{}',   -- fotos de campanha da coleção
   active         boolean not null default true,
   sort_order     integer not null default 0,

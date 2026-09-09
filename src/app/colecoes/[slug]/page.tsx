@@ -2,13 +2,23 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCategories, getCollectionBySlug, getProducts } from "@/lib/data";
+import { Suspense } from "react";
+import { getCategories, getCollectionBySlug, getCollections, getProducts } from "@/lib/data";
 import { collectionShortName, seasonLabel } from "@/lib/site";
-import { SectionHeading } from "@/components/section-heading";
-import { ProductCard } from "@/components/product-card";
 import { CommercialTerms } from "@/components/commercial-terms";
+import { HeroImage } from "@/components/hero-image";
+import { ProductGrid } from "@/components/product-grid";
+import { ContactBlock } from "@/components/contact-block";
+
+// Página estática, renovada a cada hora. O filtro por categoria roda no navegador.
+export const revalidate = 3600;
 
 type Props = PageProps<"/colecoes/[slug]">;
+
+export async function generateStaticParams() {
+  const collections = await getCollections();
+  return collections.map((c) => ({ slug: c.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -21,52 +31,47 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ColecaoPage({ params, searchParams }: Props) {
+export default async function ColecaoPage({ params }: Props) {
   const { slug } = await params;
-  const { categoria } = await searchParams;
-  const categorySlug = typeof categoria === "string" ? categoria : undefined;
-
   const collection = await getCollectionBySlug(slug);
   if (!collection) notFound();
 
-  const [categories, ownProducts] = await Promise.all([
+  const [categories, ownProducts, collections] = await Promise.all([
     getCategories(),
-    getProducts({ collectionId: collection.id, categorySlug }),
+    getProducts({ collectionId: collection.id }),
+    getCollections(),
   ]);
 
   // Coleção sem peças cadastradas: mostra as mais vendidas para a página não ficar vazia.
   const showingBestSellers = ownProducts.length === 0;
-  const products = showingBestSellers ? await getProducts({ categorySlug, limit: 10 }) : ownProducts;
-
-  const base = `/colecoes/${collection.slug}`;
+  const products = showingBestSellers ? await getProducts({}) : ownProducts;
+  const others = collections.filter((c) => c.id !== collection.id);
   const gallery = collection.gallery_urls ?? [];
-  const activeCategory = categorySlug ? categories.find((c) => c.slug === categorySlug) : undefined;
-  const heading = activeCategory ? activeCategory.name : showingBestSellers ? "Mais vendidas" : "Referências";
 
   return (
     <>
       {/* Hero */}
-      <section className="shade relative h-[70svh] min-h-[460px] bg-stone">
+      <section className="shade relative h-[70svh] min-h-[460px] max-h-[820px] bg-stone">
         {collection.hero_image_url && (
-          <Image src={collection.hero_image_url} alt="" fill priority sizes="100vw" className="object-cover object-[center_35%]" />
+          <HeroImage desktop={collection.hero_image_url} mobile={collection.hero_mobile_url} priority desktopPosition="center 35%" mobilePosition="center 25%" />
         )}
-        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-10 text-white md:px-8 md:pb-14">
+        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
           <p className="label">{seasonLabel(collection.season, collection.year)}</p>
-          <h1 className="h-serif mt-3 text-6xl md:text-8xl lg:text-[8rem]">{collectionShortName(collection.name)}</h1>
-          <div className="mt-6 flex gap-7">
-            <a href="#pecas" className="link text-[13px]">
-              Ver peças
-            </a>
-            <Link href="/catalogo" className="link text-[13px]">
+          <h1 className="h-serif mt-2 text-6xl md:text-8xl lg:text-[8rem]">{collectionShortName(collection.name)}</h1>
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
+            <Link href="/catalogo" className="btn btn-light w-full sm:w-auto">
               Receber catálogo
             </Link>
+            <a href="#pecas" className="link self-start text-[13px] sm:self-auto">
+              Ver peças
+            </a>
           </div>
         </div>
       </section>
 
       {/* Conceito */}
       {(collection.headline || collection.description) && (
-        <section className="mx-auto grid max-w-[1600px] gap-6 px-5 py-14 md:grid-cols-[1fr_2fr] md:px-8 md:py-20">
+        <section className="mx-auto grid max-w-[1600px] gap-4 px-5 py-12 md:px-8 md:py-20 lg:grid-cols-[1fr_2fr] lg:gap-6">
           <p className="label">A coleção</p>
           <div className="max-w-2xl">
             {collection.headline && <p className="h-display text-3xl md:text-5xl">{collection.headline}</p>}
@@ -88,55 +93,55 @@ export default async function ColecaoPage({ params, searchParams }: Props) {
         </section>
       )}
 
-      <section className="mx-auto max-w-[1600px] px-5 pt-14 md:px-8 md:pt-20">
+      <section className="mx-auto max-w-[1600px] px-5 pt-12 md:px-8 md:pt-20">
         <CommercialTerms />
       </section>
 
       {/* Peças */}
-      <section id="pecas" className="mx-auto max-w-[1600px] scroll-mt-20 px-5 py-14 md:px-8 md:py-20">
-        <SectionHeading title={heading} link={{ href: "/catalogo", label: "Receber catálogo completo" }} />
+      <section id="pecas" className="mx-auto max-w-[1600px] scroll-mt-20 px-5 py-12 md:px-8 md:py-20">
+        <Suspense fallback={<p className="text-sm text-ink-soft">Carregando peças...</p>}>
+          <ProductGrid products={products} categories={categories} title={showingBestSellers ? "Mais vendidas" : "Peças da coleção"} />
+        </Suspense>
+      </section>
 
-        {categories.length > 0 && (
-          <nav className="mt-6 flex flex-wrap gap-2" aria-label="Filtrar por categoria">
-            <Chip href={`${base}#pecas`} active={!categorySlug}>
-              Todas
-            </Chip>
-            {categories.map((c) => (
-              <Chip key={c.id} href={`${base}?categoria=${c.slug}#pecas`} active={categorySlug === c.slug}>
-                {c.name}
-              </Chip>
-            ))}
-          </nav>
-        )}
-
-        {products.length === 0 ? (
-          <p className="mt-10 border-y border-line py-10 text-center text-sm text-ink-soft">
-            Nenhuma peça publicada nesta categoria ainda.{" "}
-            <Link href="/catalogo" className="underline">
-              Peça o catálogo completo
-            </Link>
-            .
-          </p>
-        ) : (
-          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+      {/* Fechamento: como comprar e contato */}
+      <section className="bg-stone">
+        <div className="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 md:grid-cols-2 md:gap-16 md:px-8 md:py-20">
+          <div>
+            <h2 className="h-display text-3xl md:text-5xl">Quer essas peças na sua loja?</h2>
+            <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
+              Vendemos no atacado para lojas com CNPJ. Cadastre-se para receber o catálogo completo com a tabela de
+              preços, ou fale com a gente.
+            </p>
+            <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+              <Link href="/catalogo" className="btn btn-dark w-full sm:w-auto">
+                Receber catálogo
+              </Link>
+              <Link href="/fabrica-de-pijamas#perguntas" className="link self-start text-[13px] sm:self-auto">
+                Perguntas frequentes
+              </Link>
+            </div>
+            {others.length > 0 && (
+              <p className="mt-8 text-sm text-ink-soft">
+                Veja também:{" "}
+                {others.map((c, i) => (
+                  <span key={c.id}>
+                    {i > 0 && ", "}
+                    <Link href={`/colecoes/${c.slug}`} className="underline">
+                      {c.name}
+                    </Link>
+                  </span>
+                ))}
+                {" · "}
+                <Link href="/colecoes" className="underline">
+                  Todas as coleções
+                </Link>
+              </p>
+            )}
           </div>
-        )}
+          <ContactBlock compact />
+        </div>
       </section>
     </>
-  );
-}
-
-function Chip({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      scroll={false}
-      className={`label border px-3 py-2 transition ${active ? "border-ink bg-ink text-white" : "border-line hover:border-ink"}`}
-    >
-      {children}
-    </Link>
   );
 }

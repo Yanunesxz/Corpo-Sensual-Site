@@ -31,129 +31,199 @@ body {
   color: white;
 }
 
-/* Título condensado em caixa alta (SKIMS) */
-.h-display {
-  font-family: var(--font-display);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  line-height: 0.95;
-}
+/*
+  Classes de componente ficam em @layer components para que as utilitárias
+  do Tailwind (ex.: "text-sm", "py-3") consigam sobrescrevê-las quando usadas
+  junto no mesmo elemento.
+*/
+@layer components {
+  /* Título condensado em caixa alta (SKIMS) */
+  .h-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 0.95;
+    text-wrap: balance;
+  }
 
-/* Nome de coleção em serifa itálica (Any Any) */
-.h-serif {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-style: italic;
-  letter-spacing: -0.01em;
-  line-height: 1;
-}
+  /* Nome de coleção em serifa itálica (Any Any) */
+  .h-serif {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
 
-/* Rótulo pequeno em caixa alta */
-.label {
-  font-family: var(--font-display);
-  font-weight: 400;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
+  /* Rótulo pequeno em caixa alta */
+  .label {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
 
-/* Link sublinhado */
-.link {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  text-decoration-thickness: 1px;
-  transition: opacity 0.15s ease;
-}
-.link:hover {
-  opacity: 0.55;
-}
+  /*
+    Link sublinhado. O padding/margin negativos ampliam a área de toque
+    (~40px de altura) sem mudar o layout visível.
+  */
+  .link {
+    display: inline-block;
+    padding: 0.6rem 0;
+    margin: -0.6rem 0;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+    transition: opacity 0.15s ease;
+  }
+  .link:hover {
+    opacity: 0.55;
+  }
 
-/* Sombra suave na base da foto para o texto ler bem */
-.shade::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(45, 42, 38, 0.55), rgba(45, 42, 38, 0) 55%);
-  pointer-events: none;
-}
+  /* Sombra suave na base da foto para o texto ler bem */
+  .shade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(45, 42, 38, 0.6), rgba(45, 42, 38, 0) 60%);
+    pointer-events: none;
+  }
 
-/* Botões: retos, caixa alta, 1px */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  min-height: 46px;
-  padding: 0.85rem 1.5rem;
-  border: 1px solid transparent;
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  line-height: 1;
-  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-.btn-dark {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
-  color: white;
-}
-.btn-dark:hover {
-  background: #000;
-  border-color: #000;
-}
-.btn-dark:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-.btn-outline {
-  border-color: var(--color-ink);
-  color: var(--color-ink);
-  background: transparent;
-}
-.btn-outline:hover {
-  background: var(--color-ink);
-  color: white;
-}
-.btn-light {
-  background: white;
-  border-color: white;
-  color: var(--color-ink);
-}
-.btn-light:hover {
-  background: var(--color-stone);
-  border-color: var(--color-stone);
-}
+  /* Botões: retos, caixa alta, 1px, alvo de toque de 48px */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 48px;
+    padding: 0.85rem 1.5rem;
+    border: 1px solid transparent;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+    text-align: center;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .btn-dark {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: white;
+  }
+  .btn-dark:hover {
+    background: #000;
+    border-color: #000;
+  }
+  .btn-dark:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .btn-outline {
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+    background: transparent;
+  }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    color: white;
+  }
+  .btn-light {
+    background: white;
+    border-color: white;
+    color: var(--color-ink);
+  }
+  .btn-light:hover {
+    background: var(--color-stone);
+    border-color: var(--color-stone);
+  }
 
-/* Campos de formulário */
-.field {
-  width: 100%;
-  border: 1px solid var(--color-line);
-  background: white;
-  padding: 0.8rem 0.9rem;
-  font-size: 0.95rem;
-  color: var(--color-ink);
-  outline: none;
-  border-radius: 0;
-  transition: border-color 0.15s ease;
-}
-.field:focus {
-  border-color: var(--color-ink);
-}
-.field[aria-invalid="true"] {
-  border-color: #b3261e;
-}
-.field::placeholder {
-  color: #a39d95;
-}
+  /* Campos de formulário: 16px evita o zoom automático do iOS ao focar */
+  .field {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid var(--color-line);
+    background: white;
+    padding: 0.75rem 0.9rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+    outline: none;
+    border-radius: 0;
+    transition: border-color 0.15s ease;
+  }
+  .field:focus {
+    border-color: var(--color-ink);
+  }
+  .field[aria-invalid="true"] {
+    border-color: #b3261e;
+  }
+  .field::placeholder {
+    color: #a39d95;
+  }
+  select.field {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%232d2a26' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.4rem;
+  }
 
-/* Foto com leve zoom no hover */
-.zoom-img img {
-  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
-}
-.zoom-img:hover img {
-  transform: scale(1.03);
+  /* Chip de filtro: alvo de toque de 44px */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1px solid var(--color-line);
+    font-size: 0.8125rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+  .chip:hover {
+    border-color: var(--color-ink);
+  }
+  .chip-active {
+    border-color: var(--color-ink);
+    background: var(--color-ink);
+    color: white;
+  }
+
+  /* Perguntas frequentes com <details> nativo */
+  .faq summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 0;
+    min-height: 48px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary::after {
+    content: "+";
+    flex: none;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--color-ink-soft);
+  }
+  .faq details[open] summary::after {
+    content: "\2013";
+  }
+
+  /* Foto com leve zoom no hover */
+  .zoom-img img {
+    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .zoom-img:hover img {
+    transform: scale(1.03);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -10,17 +10,46 @@ export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  // Trava a rolagem da página enquanto o menu está aberto (html + body cobre o iOS).
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    const value = open ? "hidden" : "";
+    document.documentElement.style.overflow = value;
+    document.body.style.overflow = value;
     return () => {
+      document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
   }, [open]);
 
+  // Fecha com Esc e ao girar o aparelho para uma largura em que o menu some.
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    const mq = window.matchMedia("(min-width: 768px)");
+    const onChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onChange);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      mq.removeEventListener("change", onChange);
+    };
+  }, [open]);
+
+  const c = site.contact;
+
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper">
-      <div className="mx-auto grid h-16 max-w-[1600px] grid-cols-[1fr_auto_1fr] items-center px-5 md:px-8">
-        <Link href="/" className="font-serif text-[1.35rem] leading-none tracking-tight" aria-label="Corpo Sensual, página inicial">
+      <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 md:grid md:grid-cols-[1fr_auto_1fr] md:px-8">
+        <Link
+          href="/"
+          className="inline-flex h-11 items-center font-serif text-[1.35rem] leading-none tracking-tight"
+          aria-label="Corpo Sensual, página inicial"
+          onClick={() => setOpen(false)}
+        >
           {site.name}
         </Link>
 
@@ -31,7 +60,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`text-[13px] tracking-wide transition-opacity hover:opacity-60 ${active ? "underline underline-offset-[6px]" : ""}`}
+                className={`inline-flex h-11 items-center text-[13px] tracking-wide transition-opacity hover:opacity-60 ${active ? "underline underline-offset-[6px]" : ""}`}
               >
                 {item.label}
               </Link>
@@ -39,13 +68,14 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="flex items-center justify-end gap-5">
-          <Link href="/catalogo" className="link hidden text-[13px] md:inline">
-            Receber catálogo
+        <div className="flex items-center justify-end gap-3 md:gap-5">
+          <Link href="/catalogo" className="link inline-flex h-11 items-center text-[13px]" onClick={() => setOpen(false)}>
+            <span className="md:hidden">Catálogo</span>
+            <span className="hidden md:inline">Receber catálogo</span>
           </Link>
           <button
             type="button"
-            className="md:hidden"
+            className="-mr-2.5 flex h-11 w-11 items-center justify-center md:hidden"
             aria-expanded={open}
             aria-controls="menu-mobile"
             aria-label={open ? "Fechar menu" : "Abrir menu"}
@@ -56,21 +86,63 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <div id="menu-mobile" hidden={!open} className="border-t border-line bg-paper md:hidden">
-        {/* Fecha o menu ao escolher um link. */}
-        <nav className="flex flex-col px-5 py-4" aria-label="Menu" onClick={() => setOpen(false)}>
-          {site.nav.map((item) => (
-            <Link key={item.href} href={item.href} className="h-display border-b border-line py-4 text-2xl">
-              {item.label}
+      {/* Menu do celular: cobre a tela abaixo da barra e rola sozinho. */}
+      <div
+        id="menu-mobile"
+        hidden={!open}
+        className="fixed inset-x-0 top-16 bottom-0 z-40 overflow-y-auto overscroll-contain border-t border-line bg-paper md:hidden"
+      >
+        <div className="flex min-h-full flex-col px-5 pb-8 pt-2">
+          {/* Fecha o menu ao escolher um link. */}
+          <nav className="flex flex-col" aria-label="Menu" onClick={() => setOpen(false)}>
+            {site.nav.map((item) => (
+              <Link key={item.href} href={item.href} className="h-display flex min-h-14 items-center border-b border-line text-2xl">
+                {item.label}
+              </Link>
+            ))}
+            <Link href="/programa-cashback" className="h-display flex min-h-14 items-center border-b border-line text-2xl">
+              Programa Cashback
             </Link>
-          ))}
-          <Link href="/programa-cashback" className="h-display border-b border-line py-4 text-2xl">
-            Programa Cashback
-          </Link>
-          <Link href="/catalogo" className="btn btn-dark mt-6">
-            Receber catálogo
-          </Link>
-        </nav>
+            <Link href="/catalogo" className="btn btn-dark mt-6 w-full">
+              Receber catálogo
+            </Link>
+          </nav>
+
+          <div className="mt-8 border-t border-line pt-6 text-sm leading-relaxed text-ink-soft">
+            <p className="label text-ink">Contato</p>
+            <p className="mt-3">
+              {site.legal.endereco}
+              <br />
+              {site.legal.cidade}, {site.legal.uf}
+            </p>
+            <div className="mt-3 flex flex-col">
+              {c.whatsappUrl && (
+                <a className="link self-start py-1 text-ink" href={c.whatsappUrl} target="_blank" rel="noreferrer">
+                  WhatsApp {c.whatsappLabel}
+                </a>
+              )}
+              {c.phoneUrl && (
+                <a className="link self-start py-1 text-ink" href={c.phoneUrl}>
+                  Telefone {c.phoneLabel}
+                </a>
+              )}
+              {c.email && (
+                <a className="link self-start py-1 text-ink" href={`mailto:${c.email}`}>
+                  {c.email}
+                </a>
+              )}
+              {c.instagram && (
+                <a className="link self-start py-1 text-ink" href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer">
+                  @{c.instagram}
+                </a>
+              )}
+              <Link className="link self-start py-1 text-ink" href="/contato" onClick={() => setOpen(false)}>
+                Todos os contatos
+              </Link>
+            </div>
+            {c.hours && <p className="mt-3">{c.hours}</p>}
+          </div>
+        </div>
       </div>
     </header>
   );

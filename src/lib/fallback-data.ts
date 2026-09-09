@@ -16,6 +16,7 @@ type ColecaoJson = {
   chamada: string | null;
   descricao: string | null;
   capa: string | null;
+  capaCelular?: string | null;
   galeria: string[];
 };
 type ProdutoJson = { ref: string; rank: number; nome: string; descricao: string; categoria: string };
@@ -53,6 +54,7 @@ export const fallbackCollections: Collection[] = colecoes.map((c, i) => ({
   headline: c.chamada,
   description: c.descricao,
   hero_image_url: c.capa,
+  hero_mobile_url: c.capaCelular ?? null,
   gallery_urls: c.galeria,
   active: true,
   sort_order: i + 1,

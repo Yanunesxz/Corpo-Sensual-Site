@@ -50,10 +50,35 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+// Dados estruturados da empresa (Google: painel com endereço, telefone e redes).
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  legalName: site.legal.razaoSocial,
+  url: site.url,
+  logo: `${site.url}/images/logo-cs.png`,
+  description: site.description,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.legal.endereco,
+    addressLocality: site.legal.cidade,
+    addressRegion: site.legal.uf,
+    postalCode: site.legal.cep,
+    addressCountry: "BR",
+  },
+  ...(site.contact.phone || site.contact.whatsapp
+    ? { telephone: `+${site.contact.phone || site.contact.whatsapp}` }
+    : {}),
+  ...(site.contact.email ? { email: site.contact.email } : {}),
+  ...(site.contact.instagram ? { sameAs: [`https://instagram.com/${site.contact.instagram}`] } : {}),
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${oswald.variable} ${inter.variable} ${bodoni.variable} h-full`}>
       <body className="flex min-h-full flex-col">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />

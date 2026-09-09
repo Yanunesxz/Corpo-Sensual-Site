@@ -36,11 +36,11 @@ insert into public.categories (slug, name, image_url, sort_order) values
 ${catalogo.categorias.map((c, i) => `  (${q(c.slug)}, ${q(c.nome)}, ${q(c.imagem)}, ${i + 1})`).join(",\n")}
 on conflict (slug) do nothing;
 
-insert into public.collections (slug, name, season, year, headline, description, hero_image_url, gallery_urls, sort_order) values
+insert into public.collections (slug, name, season, year, headline, description, hero_image_url, hero_mobile_url, gallery_urls, sort_order) values
 ${catalogo.colecoes
   .map(
     (c, i) =>
-      `  (${q(c.slug)}, ${q(c.nome)}, ${q(c.temporada)}, ${c.ano ?? "null"}, ${q(c.chamada)}, ${q(c.descricao)}, ${q(c.capa)}, ${arr(c.galeria ?? [])}, ${i + 1})`,
+      `  (${q(c.slug)}, ${q(c.nome)}, ${q(c.temporada)}, ${c.ano ?? "null"}, ${q(c.chamada)}, ${q(c.descricao)}, ${q(c.capa)}, ${q(c.capaCelular ?? null)}, ${arr(c.galeria ?? [])}, ${i + 1})`,
   )
   .join(",\n")}
 on conflict (slug) do nothing;
