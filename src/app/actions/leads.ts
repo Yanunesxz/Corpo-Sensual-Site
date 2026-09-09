@@ -82,16 +82,6 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
   const d = parsed.data;
   const source = d.source as LeadSource;
 
-  const supabase = getSupabase();
-  if (!supabase) {
-    console.error("[leads] Supabase não configurado; lead não foi gravado.");
-    return {
-      ok: false,
-      message: "Nosso cadastro está temporariamente indisponível. Tente de novo em instantes ou use outro canal.",
-      values: echo(formData),
-    };
-  }
-
   const row: LeadInsert = {
     name: d.name,
     email: d.email.toLowerCase(),
@@ -111,9 +101,23 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     utm_content: nullIfEmpty(d.utm_content),
   };
 
-  // CRM (CSP 360): não bloqueia o cadastro — falha vira `pendente` e fica registrada.
+  // CRM (CSP 360): é o destino principal do lead. Falha vira `pendente` na cópia local.
   const crm = await enviarLeadParaCrm(row);
   if (crm.status === "pendente") console.warn("[leads] CRM pendente:", crm.erro);
+
+  // Cópia local em `leads` (auditoria e fila de reenvio). Sem Supabase do site
+  // configurado, o lead segue só pelo CRM — o formulário não pode travar por isso.
+  const supabase = getSupabase();
+  if (!supabase) {
+    if (crm.status === "enviado") redirect(`/obrigado?origem=${source}`);
+    console.error("[leads] Supabase do site não configurado e CRM não respondeu; lead não foi gravado.");
+    return {
+      ok: false,
+      message: "Nosso cadastro está temporariamente indisponível. Tente de novo em instantes ou use outro canal.",
+      values: echo(formData),
+    };
+  }
+
   const linha: LeadRow = {
     ...row,
     crm_status: crm.status,
