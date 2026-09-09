@@ -136,7 +136,7 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 | Conteúdo | Origem |
 | --- | --- |
 | Campanhas Frescor (verão 2026) e Entrelaços (inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
-| Referências do ranking (`public/images/produtos/<ref>.jpg`, 22 peças: top 20 + 0716 + 0325) | Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026). Fotos de estúdio de `CATALOGO\FOTOS\FOTOS 2024\FOTOS - REF VERÃO 2024` e `FOTOS INVERNO 2026`, recortes PNG de `FUNDO TRANSPARENTE (PNG)1` (0848, 0851, 0716) e páginas do catálogo Verão 2027 em PDF (1043, 1042, 1035) |
+| Referências do ranking (`public/images/produtos/<ref>.jpg`) | Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026). Fotos de estúdio nomeadas pela referência em `\\192.168.0.2\Comercial\FOTOS COM REFENCIA CS` (158 fotos, fonte principal). Fontes secundárias: `#Corpo Sensual\CATALOGO\FOTOS`, `FUNDO TRANSPARENTE (PNG)1` e páginas do catálogo Verão 2027 em PDF |
 | Mosaico de categorias da home | Fotos de produto: 0126 (Feminino), 0716 (Masculino), 0810 (Infantil), 0325 (Gestante) |
 | Logo (monograma CS) | `\\192.168.0.2\SetorX\Yan\IMG SYS\corpo-sensual-logo.png`, usado como ícone do site em `src/app/icon.png` |
 | Fotos por referência, Inverno 2026 (`0981.jpeg`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS INVERNO 2026` |
@@ -152,7 +152,7 @@ Depois de copiar fotos novas para `public/images/`, rode `npm run imagens` para 
 node scripts/foto-produto.mjs 0810 "caminho\para\0810.jpg"
 ```
 
-Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--recorte`. Para páginas de catálogo em PDF, converta a página para PNG e use `--cortar-topo=0.27` para remover o cabeçalho com a referência e as cores. O resultado vai para `public/images/produtos/<ref>.jpg`; depois cadastre a peça em `products` e a foto em `product_images` (ou em `src/lib/fallback-data.ts` enquanto o banco não existe).
+Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--recorte`. Para páginas de catálogo em PDF, converta a página para PNG e use `--cortar-topo=0.27` para remover o cabeçalho com a referência e as cores. O resultado vai para `public/images/produtos/<ref>.jpg`. Depois cadastre a peça em `src/data/catalogo.json` (ref, posição no ranking, nome, descrição, categoria) e rode `npm run seed` para regenerar o `supabase/seed.sql`. O site sem banco lê o mesmo JSON.
 
 ### Gerenciando o conteúdo no dia a dia
 

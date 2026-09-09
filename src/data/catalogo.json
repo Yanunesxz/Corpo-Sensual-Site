@@ -1,0 +1,444 @@
+{
+  "_comentario": "Fonte única do catálogo. Alimenta src/lib/fallback-data.ts (site sem Supabase) e gera supabase/seed.sql via `npm run seed`. Produtos: referências do ranking de vendas do ERP; rank = posição, a home mostra as 10 primeiras. Fotos em public/images/produtos/<ref>.jpg, preparadas com scripts/foto-produto.mjs.",
+  "categorias": [
+    {
+      "slug": "feminino",
+      "nome": "Feminino",
+      "imagem": "/images/produtos/0126.jpg"
+    },
+    {
+      "slug": "masculino",
+      "nome": "Masculino",
+      "imagem": "/images/produtos/0716.jpg"
+    },
+    {
+      "slug": "infantil",
+      "nome": "Infantil",
+      "imagem": "/images/produtos/0810.jpg"
+    },
+    {
+      "slug": "gestante",
+      "nome": "Gestante",
+      "imagem": "/images/produtos/0325.jpg"
+    }
+  ],
+  "colecoes": [
+    {
+      "slug": "frescor",
+      "nome": "Coleção Frescor",
+      "temporada": "verao",
+      "ano": 2026,
+      "chamada": "Respire o agora. Viva o momento!",
+      "descricao": "Nesta coleção, convidamos você a desacelerar: respirar fundo, vestir o presente e se deixar levar pelo frescor. Pijamas com tecidos leves que abraçam o corpo com suavidade e conectam você ao que realmente importa: o bem-estar.",
+      "capa": "/images/colecoes/frescor-2.jpg",
+      "galeria": [
+        "/images/colecoes/frescor-1.jpg",
+        "/images/colecoes/frescor-4.jpg",
+        "/images/colecoes/frescor-3.jpg",
+        "/images/colecoes/frescor-2.jpg"
+      ]
+    },
+    {
+      "slug": "entrelacos",
+      "nome": "Coleção Entrelaços",
+      "temporada": "inverno",
+      "ano": 2026,
+      "chamada": "Nossa coleção nasce do encontro entre pessoas, rotinas e histórias.",
+      "descricao": "Uma coleção que valoriza o conforto, o ritmo do dia a dia e os momentos simples que criam laços. Tecidos aconchegantes, com estética acolhedora e modelagem pensada para abraçar o corpo.",
+      "capa": "/images/colecoes/entrelacos-2.jpg",
+      "galeria": [
+        "/images/colecoes/entrelacos-3.jpg",
+        "/images/colecoes/entrelacos-1.jpg",
+        "/images/colecoes/entrelacos-4.jpg",
+        "/images/colecoes/entrelacos-2.jpg"
+      ]
+    }
+  ],
+  "produtos": [
+    {
+      "ref": "0810",
+      "rank": 1,
+      "nome": "Short doll regata mescla infantil",
+      "descricao": "Conjunto infantil de regata em malha mescla estampada e short listrado colorido.",
+      "categoria": "infantil"
+    },
+    {
+      "ref": "0118",
+      "rank": 2,
+      "nome": "Short doll regata infantil",
+      "descricao": "Regata branca com estampa de abelha e short azul-marinho liso, conjunto infantil feminino.",
+      "categoria": "infantil"
+    },
+    {
+      "ref": "0130",
+      "rank": 3,
+      "nome": "Pijama bordado de manga masculino",
+      "descricao": "Camiseta manga curta gola V com friso e bordado no peito e short, em azul-marinho liso.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "1043",
+      "rank": 4,
+      "nome": "Pijama de alça suede liso",
+      "descricao": "Blusa de alça fina azul-claro com botões e viés, e short listrado azul e branco, em suede.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0131",
+      "rank": 5,
+      "nome": "Short de malha masculino",
+      "descricao": "Short masculino de malha lisa, cor vinho, com cós elástico; modelo sem camisa.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0848",
+      "rank": 6,
+      "nome": "Pijama regata canelado",
+      "descricao": "Regata canelada bege com viés azul-marinho e short azul-marinho com cordão no cós.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0115",
+      "rank": 7,
+      "nome": "Short doll de alça em malha",
+      "descricao": "Blusa de alça branca com estampa escrita e short rosa liso, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "2130",
+      "rank": 8,
+      "nome": "Pijama aberto bordado de manga masculino",
+      "descricao": "Camisa aberta de manga curta com botões, vivo e bordado no peito, com short liso.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0123",
+      "rank": 9,
+      "nome": "Pijama aberto de manga bordado",
+      "descricao": "Blusa aberta com botões e manga curta, detalhe bordado, com bermuda até o joelho, em cor lisa.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0550",
+      "rank": 10,
+      "nome": "Short liganete masculino",
+      "descricao": "Short masculino em liganete, estampado, com cós elástico e etiqueta frontal.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "1034",
+      "rank": 11,
+      "nome": "Pijama de alça canelado listrado",
+      "descricao": "Regata de alça fina e short com cordão na cintura, em malha canelada listrada.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0126",
+      "rank": 12,
+      "nome": "Camisola bordada aberta",
+      "descricao": "Camisola aberta com botões na frente, manga curta e bordado, comprimento acima do joelho.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "1042",
+      "rank": 13,
+      "nome": "Pijama de alça suede feminino",
+      "descricao": "Regata de alça fina com estampa no peito e short estampado floral, em suede.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0851",
+      "rank": 14,
+      "nome": "Pijama americano liso",
+      "descricao": "Camisa de manga curta com gola, botões e vivo contrastante, com short combinando, liso.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0502",
+      "rank": 15,
+      "nome": "Short doll de alça em liganete",
+      "descricao": "Conjunto de blusa de alça fina e short em liganete, estampa de tucanos em fundo verde-claro.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0390",
+      "rank": 16,
+      "nome": "Short doll nadador",
+      "descricao": "Conjunto de regata nadador off-white com estampa no peito e short verde estampado de corações.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0080",
+      "rank": 17,
+      "nome": "Short doll com renda em liganete",
+      "descricao": "Conjunto de blusa de alça fina com renda no decote e short, liso, em liganete azul.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "1035",
+      "rank": 18,
+      "nome": "Pijama de alça canelado liso",
+      "descricao": "Conjunto de blusa de alça com viés branco e short com cordão, liso, em malha canelada marrom.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0355",
+      "rank": 19,
+      "nome": "Short doll regata canelado",
+      "descricao": "Conjunto de regata com detalhe de coração no decote e short com cordão, liso, em malha canelada.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0135",
+      "rank": 20,
+      "nome": "Short estampado masculino em malha PV",
+      "descricao": "Short masculino em malha PV, estampado com âncoras em fundo azul-marinho, cós elástico.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0354",
+      "rank": 21,
+      "nome": "Short doll de alça canelado",
+      "descricao": "Conjunto de blusa de alça fina e short com cordão, liso, em malha canelada azul-claro.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0853",
+      "rank": 22,
+      "nome": "Pijama americano curto",
+      "descricao": "Camisa de manga curta com gola e botões, mais short, em rosa com bolinhas brancas.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0125",
+      "rank": 23,
+      "nome": "Camisola bordada de manga",
+      "descricao": "Camisola curta de manga curta, lisa, com bordado floral e botões no decote.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0720",
+      "rank": 25,
+      "nome": "Short doll de alça estampado",
+      "descricao": "Blusa de alça fina listrada em branco e rosa com short rosa liso.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0350",
+      "rank": 26,
+      "nome": "Camisola bordada aberta curta",
+      "descricao": "Camisola curta de manga curta, aberta na frente com botões e bordado floral no decote.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0300",
+      "rank": 27,
+      "nome": "Robe de seda",
+      "descricao": "Robe curto preto acetinado, de manga curta, com faixa para amarrar na cintura.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0716",
+      "rank": 28,
+      "nome": "Pijama de liganete masculino",
+      "descricao": "Camiseta de manga curta com estampa no peito e short, em liganete marrom liso.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "1036",
+      "rank": 29,
+      "nome": "Pijama de alça família feminino",
+      "descricao": "Blusa de alça fina com estampa \"Oh happy day!\" e short com cordão, em azul-marinho.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0110",
+      "rank": 30,
+      "nome": "Short doll regata em malha",
+      "descricao": "Regata rosa com estampa Pizza Lover Club e short liso vinho, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0601",
+      "rank": 31,
+      "nome": "Short doll regata em liganete",
+      "descricao": "Regata e short em liganete verde com estampa de borboletas e corações.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0129",
+      "rank": 32,
+      "nome": "Pijama bordado regata masculino",
+      "descricao": "Regata e bermuda lisas em cinza, com bordado pequeno no peito.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0501",
+      "rank": 33,
+      "nome": "Pijama regata estampado em liganete",
+      "descricao": "Regata e bermuda em liganete azul com estampa de margaridas.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0690",
+      "rank": 34,
+      "nome": "Pijama manga curta com pescador",
+      "descricao": "Blusa manga curta verde-água com estampa de tulipas e calça pescador azul-marinho.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "4130",
+      "rank": 35,
+      "nome": "Pijama aberto com calça masculino",
+      "descricao": "Camisa aberta de botões, manga curta com vivo branco, e calça comprida, em verde-oliva.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "2134",
+      "rank": 36,
+      "nome": "Short doll regata estampado",
+      "descricao": "Regata branca com estampa floral e bermuda lisa azul-claro.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0310",
+      "rank": 38,
+      "nome": "Pijama regata em malha",
+      "descricao": "Conjunto de regata off-white com bolso estampado e bermuda verde-oliva, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0316",
+      "rank": 41,
+      "nome": "Short doll nadador de onça",
+      "descricao": "Regata nadador verde-água com estampa de tartaruga e flores e short estampado de onça.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0116",
+      "rank": 42,
+      "nome": "Short doll de alça de bolinhas",
+      "descricao": "Blusa de alça fina rosa com estampa de limonada e short vinho de bolinhas, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "2131",
+      "rank": 43,
+      "nome": "Pijama regata floral em malha",
+      "descricao": "Regata azul-claro com decote V e bermuda off-white de estampa floral, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "2226",
+      "rank": 44,
+      "nome": "Camisola aberta xadrez",
+      "descricao": "Camisola sem manga com abertura frontal de botões e estampa xadrez em tons de rosa.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0330",
+      "rank": 45,
+      "nome": "Pijama listrado de manga masculino",
+      "descricao": "Camiseta manga curta cinza mescla com listras pretas e bermuda preta lisa.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0499",
+      "rank": 46,
+      "nome": "Pijama bermuda liganete",
+      "descricao": "Blusa manga curta rosa com estampa de corações e bermuda vinho lisa, em liganete.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0103",
+      "rank": 47,
+      "nome": "Pijama infantil masculino em malha",
+      "descricao": "Conjunto infantil de camiseta manga curta com estampa de futebol e bermuda lisa verde, em malha.",
+      "categoria": "infantil"
+    },
+    {
+      "ref": "0325",
+      "rank": 48,
+      "nome": "Camisola de gestante estampada",
+      "descricao": "Camisola de alça para gestante, busto liso rosa e saia estampada com florzinhas e laço na cintura.",
+      "categoria": "gestante"
+    },
+    {
+      "ref": "0704",
+      "rank": 49,
+      "nome": "Short doll de alça",
+      "descricao": "Conjunto de blusa de alça fina com decote V e short azul-marinho com vivo claro e cordão na cintura.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0093",
+      "rank": 50,
+      "nome": "Camisola de alça liganete lisa",
+      "descricao": "Camisola curta de alça fina em liganete lisa azul, com decote V e renda no busto.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0122",
+      "rank": 51,
+      "nome": "Pijama de manga em malha",
+      "descricao": "Conjunto de blusa manga curta verde-água com estampa de tulipas e bermuda lisa azul-marinho, em malha.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0128",
+      "rank": 52,
+      "nome": "Pijama aberto de manga estampado",
+      "descricao": "Conjunto de blusa aberta com botões e manga curta, rosa com estampa floral, e bermuda lisa vinho.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0359",
+      "rank": 53,
+      "nome": "Short doll regata jovem",
+      "descricao": "Conjunto de regata rosa clara estampada e short xadrez rosa com cordão na cintura.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0570",
+      "rank": 54,
+      "nome": "Pijama liganete masculino",
+      "descricao": "Camiseta de manga curta com estampa miúda escura e short liso cinza, em liganete.",
+      "categoria": "masculino"
+    },
+    {
+      "ref": "0121",
+      "rank": 55,
+      "nome": "Short doll de alça infantil",
+      "descricao": "Regata de alça fina com estampa de borboleta e short liso, em verde-água, para menina.",
+      "categoria": "infantil"
+    },
+    {
+      "ref": "0605",
+      "rank": 57,
+      "nome": "Camisola regata liganete",
+      "descricao": "Camisola regata curta em liganete, verde com estampa de flores e corações.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0719",
+      "rank": 58,
+      "nome": "Pijama aberto estampado de manga",
+      "descricao": "Blusa de manga curta aberta com botões, azul lisa, e bermuda branca estampada com flores.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "0730",
+      "rank": 59,
+      "nome": "Short doll nadador estampado",
+      "descricao": "Regata nadador listrada em cinza e preto com short liso preto.",
+      "categoria": "feminino"
+    },
+    {
+      "ref": "2014",
+      "rank": 60,
+      "nome": "Short doll regata infantil feminino",
+      "descricao": "Regata listrada rosa e branca com babado na barra e short com babados, para menina.",
+      "categoria": "infantil"
+    }
+  ]
+}
