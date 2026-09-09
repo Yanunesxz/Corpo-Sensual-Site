@@ -84,13 +84,13 @@ Funções reutilizadas por várias páginas. Também pode ser importado pelo bac
 | `Home.zw74p.js` | Home (principal) | Modelo padrão, sem lógica |
 | `HOME.dux8x.js` | HOME (versão alternativa) | Captura de UTM |
 | `Sobre.xmlss.js` | Sobre | Modelo padrão |
-| `Catalogo Verao.qpamd.js` | Catálogo Verão | Handler `input8_mouseIn` vazio |
-| `Colecao Verao.gug3v.js` | Coleção Verão (landing) | Captura de UTM + URL da página |
-| `Colecao Inverno.eg091.js` | Coleção Inverno (landing) | Captura de UTM + URL da página |
-| `Colecao Verao Plumene.gsl6o.js` | Coleção Verão Plumene (landing) | Captura de UTM + URL da página |
-| `Colecao Inverno Plumene.rygrg.js` | Coleção Inverno Plumene (landing) | Captura de UTM + URL da página |
-| `LP FABRICA PIJAMAS.gq3i9.js` | LP Fábrica de Pijamas | Captura de UTM + URL da página |
-| `Surpreenda Plumene.cxa1y.js` | Surpreenda Plumene | Handler `input8_mouseIn` vazio |
+| `Catalogo Verao.qpamd.js` | Catálogo Verão | Lead → CRM (marca `cs`) + handler `input8_mouseIn` vazio |
+| `Colecao Verao.gug3v.js` | Coleção Verão (landing) | Lead → CRM (marca `cs`): UTM + URL + marca/página |
+| `Colecao Inverno.eg091.js` | Coleção Inverno (landing) | Lead → CRM (marca `cs`): UTM + URL + marca/página |
+| `Colecao Verao Plumene.gsl6o.js` | Coleção Verão Plumene (landing) | Lead → CRM (marca `plumene`): UTM + URL + marca/página |
+| `Colecao Inverno Plumene.rygrg.js` | Coleção Inverno Plumene (landing) | Lead → CRM (marca `plumene`): UTM + URL + marca/página |
+| `LP FABRICA PIJAMAS.gq3i9.js` | LP Fábrica de Pijamas | Lead → CRM (marca `cs`): UTM + URL + marca/página |
+| `Surpreenda Plumene.cxa1y.js` | Surpreenda Plumene | Lead → CRM (marca `plumene`) + handler `input8_mouseIn` vazio |
 | `Programa Cashback.z4e1i.js` | Programa Cashback | Handler `input8_mouseIn` vazio |
 | `colecao-verao-obrigado.p4p67.js` | Obrigado — Coleção Verão | Captura de UTM |
 | `colecao-inverno-obrigado.r0avw.js` | Obrigado — Coleção Inverno | Captura de UTM |
@@ -109,9 +109,24 @@ As landing pages e páginas de obrigado leem os parâmetros `utm_source`, `utm_m
 
 Observações para quem for mexer nesse código:
 
-- Os elementos `#inputUtm*` precisam existir na página no editor do Wix, senão `$w()` falha em tempo de execução.
-- Quando o parâmetro não vem na URL, o valor gravado é a string `"undefined"` (por causa do template literal). Se isso for um problema para o CRM, troque por `utm_source ?? ""`.
-- Há um `$w.onReady` aninhado dentro de outro. Funciona, mas o de dentro é redundante e pode ser removido.
+- Nas 7 landing pages ligadas ao CRM o preenchimento passa por `preencherOculto(id, valor)`, que ignora elemento ausente em vez de quebrar a página. As páginas de obrigado e a HOME ainda usam `$w("#inputUtm...")` direto — lá os elementos precisam existir no editor.
+- Sem UTM na URL o valor gravado é `""` (era a palavra `"undefined"` por causa do template literal — corrigido nas 7 landing pages com `utm_source ?? ""`; as páginas de obrigado ainda têm o comportamento antigo).
+- Cada landing page declara `MARCA` (`cs` ou `plumene`) e `PAGINA` e grava nos campos ocultos opcionais `#inputMarca` e `#inputPagina` (crie-os no editor como texto oculto para o backend não depender da URL).
+
+### Lead das landing pages → CRM (CSP 360)
+
+`src/backend/events.js` escuta o evento de **formulário enviado** do Wix Forms (`wixForms_onFormSubmissionCreated`; o legado `wixCrm_onFormSubmit` também está coberto), monta o lead e chama a Edge Function `lead-site` do CRM ([Projeto-CS-SP](https://github.com/Yanunesxz/Projeto-CS-SP), runbook em `central/integracao-site.md`) com o header `x-chave`:
+
+```json
+{ "marca": "cs|plumene", "pagina": "LP Fábrica Pijamas", "url": "…", "nome": "…", "email": "…",
+  "whatsapp": "…", "possui_cnpj": "Sim|Não", "cnpj": "…", "nome_loja": "…",
+  "utm": { "source": "…", "medium": "…", "campaign": "…", "term": "…" } }
+```
+
+- **Chave**: secret `LEAD_SITE_CHAVE_CS` no **Secrets Manager** do Wix (Painel → Developer Tools → Secrets Manager), mesmo valor do secret da função no Supabase. Nunca no código.
+- **Campos do formulário**: o backend casa as chaves dos campos por nome (`nome`, `email`, `whatsapp`/`phone`, `cnpj`, `loja`/`empresa`, `utm_*`, `inputUrlPage`, `inputMarca`, `inputPagina`). O log do site mostra `lead-site: formulário <id> · campos …` a cada envio — se algum campo não estiver sendo reconhecido, ajuste as `REGRAS` ou renomeie a chave do campo no editor.
+- **Marca/página**: campo oculto → tabela `FORMULARIOS` (id do formulário) → URL da página (`plumene` no endereço = PLUMENE) → padrão `cs`.
+- O CRM deduplica (CNPJ → telefone → e-mail) e não abre segundo negócio para o mesmo prospecto; reenviar não duplica. Falha no CRM nunca bloqueia o formulário — só fica no log.
 
 ---
 
