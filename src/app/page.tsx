@@ -31,7 +31,7 @@ export default async function HomePage() {
           mobilePosition="center 25%"
         />
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
-          <p className="label">
+          <p className="label text-[13px]">
             {current ? `Nova coleção · ${seasonLabel(current.season, current.year)}` : "Moda íntima"}
           </p>
           <h1 className="h-serif mt-2 text-6xl md:text-8xl lg:text-[9rem]">
@@ -95,7 +95,7 @@ export default async function HomePage() {
         <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-24">
           <SectionHeading title="Mais vendidas" link={{ href: currentHref, label: "Ver a coleção completa" }} />
           <p className="mt-3 text-sm text-ink-soft">As peças com maior saída nas lojas neste trimestre. Venda no atacado, para lojas com CNPJ.</p>
-          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 [&>*:nth-child(n+7)]:hidden md:[&>*:nth-child(n+7)]:block md:max-lg:[&>*:nth-child(10)]:hidden">
+          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+7)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -113,14 +113,17 @@ export default async function HomePage() {
         <section className="mx-auto max-w-[1600px] px-2">
           <ul className="grid gap-2 md:grid-cols-2">
             {collections.slice(0, 2).map((c, i) => {
-              // Evita repetir a foto do hero no primeiro bloco.
-              const photo = (i === 0 && c.gallery_urls?.[0]) || c.hero_mobile_url || c.hero_image_url;
+              // Evita repetir no bloco a foto usada no hero (vertical ou horizontal).
+              const photo =
+                (i === 0 ? c.gallery_urls?.find((u) => u !== c.hero_mobile_url && u !== c.hero_image_url) : null) ||
+                c.hero_mobile_url ||
+                c.hero_image_url;
               return (
                 <li key={c.id}>
                   <Link href={`/colecoes/${c.slug}`} className="shade zoom-img relative block aspect-[4/5] overflow-hidden bg-stone md:aspect-square">
                     {photo && <Image src={photo} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[center_25%]" />}
                     <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white md:p-8">
-                      <p className="label">{seasonLabel(c.season, c.year)}</p>
+                      <p className="label text-[13px]">{seasonLabel(c.season, c.year)}</p>
                       <p className="h-display mt-2 text-4xl md:text-5xl">{collectionShortName(c.name)}</p>
                       {c.headline && <p className="mt-2 max-w-sm text-sm text-white/90">{c.headline}</p>}
                       <span className="link mt-4 inline-block text-[13px]">Ver coleção</span>
@@ -134,8 +137,8 @@ export default async function HomePage() {
       )}
 
       {/* Lojistas */}
-      <section className="mt-14 bg-stone md:mt-24">
-        <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-14 md:grid-cols-2 md:gap-16 md:px-8 md:py-24">
+      <section className="mt-10 bg-stone md:mt-24">
+        <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-12 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-16">
           <h2 className="h-display text-4xl md:text-6xl lg:text-7xl">
             Revenda a<br />Corpo Sensual
           </h2>
@@ -152,11 +155,11 @@ export default async function HomePage() {
               <li className="py-3">{commercial.freeShipping}*</li>
             </ul>
             <p className="mt-2 text-xs text-ink-soft">*{commercial.freeShippingNote}</p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-              <Link href="/catalogo" className="btn btn-dark w-full sm:w-auto">
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
+              <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
                 Receber catálogo
               </Link>
-              <Link href="/fabrica-de-pijamas#perguntas" className="link self-start text-[13px] sm:self-auto">
+              <Link href="/fabrica-de-pijamas#perguntas" className="link self-start whitespace-nowrap text-[13px] sm:self-auto">
                 Perguntas frequentes
               </Link>
             </div>

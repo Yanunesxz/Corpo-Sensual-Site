@@ -4,10 +4,12 @@ import { politicas } from "@/lib/content/politicas";
 
 const lojistas = [
   { href: "/catalogo", label: "Receber catálogo" },
-  { href: "/fabrica-de-pijamas", label: "Fábrica de pijamas" },
+  { href: "/fabrica-de-pijamas", label: "Como comprar da fábrica" },
   { href: "/fabrica-de-pijamas#perguntas", label: "Perguntas frequentes" },
   { href: "/programa-cashback", label: "Programa Cashback" },
 ];
+
+const linkClass = "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[6px] transition-opacity hover:opacity-55";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -15,8 +17,8 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-line">
-      <div className="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 md:grid-cols-2 md:gap-x-8 md:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div>
+      <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-x-6 gap-y-10 px-5 py-14 md:gap-x-8 md:px-8 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div className="col-span-2 lg:col-span-1">
           <p className="font-serif text-2xl">{site.name}</p>
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">{site.tagline}</p>
 
@@ -25,37 +27,37 @@ export function SiteFooter() {
             <p className="mt-2">
               {site.legal.endereco}
               <br />
-              {site.legal.cidade}, {site.legal.uf}, CEP {site.legal.cep}
+              {site.legal.cidade}, {site.legal.uf}, CEP <span className="whitespace-nowrap">{site.legal.cep}</span>
             </p>
-            <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className="link mt-2 text-[13px]">
-              Ver no mapa
-            </a>
-            <div className="mt-4 flex flex-col">
+            <div className="mt-1 flex flex-col">
+              <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className={`${linkClass} text-[13px]`}>
+                Ver no mapa
+              </a>
               {c.whatsappUrl && (
-                <a href={c.whatsappUrl} target="_blank" rel="noreferrer" className="link self-start py-1">
+                <a href={c.whatsappUrl} target="_blank" rel="noreferrer" className={linkClass}>
                   WhatsApp {c.whatsappLabel}
                 </a>
               )}
               {c.phoneUrl && (
-                <a href={c.phoneUrl} className="link self-start py-1">
+                <a href={c.phoneUrl} className={linkClass}>
                   {c.phoneLabel}
                 </a>
               )}
               {c.email && (
-                <a href={`mailto:${c.email}`} className="link self-start py-1">
+                <a href={`mailto:${c.email}`} className={linkClass}>
                   {c.email}
                 </a>
               )}
               {c.instagram && (
-                <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className="link self-start py-1">
+                <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className={linkClass}>
                   Instagram @{c.instagram}
                 </a>
               )}
-              <Link href="/contato" className="link self-start py-1">
+              <Link href="/contato" className={linkClass}>
                 Fale conosco
               </Link>
             </div>
-            {c.hours && <p className="mt-3 text-ink-soft">{c.hours}</p>}
+            {c.hours && <p className="mt-2 text-ink-soft">{c.hours}</p>}
           </address>
         </div>
 
@@ -67,10 +69,7 @@ export function SiteFooter() {
       <div className="border-t border-line">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-1.5 px-5 py-5 text-xs leading-relaxed text-ink-soft md:flex-row md:items-start md:justify-between md:gap-8 md:px-8">
           <p>
-            {site.legal.razaoSocial} · CNPJ {site.legal.cnpj}
-            <br className="md:hidden" />
-            <span className="hidden md:inline"> · </span>
-            {site.address.line}
+            {site.legal.razaoSocial} · <span className="whitespace-nowrap">CNPJ {site.legal.cnpj}</span>
           </p>
           <p className="whitespace-nowrap">© {year} {site.name}</p>
         </div>

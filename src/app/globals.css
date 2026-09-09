@@ -43,6 +43,8 @@ body {
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.02em;
+    /* --tw-leading mantém o 0.95 mesmo quando um utilitário text-* define line-height. */
+    --tw-leading: 0.95;
     line-height: 0.95;
     text-wrap: balance;
   }
@@ -82,13 +84,27 @@ body {
     opacity: 0.55;
   }
 
-  /* Sombra suave na base da foto para o texto ler bem */
+  /* Sombra suave na base da foto para o texto ler bem (mais forte no celular, onde o texto cobre mais da foto) */
   .shade::after {
     content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(to top, rgba(45, 42, 38, 0.6), rgba(45, 42, 38, 0) 60%);
     pointer-events: none;
+  }
+  @media (max-width: 1023px) {
+    .shade::after {
+      background: linear-gradient(to top, rgba(45, 42, 38, 0.75), rgba(45, 42, 38, 0.3) 40%, rgba(45, 42, 38, 0) 70%);
+    }
+  }
+
+  /* Botão flutuante do WhatsApp some enquanto um campo está em foco no celular (teclado aberto) */
+  @media (max-width: 767px) {
+    body:has(.field:focus) .wa-fab {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
   }
 
   /* Botões: retos, caixa alta, 1px, alvo de toque de 48px */

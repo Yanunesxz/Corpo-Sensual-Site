@@ -11,9 +11,9 @@ export function WhatsAppButton() {
       target="_blank"
       rel="noreferrer"
       aria-label="Falar no WhatsApp"
-      className="fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105"
+      className="wa-fab fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105 md:bottom-5 md:right-5 md:h-14 md:w-14"
     >
-      <WhatsApp width={28} height={28} />
+      <WhatsApp width={26} height={26} />
     </a>
   );
 }

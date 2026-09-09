@@ -32,7 +32,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     },
     initialLeadState,
   );
-  const [hasCnpj, setHasCnpj] = useState<string>("");
+  const [hasCnpj, setHasCnpj] = useState<string>(state.values?.has_cnpj ?? "");
 
   const err = state.errors ?? {};
   const v = state.values ?? {};
@@ -51,21 +51,31 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       </div>
 
       <Field label="Nome" name="name" error={err.name}>
-        <input id="name" className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} defaultValue={v.name} placeholder="Como podemos te chamar?" />
+        <input id="name" className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} aria-describedby={err.name ? "name-error" : undefined} defaultValue={v.name} placeholder="Como podemos te chamar?" />
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="E-mail" name="email" error={err.email}>
-          <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} defaultValue={v.email} placeholder="voce@empresa.com.br" />
+          <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} aria-describedby={err.email ? "email-error" : undefined} defaultValue={v.email} placeholder="voce@empresa.com.br" />
         </Field>
         <Field label="WhatsApp" name="whatsapp" error={err.whatsapp}>
-          <input id="whatsapp" className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} defaultValue={v.whatsapp} placeholder="(DDD) número" />
+          <input id="whatsapp" className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} aria-describedby={err.whatsapp ? "whatsapp-error" : undefined} defaultValue={v.whatsapp} placeholder="(DDD) número" />
         </Field>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label={isContact ? "Você é" : "Possui CNPJ?"} name="has_cnpj" error={err.has_cnpj}>
-          <select id="has_cnpj" className="field" name="has_cnpj" defaultValue={v.has_cnpj ?? ""} required aria-invalid={Boolean(err.has_cnpj)} onChange={(e) => setHasCnpj(e.target.value)}>
+          <select
+            id="has_cnpj"
+            key={v.has_cnpj ?? ""}
+            className="field"
+            name="has_cnpj"
+            defaultValue={v.has_cnpj ?? ""}
+            required
+            aria-invalid={Boolean(err.has_cnpj)}
+            aria-describedby={err.has_cnpj ? "has_cnpj-error" : undefined}
+            onChange={(e) => setHasCnpj(e.target.value)}
+          >
             <option value="" disabled>
               Selecionar
             </option>
@@ -129,6 +139,24 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </Link>
         . Usamos seus dados apenas para responder ao seu contato.
       </p>
+      {!isContact && (
+        <p className="text-sm text-ink-soft">
+          Prefere falar direto?{" "}
+          {c.whatsappUrl ? (
+            <a className="underline" href={c.whatsappUrl} target="_blank" rel="noreferrer">
+              WhatsApp {c.whatsappLabel}
+            </a>
+          ) : c.email ? (
+            <a className="underline" href={`mailto:${c.email}`}>
+              {c.email}
+            </a>
+          ) : (
+            <Link className="underline" href="/contato">
+              Veja os canais de contato
+            </Link>
+          )}
+        </p>
+      )}
     </form>
   );
 }
@@ -141,7 +169,7 @@ function Field({ label, name, error, children }: { label: string; name: string; 
       </label>
       {children}
       {error && (
-        <p className="mt-1.5 text-xs text-red-700" role="alert">
+        <p id={`${name}-error`} className="mt-1.5 text-xs text-red-700" role="alert">
           {error}
         </p>
       )}

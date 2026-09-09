@@ -33,6 +33,9 @@ export default function CatalogoPage() {
             tamanhos e a tabela de preços de atacado. {site.commercial.exclusive}
           </p>
           <div className="mt-8 max-w-lg">
+            <p className="mb-6 text-sm leading-relaxed text-ink-soft">
+              {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}. {site.commercial.freeShipping}.
+            </p>
             <LeadForm source="catalogo" submitLabel="Quero receber o catálogo" />
           </div>
           <div className="mt-10">

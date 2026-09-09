@@ -34,6 +34,7 @@ const pages = [
   ["catalogo", "/catalogo"],
   ["fabrica", "/fabrica-de-pijamas"],
   ["cashback", "/programa-cashback"],
+  ["contato", "/contato"],
   ["obrigado", "/obrigado?origem=catalogo"],
   ["privacidade", "/politicas/privacidade"],
   ["404", "/pagina-inexistente"],

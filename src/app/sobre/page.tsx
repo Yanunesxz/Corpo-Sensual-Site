@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { ContactBlock } from "@/components/contact-block";
+import { Steps } from "@/components/steps";
+import { passosLojista } from "@/lib/content/lojistas";
 
 export const metadata: Metadata = {
   title: "Sobre",
@@ -33,8 +35,9 @@ export default function SobrePage() {
         <p className="label">Sobre</p>
         <h1 className="h-display mt-3 max-w-4xl text-4xl md:text-6xl lg:text-7xl">Conforto e estilo, feitos com atenção aos detalhes</h1>
         <p className="mt-5 max-w-2xl text-[15px] leading-relaxed md:text-base">
-          A {site.legal.razaoSocial} é uma fábrica de pijamas e moda íntima em {site.legal.cidade}, {site.legal.uf}. Há mais de
-          25 anos desenvolvemos e produzimos peças vendidas por lojas de todo o Brasil.
+          A {site.name} é uma fábrica própria de pijamas, camisolas, robes e moda íntima em {site.legal.cidade},{" "}
+          {site.legal.uf}. Há mais de 25 anos vendemos no atacado para lojistas de todo o Brasil, por representantes e
+          pela plataforma digital de pedidos.
         </p>
       </section>
 
@@ -60,9 +63,9 @@ export default function SobrePage() {
 
       <section className="mx-auto max-w-[1600px] px-5 md:px-8">
         <h2 className="h-display text-2xl md:text-3xl">A empresa em resumo</h2>
-        <dl className="mt-4 grid divide-y divide-line border-y border-line sm:grid-cols-2 sm:gap-x-10 md:grid-cols-3">
+        <dl className="mt-4 grid border-t border-line sm:grid-cols-2 sm:gap-x-10 md:grid-cols-3">
           {facts.map((f) => (
-            <div key={f.label} className="py-4 sm:border-b sm:border-line sm:last:border-b-0">
+            <div key={f.label} className="border-b border-line py-4">
               <dt className="label text-ink-soft">{f.label}</dt>
               <dd className="mt-1 text-[15px] leading-snug">{f.value}</dd>
             </div>
@@ -83,6 +86,19 @@ export default function SobrePage() {
       </section>
 
       <section className="mx-auto max-w-[1600px] px-5 pb-12 md:px-8 md:pb-20">
+        <h2 className="h-display text-2xl md:text-3xl">Como comprar</h2>
+        <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-ink-soft">
+          {site.commercial.exclusive} {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}.
+        </p>
+        <div className="mt-5 max-w-2xl">
+          <Steps steps={passosLojista} />
+        </div>
+        <Link href="/fabrica-de-pijamas#perguntas" className="link mt-5 inline-block text-[13px]">
+          Perguntas frequentes de lojistas
+        </Link>
+      </section>
+
+      <section className="mx-auto max-w-[1600px] px-5 pb-12 md:px-8 md:pb-20">
         <h2 className="h-display text-2xl md:text-3xl">Onde estamos</h2>
         <div className="mt-6">
           <ContactBlock />
@@ -94,9 +110,14 @@ export default function SobrePage() {
           <h2 className="h-display text-4xl md:text-6xl">
             Quer revender a<br />Corpo Sensual?
           </h2>
-          <Link href="/catalogo" className="btn btn-dark w-full sm:w-auto md:self-auto">
-            Receber catálogo
-          </Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
+              Receber catálogo
+            </Link>
+            <Link href="/contato" className="btn btn-outline w-full whitespace-nowrap sm:w-auto">
+              Falar com a gente
+            </Link>
+          </div>
         </div>
       </section>
     </>

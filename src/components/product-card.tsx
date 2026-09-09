@@ -21,7 +21,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
       </div>
       <div className="mt-3">
         <h3 className="text-sm leading-snug">{product.name}</h3>
-        <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-xs text-ink-soft">
+        <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-[13px] text-ink-soft">
           {product.ref && <span className="label">Ref. {product.ref}</span>}
           {product.category && <span>{product.category.name}</span>}
         </p>

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 import { Close, Menu } from "./icons";
 
+const menuLink = "inline-flex min-h-11 items-center self-start text-ink underline decoration-1 underline-offset-[6px]";
+
 export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -115,28 +117,28 @@ export function SiteHeader() {
               <br />
               {site.legal.cidade}, {site.legal.uf}
             </p>
-            <div className="mt-3 flex flex-col">
+            <div className="mt-2 flex flex-col">
               {c.whatsappUrl && (
-                <a className="link self-start py-1 text-ink" href={c.whatsappUrl} target="_blank" rel="noreferrer">
+                <a className={menuLink} href={c.whatsappUrl} target="_blank" rel="noreferrer">
                   WhatsApp {c.whatsappLabel}
                 </a>
               )}
               {c.phoneUrl && (
-                <a className="link self-start py-1 text-ink" href={c.phoneUrl}>
+                <a className={menuLink} href={c.phoneUrl}>
                   Telefone {c.phoneLabel}
                 </a>
               )}
               {c.email && (
-                <a className="link self-start py-1 text-ink" href={`mailto:${c.email}`}>
+                <a className={menuLink} href={`mailto:${c.email}`}>
                   {c.email}
                 </a>
               )}
               {c.instagram && (
-                <a className="link self-start py-1 text-ink" href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer">
+                <a className={menuLink} href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer">
                   @{c.instagram}
                 </a>
               )}
-              <Link className="link self-start py-1 text-ink" href="/contato" onClick={() => setOpen(false)}>
+              <Link className={menuLink} href="/contato" onClick={() => setOpen(false)}>
                 Todos os contatos
               </Link>
             </div>

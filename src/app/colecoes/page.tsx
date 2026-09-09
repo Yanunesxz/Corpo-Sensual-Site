@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { getCollections } from "@/lib/data";
+import { getCollections, getProducts } from "@/lib/data";
 import { collectionShortName, seasonLabel, site } from "@/lib/site";
 
 export const revalidate = 3600;
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 
 export default async function ColecoesPage() {
   const collections = await getCollections();
+  const counts = await Promise.all(collections.map((c) => getProducts({ collectionId: c.id }).then((p) => p.length)));
   return (
     <section className="mx-auto max-w-[1600px] px-2 pb-16 pt-8 md:pt-14">
       <div className="px-3 md:px-6">
@@ -35,9 +36,9 @@ export default async function ColecoesPage() {
         <p className="mt-10 px-3 text-sm text-ink-soft md:px-6">Nenhuma coleção publicada no momento.</p>
       ) : (
         <ul className="mt-8 grid gap-2">
-          {collections.map((c) => (
+          {collections.map((c, i) => (
             <li key={c.id}>
-              <Link href={`/colecoes/${c.slug}`} className="shade zoom-img relative block aspect-[4/5] overflow-hidden bg-stone md:aspect-[16/9] lg:aspect-[21/9]">
+              <Link href={`/colecoes/${c.slug}`} className="shade zoom-img relative block aspect-[4/5] overflow-hidden bg-stone md:aspect-[3/2] lg:aspect-[21/9]">
                 {c.hero_mobile_url && (
                   <Image src={c.hero_mobile_url} alt="" fill sizes="100vw" className="object-cover object-[center_25%] md:hidden" />
                 )}
@@ -51,9 +52,10 @@ export default async function ColecoesPage() {
                   />
                 )}
                 <div className="absolute inset-x-0 bottom-0 z-10 p-5 text-white md:p-10">
-                  <p className="label">{seasonLabel(c.season, c.year)}</p>
+                  <p className="label text-[13px]">{seasonLabel(c.season, c.year)}</p>
                   <p className="h-display mt-2 text-4xl md:text-6xl">{collectionShortName(c.name)}</p>
-                  {c.headline && <p className="mt-2 hidden max-w-md text-sm text-white/90 sm:block md:text-base">{c.headline}</p>}
+                  {c.headline && <p className="mt-2 hidden max-w-md text-base text-white/90 lg:block">{c.headline}</p>}
+                  {counts[i] > 0 && <p className="mt-2 text-sm text-white/85">{counts[i]} peças nas linhas feminina, masculina, infantil e gestante</p>}
                   <span className="link mt-3 inline-block text-[13px]">Ver coleção</span>
                 </div>
               </Link>

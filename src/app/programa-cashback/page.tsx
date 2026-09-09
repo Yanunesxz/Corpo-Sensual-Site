@@ -57,7 +57,7 @@ export default function CashbackPage() {
             .
           </p>
         </div>
-        <div id="formulario" className="scroll-mt-20 border border-line p-5 md:p-8">
+        <div id="formulario" className="scroll-mt-20 border-y border-line py-8 md:border md:p-8">
           <h2 className="h-display text-2xl md:text-3xl">Quero participar</h2>
           <p className="mt-2 text-sm text-ink-soft">Cadastre a sua loja e receba as regras do programa.</p>
           <div className="mt-6">

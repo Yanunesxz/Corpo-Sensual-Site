@@ -5,7 +5,7 @@ export default function NotFound() {
   return (
     <section className="mx-auto flex min-h-[70svh] max-w-2xl flex-col justify-center px-5 py-16 md:px-8">
       <p className="label">Erro 404</p>
-      <h1 className="h-display mt-3 text-5xl md:text-7xl">Página não encontrada</h1>
+      <h1 className="h-display mt-3 text-4xl md:text-7xl">Página não encontrada</h1>
       <p className="mt-5 text-[15px] leading-relaxed text-ink-soft">
         O endereço pode ter mudado ou a página não existe mais. Veja por onde continuar:
       </p>

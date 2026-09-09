@@ -24,10 +24,10 @@ export default function ContatoPage() {
       </section>
 
       <section className="mx-auto max-w-[1600px] px-5 py-12 md:px-8 md:py-16">
-        <ContactBlock />
+        <ContactBlock formHref="#formulario" />
       </section>
 
-      <section className="mx-auto grid max-w-[1600px] gap-10 border-t border-line px-5 py-12 md:grid-cols-2 md:gap-16 md:px-8 md:py-16">
+      <section className="mx-auto grid max-w-[1600px] gap-10 border-t border-line px-5 py-12 md:px-8 md:py-16 lg:grid-cols-2 lg:gap-16">
         <div>
           <h2 className="h-display text-3xl md:text-4xl">Envie uma mensagem</h2>
           <ul className="mt-5 space-y-3 text-[15px] leading-relaxed text-ink-soft">

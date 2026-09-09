@@ -6,6 +6,7 @@ import { CommercialTerms } from "@/components/commercial-terms";
 import { Faq } from "@/components/faq";
 import { HeroImage } from "@/components/hero-image";
 import { faqLojista } from "@/lib/content/faq";
+import { passosLojista } from "@/lib/content/lojistas";
 
 export const metadata: Metadata = {
   title: "Fábrica de pijamas para lojistas",
@@ -22,20 +23,16 @@ const benefits = [
   "Representante dedicado na sua região",
 ];
 
-const steps = [
-  { title: "Cadastre a sua loja", description: "Preencha o formulário com seus dados e o CNPJ da loja." },
-  { title: "Fale com o representante", description: "O representante da sua região apresenta o catálogo, preços e condições." },
-  { title: "Faça o primeiro pedido", description: "Escolha as referências, monte a grade e acompanhe a produção e o envio." },
-];
+const steps = passosLojista;
 
 export default function FabricaPage() {
   return (
     <>
       <section className="shade relative h-[60svh] min-h-[420px] max-h-[720px] bg-stone">
-        <HeroImage desktop="/images/colecoes/frescor-3.jpg" mobile="/images/colecoes/frescor-4.jpg" priority desktopPosition="center 30%" mobilePosition="center 20%" />
+        <HeroImage desktop="/images/colecoes/frescor-3.jpg" mobile="/images/colecoes/frescor-4.jpg" priority desktopPosition="center 30%" mobilePosition="center 20%" switchAt="lg" />
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
-          <p className="label">Fábrica de pijamas</p>
-          <h1 className="h-display mt-2 max-w-3xl text-4xl md:text-6xl lg:text-7xl">Pijamas direto da fábrica para a sua loja</h1>
+          <p className="label text-[13px]">Fábrica de pijamas</p>
+          <h1 className="h-display mt-2 max-w-3xl text-4xl md:text-5xl lg:text-7xl">Pijamas direto da fábrica para a sua loja</h1>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
             <a href="#formulario" className="btn btn-light w-full sm:w-auto">
               Quero ser lojista
@@ -67,7 +64,7 @@ export default function FabricaPage() {
             </div>
           </div>
         </div>
-        <div id="formulario" className="scroll-mt-20 border border-line p-5 md:p-8">
+        <div id="formulario" className="scroll-mt-20 border-y border-line py-8 md:border md:p-8">
           <h2 className="h-display text-2xl md:text-3xl">Quero comprar da fábrica</h2>
           <p className="mt-2 text-sm text-ink-soft">Cadastre-se e receba o contato do representante da sua região.</p>
           <div className="mt-6">

@@ -26,7 +26,7 @@ export default async function PoliticaPage({ params }: Props) {
     <article className="mx-auto max-w-2xl px-5 py-10 md:px-8 md:py-16">
       <p className="label">Institucional</p>
       <h1 className="h-display mt-3 text-4xl md:text-6xl">{politica.title}</h1>
-      <p className="mt-3 text-xs text-ink-soft">
+      <p className="mt-3 text-sm text-ink-soft">
         Última atualização: <time dateTime={politica.updatedAt}>{updated}</time>
       </p>
 

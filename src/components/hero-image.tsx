@@ -1,28 +1,40 @@
 import Image from "next/image";
 
 type Props = {
-  /** Foto para telas médias e grandes (normalmente horizontal). */
+  /** Foto para telas largas (normalmente horizontal). */
   desktop: string;
-  /** Foto vertical para o celular. Se não houver, usa a mesma foto. */
+  /** Foto vertical para telas estreitas. Se não houver, usa a mesma foto. */
   mobile?: string | null;
   alt?: string;
   priority?: boolean;
-  /** Ponto de interesse da foto de desktop, ex.: "center 35%". */
+  /** Ponto de interesse da foto larga, ex.: "center 35%". */
   desktopPosition?: string;
   mobilePosition?: string;
+  /** Largura a partir da qual entra a foto larga: "md" (768px) ou "lg" (1024px, inclui o tablet na vertical). */
+  switchAt?: "md" | "lg";
 };
 
 /**
- * Foto de fundo com direção de arte: no celular entra a versão vertical,
- * no desktop a horizontal. Só uma das duas é baixada, por causa do
- * `sizes` combinado com display:none (o navegador não carrega imagem oculta
- * quando o <img> não é renderizado... então usamos <picture> por mídia).
+ * Foto de fundo com direção de arte: telas estreitas recebem a versão vertical,
+ * telas largas a horizontal. Só uma das duas é baixada: o `sizes` de 1px para a
+ * versão oculta faz o navegador pedir a menor variante possível.
  */
-export function HeroImage({ desktop, mobile, alt = "", priority = false, desktopPosition = "center 35%", mobilePosition = "center 30%" }: Props) {
+export function HeroImage({
+  desktop,
+  mobile,
+  alt = "",
+  priority = false,
+  desktopPosition = "center 35%",
+  mobilePosition = "center 30%",
+  switchAt = "md",
+}: Props) {
   const mob = mobile ?? desktop;
   if (mob === desktop) {
     return <Image src={desktop} alt={alt} fill priority={priority} sizes="100vw" className="object-cover" style={{ objectPosition: desktopPosition }} />;
   }
+  const bp = switchAt === "lg" ? 1024 : 768;
+  const mobileClass = switchAt === "lg" ? "object-cover lg:hidden" : "object-cover md:hidden";
+  const desktopClass = switchAt === "lg" ? "hidden object-cover lg:block" : "hidden object-cover md:block";
   return (
     <>
       <Image
@@ -30,8 +42,8 @@ export function HeroImage({ desktop, mobile, alt = "", priority = false, desktop
         alt={alt}
         fill
         priority={priority}
-        sizes="(max-width: 767px) 100vw, 1px"
-        className="object-cover md:hidden"
+        sizes={`(max-width: ${bp - 1}px) 100vw, 1px`}
+        className={mobileClass}
         style={{ objectPosition: mobilePosition }}
       />
       <Image
@@ -39,8 +51,8 @@ export function HeroImage({ desktop, mobile, alt = "", priority = false, desktop
         alt={alt}
         fill
         priority={priority}
-        sizes="(min-width: 768px) 100vw, 1px"
-        className="hidden object-cover md:block"
+        sizes={`(min-width: ${bp}px) 100vw, 1px`}
+        className={desktopClass}
         style={{ objectPosition: desktopPosition }}
       />
     </>

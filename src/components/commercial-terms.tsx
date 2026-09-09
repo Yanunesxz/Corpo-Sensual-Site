@@ -7,7 +7,7 @@ export function CommercialTerms({ className = "" }: { className?: string }) {
   return (
     <div className={`border-y border-line py-6 ${className}`}>
       <div className="grid gap-4 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-10">
-        <p className="label">{commercial.exclusive}</p>
+        <p className="text-sm font-medium">{commercial.exclusive}</p>
         <ul className="flex flex-col gap-2 text-sm md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-2 lg:justify-end">
           {items.map((item) => (
             <li key={item}>{item}</li>

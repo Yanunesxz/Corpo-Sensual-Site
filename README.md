@@ -25,6 +25,7 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 | `/catalogo` | Receber catálogo | Passo a passo + formulário de lead (`source = catalogo`) |
 | `/fabrica-de-pijamas` | Para lojistas | Landing B2B com benefícios + formulário (`source = fabrica-de-pijamas`) |
 | `/programa-cashback` | Programa Cashback | Explicação do programa + formulário (`source = programa-cashback`) |
+| `/contato` | Contato | Endereço com mapa, canais, horário, formulário (`source = contato`) e perguntas frequentes |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
 | `/sitemap.xml`, `/robots.txt` | SEO | Gerados automaticamente |
@@ -99,6 +100,13 @@ Scripts:
 | `npm run build` | Build de produção (também checa tipos) |
 | `npm run start` | Serve o build de produção |
 | `npm run lint` | ESLint |
+| `npm run seed` | Gera `supabase/seed.sql` a partir de `src/data/catalogo.json` |
+| `npm run imagens` | Reduz fotos grandes em `public/images` |
+| `node scripts/capturas.mjs http://localhost:3000 capturas` | Captura todas as páginas em celular, tablet e desktop (usa o Edge/Chrome instalado) para conferir responsividade |
+
+### Contato e horário
+
+Os canais aparecem no cabeçalho, rodapé, página de contato e formulários assim que as variáveis existirem no Vercel: `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_TELEFONE`, `NEXT_PUBLIC_EMAIL`, `NEXT_PUBLIC_INSTAGRAM` e `NEXT_PUBLIC_HORARIO`. Sem elas o site mostra endereço, mapa e o formulário de contato. As perguntas frequentes de lojistas ficam em `src/lib/content/faq.ts`.
 
 ---
 
