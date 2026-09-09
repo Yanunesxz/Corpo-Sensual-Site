@@ -14,16 +14,13 @@ type Props = {
   submitLabel?: string;
   /** Mostra o campo de mensagem livre. */
   withMessage?: boolean;
-  /** Fundo escuro: ajusta cores dos rótulos. */
-  dark?: boolean;
 };
 
 /**
  * Formulário de captação usado nas páginas de catálogo, fábrica e cashback.
- * Captura UTMs, URL e referrer da página automaticamente (campos ocultos).
+ * Anexa UTMs, URL e referrer da página antes de enviar.
  */
-export function LeadForm({ source, submitLabel = "Continuar", withMessage = false, dark = false }: Props) {
-  // Antes de enviar, anexa UTMs, URL e referrer lidos da página atual.
+export function LeadForm({ source, submitLabel = "Continuar", withMessage = false }: Props) {
   const [state, action, pending] = useActionState(
     async (prev: LeadFormState, formData: FormData) => {
       const t = readTracking();
@@ -36,33 +33,33 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   );
 
   const err = state.errors ?? {};
-  const label = dark ? "text-white/80" : "text-ink-soft";
 
   return (
-    <form action={action} className="space-y-4" noValidate>
+    <form action={action} className="space-y-5" noValidate>
       <input type="hidden" name="source" value={source} />
-      {/* Honeypot: fica invisível para pessoas e é preenchido por bots. */}
+      {/* Honeypot: invisível para pessoas, preenchido por bots. */}
       <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
         <label>
           Não preencha este campo
           <input type="text" name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
-      <Field label="Nome" name="name" error={err.name} labelClass={label}>
-        <input className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} placeholder="Como podemos te chamar?" />
+
+      <Field label="Nome" name="name" error={err.name}>
+        <input className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} />
       </Field>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="E-mail" name="email" error={err.email} labelClass={label}>
-          <input className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} placeholder="voce@empresa.com.br" />
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="E-mail" name="email" error={err.email}>
+          <input className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} />
         </Field>
-        <Field label="WhatsApp" name="whatsapp" error={err.whatsapp} labelClass={label}>
-          <input className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} placeholder="(32) 99999-9999" />
+        <Field label="WhatsApp" name="whatsapp" error={err.whatsapp}>
+          <input className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} placeholder="(DDD) número" />
         </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Possui CNPJ?" name="has_cnpj" error={err.has_cnpj} labelClass={label}>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <Field label="Possui CNPJ?" name="has_cnpj" error={err.has_cnpj}>
           <select className="field" name="has_cnpj" defaultValue="" required aria-invalid={Boolean(err.has_cnpj)}>
             <option value="" disabled>
               Selecionar
@@ -71,28 +68,28 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             <option value="nao">Ainda não</option>
           </select>
         </Field>
-        <Field label="Nome da loja (opcional)" name="company" error={err.company} labelClass={label}>
-          <input className="field" name="company" autoComplete="organization" placeholder="Loja ou marca" />
+        <Field label="Nome da loja" name="company" error={err.company} optional>
+          <input className="field" name="company" autoComplete="organization" />
         </Field>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[1fr_6rem]">
-        <Field label="Cidade (opcional)" name="city" error={err.city} labelClass={label}>
-          <input className="field" name="city" autoComplete="address-level2" placeholder="Cidade" />
+      <div className="grid gap-5 sm:grid-cols-[1fr_6rem]">
+        <Field label="Cidade" name="city" error={err.city} optional>
+          <input className="field" name="city" autoComplete="address-level2" />
         </Field>
-        <Field label="UF" name="state" error={err.state} labelClass={label}>
-          <input className="field uppercase" name="state" autoComplete="address-level1" maxLength={2} placeholder="MG" />
+        <Field label="UF" name="state" error={err.state} optional>
+          <input className="field uppercase" name="state" autoComplete="address-level1" maxLength={2} />
         </Field>
       </div>
 
       {withMessage && (
-        <Field label="Mensagem (opcional)" name="message" error={err.message} labelClass={label}>
-          <textarea className="field min-h-28 resize-y" name="message" placeholder="Conte um pouco sobre a sua loja ou o que você procura." />
+        <Field label="Mensagem" name="message" error={err.message} optional>
+          <textarea className="field min-h-28 resize-y" name="message" />
         </Field>
       )}
 
       {state.message && !state.ok && (
-        <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
           {state.message}{" "}
           {site.contact.whatsappUrl && (
             <a className="underline" href={site.contact.whatsappUrl} target="_blank" rel="noreferrer">
@@ -102,12 +99,12 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </p>
       )}
 
-      <button type="submit" className="btn btn-primary w-full sm:w-auto" disabled={pending}>
+      <button type="submit" className="btn btn-dark w-full" disabled={pending}>
         {pending ? "Enviando..." : submitLabel}
       </button>
 
-      <p className={`text-xs leading-relaxed ${label}`}>
-        Ao continuar você concorda com a nossa{" "}
+      <p className="text-[11px] leading-relaxed text-ink-soft">
+        Ao continuar você concorda com a{" "}
         <Link href="/politicas/privacidade" className="underline">
           política de privacidade
         </Link>
@@ -121,19 +118,20 @@ function Field({
   label,
   name,
   error,
-  labelClass,
+  optional = false,
   children,
 }: {
   label: string;
   name: string;
   error?: string;
-  labelClass: string;
+  optional?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div>
-      <label htmlFor={name} className={`mb-1.5 block text-xs font-medium uppercase tracking-[0.14em] ${labelClass}`}>
+      <label htmlFor={name} className="label mb-2 block">
         {label}
+        {optional && <span className="ml-1 normal-case tracking-normal text-ink-soft">(opcional)</span>}
       </label>
       <div className="[&>*]:w-full" data-field={name}>
         {children}

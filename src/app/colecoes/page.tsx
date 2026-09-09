@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCollections } from "@/lib/data";
-import { seasonLabel } from "@/lib/site";
+import { collectionShortName, seasonLabel } from "@/lib/site";
 import { SectionHeading } from "@/components/section-heading";
-import { Reveal } from "@/components/reveal";
-import { ArrowRight } from "@/components/icons";
 
 export const revalidate = 3600;
 
@@ -17,32 +15,27 @@ export const metadata: Metadata = {
 export default async function ColecoesPage() {
   const collections = await getCollections();
   return (
-    <section className="mx-auto max-w-7xl px-5 pb-24 pt-32 md:px-8 md:pt-44">
-      <Reveal>
-        <SectionHeading level="h1" eyebrow="Coleções" title="Nossas coleções" description="Peças desenvolvidas para cada temporada, com modelagem atual e tecidos selecionados." />
-      </Reveal>
+    <section className="mx-auto max-w-[1600px] px-2 pb-16 pt-10 md:pt-14">
+      <SectionHeading level="h1" title="Coleções" className="px-3 md:px-6" />
 
       {collections.length === 0 ? (
-        <p className="mt-12 text-ink-soft">Nenhuma coleção publicada no momento.</p>
+        <p className="mt-10 px-3 text-sm text-ink-soft md:px-6">Nenhuma coleção publicada no momento.</p>
       ) : (
-        <ul className="mt-12 grid gap-6 md:grid-cols-2">
-          {collections.map((c, i) => (
-            <Reveal as="li" key={c.id} delay={i * 100}>
-              <Link href={`/colecoes/${c.slug}`} className="group relative block aspect-[16/10] overflow-hidden rounded-card bg-ink text-white">
+        <ul className="mt-8 grid gap-2">
+          {collections.map((c) => (
+            <li key={c.id}>
+              <Link href={`/colecoes/${c.slug}`} className="shade zoom-img relative block aspect-[4/5] overflow-hidden bg-stone md:aspect-[21/9]">
                 {c.hero_image_url && (
-                  <Image src={c.hero_image_url} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover opacity-90 transition duration-700 group-hover:scale-105" />
+                  <Image src={c.hero_image_url} alt="" fill sizes="100vw" className="object-cover object-[center_35%]" />
                 )}
-                <div className="absolute inset-0 bg-linear-to-t from-ink/85 via-ink/20 to-transparent" aria-hidden />
-                <div className="absolute inset-x-0 bottom-0 p-7">
-                  <p className="eyebrow text-butter">{seasonLabel(c.season, c.year)}</p>
-                  <p className="display mt-2 text-3xl md:text-4xl">{c.name}</p>
-                  {c.headline && <p className="mt-2 max-w-md text-sm text-white/80">{c.headline}</p>}
-                  <span className="mt-4 inline-flex items-center gap-2 text-sm">
-                    Ver peças <ArrowRight width={16} height={16} />
-                  </span>
+                <div className="absolute inset-x-0 bottom-0 z-10 p-6 text-white md:p-10">
+                  <p className="label">{seasonLabel(c.season, c.year)}</p>
+                  <p className="h-display mt-2 text-5xl md:text-7xl">{collectionShortName(c.name)}</p>
+                  {c.headline && <p className="mt-2 max-w-md text-sm text-white/90 md:text-base">{c.headline}</p>}
+                  <span className="link mt-4 inline-block text-[13px]">Ver coleção</span>
                 </div>
               </Link>
-            </Reveal>
+            </li>
           ))}
         </ul>
       )}

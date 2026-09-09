@@ -1,158 +1,114 @@
 @import "tailwindcss";
 
 /*
-  Identidade visual da Corpo Sensual.
-  Todas as cores e fontes do site saem daqui: use as classes utilitárias
-  geradas (bg-cream, text-ink, text-brand, font-display...) em vez de
-  valores soltos nos componentes.
+  Identidade visual. Referências: SKIMS (foto em tela cheia, títulos
+  condensados em caixa alta, links sublinhados, cantos retos, quase sem cor)
+  e Any Any (mosaico de categorias, nome da coleção em serifa).
+  Tudo o que é cor, fonte e acabamento sai daqui.
 */
 @theme {
-  --color-cream: #faf7f2;
-  --color-cream-dark: #f1ebe2;
-  --color-ink: #1c1917;
-  --color-ink-soft: #6b635b;
-  --color-line: #e7e0d6;
-  --color-brand: #7a1f3d;
-  --color-brand-dark: #5e1730;
-  --color-gold: #b8865b;
-  --color-rose: #f1dedb;
-  --color-sky: #dce7f0;
-  --color-butter: #f6e7a6;
+  --color-paper: #ffffff;
+  --color-stone: #f4f2ee;
+  --color-stone-dark: #e8e4de;
+  --color-ink: #2d2a26;
+  --color-ink-soft: #736d66;
+  --color-line: #dedad3;
 
-  --font-display: var(--font-bodoni), "Bodoni MT", "Didot", "Times New Roman", serif;
+  --font-display: var(--font-oswald), "Arial Narrow", "Helvetica Neue", sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  --radius-card: 1.25rem;
-}
-
-html {
-  scroll-behavior: smooth;
+  --font-serif: var(--font-bodoni), "Didot", "Bodoni MT", serif;
 }
 
 body {
-  background: var(--color-cream);
+  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--color-brand);
+  background: var(--color-ink);
   color: white;
 }
 
-/* Título com o estilo editorial do site */
-.display {
+/* Título condensado em caixa alta (SKIMS) */
+.h-display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+}
+
+/* Nome de coleção em serifa itálica (Any Any) */
+.h-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+/* Rótulo pequeno em caixa alta */
+.label {
   font-family: var(--font-display);
   font-weight: 400;
-  letter-spacing: -0.01em;
-  line-height: 1.05;
-}
-
-/* Rótulo pequeno em caixa alta acima dos títulos */
-.eyebrow {
-  font-size: 0.75rem;
-  letter-spacing: 0.22em;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-gold);
 }
 
-/*
-  Animação de entrada (ver components/reveal.tsx).
-  Só esconde o conteúdo quando o JavaScript está ativo (classe "js" no <html>).
-  O componente adiciona "is-visible" quando o elemento entra na tela ou, no
-  máximo, 1,5s depois de montar. Sem JS nada fica invisível.
-*/
-.js .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+/* Link sublinhado */
+.link {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  transition: opacity 0.15s ease;
 }
-.js .reveal.is-visible {
-  opacity: 1;
-  transform: none;
+.link:hover {
+  opacity: 0.55;
 }
 
-/* Faixa rolante de diferenciais (ver components/marquee.tsx) */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-.marquee {
-  animation: marquee 60s linear infinite;
-}
-.marquee:hover {
-  animation-play-state: paused;
+/* Sombra suave na base da foto para o texto ler bem */
+.shade::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(45, 42, 38, 0.55), rgba(45, 42, 38, 0) 55%);
+  pointer-events: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .js .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-  .marquee {
-    animation: none;
-  }
-  html {
-    scroll-behavior: auto;
-  }
-}
-
-/* Campos de formulário */
-.field {
-  width: 100%;
-  border: 1px solid var(--color-line);
-  background: white;
-  border-radius: 0.75rem;
-  padding: 0.85rem 1rem;
-  font-size: 1rem;
-  color: var(--color-ink);
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.field:focus {
-  border-color: var(--color-brand);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 12%, transparent);
-}
-.field[aria-invalid="true"] {
-  border-color: #b3261e;
-}
-
-/* Botões */
+/* Botões: retos, caixa alta, 1px */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
-  padding: 0.9rem 1.75rem;
+  min-height: 46px;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid transparent;
+  font-size: 0.75rem;
   font-weight: 500;
-  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   line-height: 1;
-  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
-  min-height: 44px;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
-.btn:active {
-  transform: translateY(1px);
-}
-.btn-primary {
-  background: var(--color-brand);
+.btn-dark {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
   color: white;
 }
-.btn-primary:hover {
-  background: var(--color-brand-dark);
+.btn-dark:hover {
+  background: #000;
+  border-color: #000;
 }
-.btn-primary:disabled {
+.btn-dark:disabled {
   opacity: 0.6;
   cursor: wait;
 }
 .btn-outline {
-  border: 1px solid var(--color-ink);
+  border-color: var(--color-ink);
   color: var(--color-ink);
   background: transparent;
 }
@@ -162,8 +118,46 @@ body {
 }
 .btn-light {
   background: white;
+  border-color: white;
   color: var(--color-ink);
 }
 .btn-light:hover {
-  background: var(--color-cream-dark);
+  background: var(--color-stone);
+  border-color: var(--color-stone);
+}
+
+/* Campos de formulário */
+.field {
+  width: 100%;
+  border: 1px solid var(--color-line);
+  background: white;
+  padding: 0.8rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.15s ease;
+}
+.field:focus {
+  border-color: var(--color-ink);
+}
+.field[aria-invalid="true"] {
+  border-color: #b3261e;
+}
+.field::placeholder {
+  color: #a39d95;
+}
+
+/* Foto com leve zoom no hover */
+.zoom-img img {
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.zoom-img:hover img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zoom-img img {
+    transition: none;
+  }
 }

@@ -39,6 +39,11 @@ export const site = {
   },
 } as const;
 
+/** "Coleção Frescor" -> "Frescor", para títulos grandes. */
+export function collectionShortName(name: string): string {
+  return name.replace(/^cole[cç][aã]o\s+/i, "");
+}
+
 /** Rótulo de temporada usado em títulos e etiquetas. */
 export function seasonLabel(season: "verao" | "inverno" | "atemporal", year?: number | null): string {
   const base = season === "verao" ? "Primavera / Verão" : season === "inverno" ? "Outono / Inverno" : "Atemporal";

@@ -22,17 +22,17 @@ export default async function PoliticaPage({ params }: Props) {
   const updated = new Date(`${politica.updatedAt}T12:00:00`).toLocaleDateString("pt-BR");
 
   return (
-    <article className="mx-auto max-w-3xl px-5 pb-24 pt-32 md:px-8 md:pt-44">
-      <p className="eyebrow">Institucional</p>
-      <h1 className="display mt-3 text-4xl md:text-5xl">{politica.title}</h1>
-      <p className="mt-3 text-sm text-ink-soft">Última atualização: {updated}</p>
-      <p className="mt-8 text-lg leading-relaxed text-ink-soft">{politica.intro}</p>
+    <article className="mx-auto max-w-3xl px-5 py-14 md:px-8 md:py-20">
+      <p className="label">Institucional</p>
+      <h1 className="h-display mt-3 text-4xl md:text-6xl">{politica.title}</h1>
+      <p className="mt-3 text-xs text-ink-soft">Última atualização: {updated}</p>
+      <p className="mt-8 text-[15px] leading-relaxed">{politica.intro}</p>
 
       {politica.sections.map((s) => (
-        <section key={s.heading} className="mt-10">
-          <h2 className="text-xl font-medium">{s.heading}</h2>
+        <section key={s.heading} className="mt-10 border-t border-line pt-6">
+          <h2 className="text-base font-medium">{s.heading}</h2>
           {s.paragraphs.map((p, i) => (
-            <p key={i} className="mt-3 leading-relaxed text-ink-soft">
+            <p key={i} className="mt-3 text-[15px] leading-relaxed text-ink-soft">
               {p}
             </p>
           ))}

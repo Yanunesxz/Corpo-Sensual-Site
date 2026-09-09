@@ -1,35 +1,35 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 
 type Props = {
-  eyebrow?: string;
   title: ReactNode;
+  /** Link à direita, no estilo "Ver todas". */
+  link?: { href: string; label: string };
   description?: ReactNode;
-  align?: "left" | "center";
   className?: string;
-  /** Nível do título. Use h1 apenas uma vez por página. */
   level?: "h1" | "h2";
-  /** "light" para fundos escuros. */
-  tone?: "dark" | "light";
+  size?: "sm" | "md" | "lg";
 };
 
-export function SectionHeading({
-  eyebrow,
-  title,
-  description,
-  align = "left",
-  className = "",
-  level = "h2",
-  tone = "dark",
-}: Props) {
+const sizes = {
+  sm: "text-2xl md:text-3xl",
+  md: "text-3xl md:text-5xl",
+  lg: "text-4xl md:text-6xl lg:text-7xl",
+};
+
+export function SectionHeading({ title, link, description, className = "", level = "h2", size = "md" }: Props) {
   const Tag = level;
-  const descColor = tone === "light" ? "text-white/75" : "text-ink-soft";
   return (
-    <div className={`${align === "center" ? "mx-auto text-center" : ""} max-w-2xl ${className}`}>
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <Tag className={`display mt-3 ${level === "h1" ? "text-4xl md:text-6xl" : "text-3xl md:text-5xl"}`}>
-        {title}
-      </Tag>
-      {description && <p className={`mt-5 text-base leading-relaxed md:text-lg ${descColor}`}>{description}</p>}
+    <div className={className}>
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+        <Tag className={`h-display ${sizes[size]}`}>{title}</Tag>
+        {link && (
+          <Link href={link.href} className="link text-[13px]">
+            {link.label}
+          </Link>
+        )}
+      </div>
+      {description && <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-ink-soft">{description}</p>}
     </div>
   );
 }

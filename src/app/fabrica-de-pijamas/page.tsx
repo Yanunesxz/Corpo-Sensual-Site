@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { SectionHeading } from "@/components/section-heading";
 import { Steps } from "@/components/steps";
 import { LeadForm } from "@/components/lead-form";
 import { CommercialTerms } from "@/components/commercial-terms";
-import { Reveal } from "@/components/reveal";
-import { Check } from "@/components/icons";
+import { SectionHeading } from "@/components/section-heading";
 
 export const metadata: Metadata = {
   title: "Fábrica de pijamas para lojistas",
@@ -31,50 +29,45 @@ const steps = [
 export default function FabricaPage() {
   return (
     <>
-      <section className="relative isolate overflow-hidden bg-ink text-white">
-        <Image src="/images/colecoes/frescor-3.jpg" alt="" fill sizes="100vw" className="object-cover object-[center_30%] opacity-40" priority />
-        <div className="absolute inset-0 bg-linear-to-r from-ink via-ink/80 to-ink/30" aria-hidden />
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-5 pb-20 pt-36 md:grid-cols-[1.1fr_1fr] md:px-8 md:pb-28 md:pt-48">
-          <Reveal>
-            <SectionHeading
-              level="h1"
-              tone="light"
-              eyebrow="Fábrica de pijamas"
-              title="Pijamas direto da fábrica para a sua loja"
-              description="Mais de 25 anos confeccionando moda íntima em Muriaé, MG. Uma marca conhecida nacionalmente, com estrutura para atender a sua loja com qualidade e agilidade."
-            />
-            <ul className="mt-10 grid gap-3 sm:grid-cols-2">
-              {benefits.map((b) => (
-                <li key={b} className="flex items-start gap-3 text-sm text-white/85">
-                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-butter text-ink">
-                    <Check width={14} height={14} strokeWidth={2.4} />
-                  </span>
-                  {b}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={120} className="rounded-card bg-white p-6 text-ink shadow-2xl md:p-8">
-            <h2 className="display text-2xl md:text-3xl">Quero comprar da fábrica</h2>
-            <p className="mt-1 text-sm text-ink-soft">Cadastre-se e receba o contato do representante da sua região.</p>
+      <section className="shade relative h-[60svh] min-h-[420px] bg-stone">
+        <Image src="/images/colecoes/frescor-3.jpg" alt="" fill priority sizes="100vw" className="object-cover object-[center_30%]" />
+        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-10 text-white md:px-8 md:pb-14">
+          <p className="label">Fábrica de pijamas</p>
+          <h1 className="h-display mt-3 max-w-3xl text-4xl md:text-6xl lg:text-7xl">Pijamas direto da fábrica para a sua loja</h1>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:grid-cols-2 md:gap-16 md:px-8 md:py-20">
+        <div>
+          <p className="max-w-md text-[15px] leading-relaxed text-ink-soft">
+            Mais de 25 anos confeccionando moda íntima em Muriaé, MG. Uma marca conhecida nacionalmente, com estrutura
+            para atender a sua loja com qualidade e agilidade.
+          </p>
+          <ul className="mt-8 divide-y divide-line border-y border-line">
+            {benefits.map((b) => (
+              <li key={b} className="py-3 text-sm">
+                {b}
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10">
+            <SectionHeading title="Como funciona" size="sm" />
             <div className="mt-6">
-              <LeadForm source="fabrica-de-pijamas" submitLabel="Quero ser lojista" withMessage />
+              <Steps steps={steps} />
             </div>
-          </Reveal>
+          </div>
+        </div>
+        <div className="border border-line p-6 md:p-8">
+          <h2 className="h-display text-3xl">Quero comprar da fábrica</h2>
+          <p className="mt-2 text-sm text-ink-soft">Cadastre-se e receba o contato do representante da sua região.</p>
+          <div className="mt-6">
+            <LeadForm source="fabrica-de-pijamas" submitLabel="Quero ser lojista" withMessage />
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-5 pt-16 md:px-8 md:pt-24">
+      <section className="mx-auto max-w-[1600px] px-5 pb-16 md:px-8">
         <CommercialTerms />
-      </section>
-
-      <section className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal>
-          <SectionHeading eyebrow="Como funciona" title="Três passos para começar a vender" />
-        </Reveal>
-        <div className="mt-12">
-          <Steps steps={steps} />
-        </div>
       </section>
     </>
   );
