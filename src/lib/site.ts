@@ -2,14 +2,29 @@
  * Dados institucionais e de contato usados em todo o site.
  * Os contatos vêm de variáveis de ambiente para poderem mudar sem commit.
  */
-const whatsappDigits = (process.env.NEXT_PUBLIC_WHATSAPP ?? "").replace(/\D/g, "");
+/** Lê uma variável de ambiente tratando vazio como ausente (o Vercel importa o .env.example com valores vazios). */
+const env = (name: string): string => (process.env[name] ?? "").trim();
+
+const whatsappDigits = env("NEXT_PUBLIC_WHATSAPP").replace(/\D/g, "");
+
+/**
+ * URL pública do site, nesta ordem: NEXT_PUBLIC_SITE_URL definida, domínio de
+ * produção do Vercel, URL do deploy atual do Vercel, domínio oficial.
+ */
+function resolveSiteUrl(): string {
+  const explicit = env("NEXT_PUBLIC_SITE_URL");
+  if (explicit) return explicit.replace(/\/+$/, "");
+  const vercel = env("VERCEL_PROJECT_PRODUCTION_URL") || env("VERCEL_URL");
+  if (vercel) return `https://${vercel}`;
+  return "https://www.corposensual.com.br";
+}
 
 export const site = {
   name: "Corpo Sensual",
   tagline: "Moda íntima com conforto, estilo e mais de 25 anos de expertise.",
   description:
     "Confecção de pijamas, camisolas, robes e moda íntima para lojistas de todo o Brasil. Conforto, estilo e qualidade em cada peça.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.corposensual.com.br",
+  url: resolveSiteUrl(),
   legal: {
     razaoSocial: "Confecções Corpo Sensual Ltda",
     cnpj: "07.564.390/0001-71",
@@ -20,8 +35,8 @@ export const site = {
   contact: {
     whatsapp: whatsappDigits,
     whatsappUrl: whatsappDigits ? `https://wa.me/${whatsappDigits}` : "",
-    instagram: process.env.NEXT_PUBLIC_INSTAGRAM ?? "",
-    email: process.env.NEXT_PUBLIC_EMAIL ?? "",
+    instagram: env("NEXT_PUBLIC_INSTAGRAM").replace(/^@/, ""),
+    email: env("NEXT_PUBLIC_EMAIL"),
   },
   nav: [
     { href: "/", label: "Home" },
