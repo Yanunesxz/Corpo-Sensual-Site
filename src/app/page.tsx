@@ -49,17 +49,19 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Categorias: mosaico com o nome na foto */}
+      {/* Categorias: foto de estúdio com o nome abaixo */}
       {categories.length > 0 && (
         <section className="mx-auto max-w-[1600px] px-2 pt-2 md:px-2">
           <ul className="grid grid-cols-2 gap-2 lg:grid-cols-4">
             {categories.map((c) => (
               <li key={c.id}>
-                <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="shade zoom-img relative block aspect-[4/5] overflow-hidden bg-stone">
-                  {c.image_url && (
-                    <Image src={c.image_url} alt={c.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
-                  )}
-                  <span className="h-display absolute inset-x-0 bottom-5 z-10 text-center text-2xl text-white md:text-3xl">
+                <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="group block">
+                  <span className="zoom-img relative block aspect-[4/5] overflow-hidden bg-stone">
+                    {c.image_url && (
+                      <Image src={c.image_url} alt={c.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                    )}
+                  </span>
+                  <span className="h-display mt-3 block px-3 text-2xl transition-opacity group-hover:opacity-60 md:text-3xl">
                     {c.name}
                   </span>
                 </Link>

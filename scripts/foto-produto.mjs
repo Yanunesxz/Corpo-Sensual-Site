@@ -43,7 +43,8 @@ async function corDoFundo(buffer) {
   return { r: med(0), g: med(1), b: med(2) };
 }
 
-let img = sharp(input);
+// rotate() sem argumento corrige a orientação gravada pela câmera (EXIF).
+let img = sharp(input).rotate();
 if (cortarTopo > 0) {
   const m = await img.metadata();
   img = img.extract({ left: 0, top: Math.round(m.height * cortarTopo), width: m.width, height: Math.round(m.height * (1 - cortarTopo)) });
