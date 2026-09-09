@@ -79,3 +79,12 @@ export type LeadInsert = {
   utm_term: string | null;
   utm_content: string | null;
 };
+
+/** Linha gravada em `leads`: o lead mais o resultado do envio ao CRM (migration 0002). */
+export type LeadRow = LeadInsert & {
+  crm_status: "enviado" | "pendente";
+  crm_cliente: string | null;
+  crm_negocio: string | null;
+  crm_erro: string | null;
+  crm_enviado_em: string | null;
+};

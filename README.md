@@ -43,6 +43,15 @@ Todos os formulários gravam na tabela `leads` do Supabase, com:
 
 Se o Supabase não estiver configurado, o formulário mostra um aviso e não perde o lead silenciosamente.
 
+### Lead direto no CRM (CSP 360)
+
+Na mesma server action, antes de gravar, o servidor chama a Edge Function `lead-site` do CRM ([Projeto-CS-SP](https://github.com/Yanunesxz/Projeto-CS-SP), runbook em `central/integracao-site.md`) com o header `x-chave`. O CRM procura o cliente por CNPJ, telefone e e-mail, cria o **prospecto** com a responsável comercial e abre o **negócio** na etapa "Leads" do funil "Venda Direta — Leads", com origem = `utm_source`, UTMs, página, cidade/UF e a mensagem no histórico. Reenviar não duplica nada.
+
+- Código: `src/lib/crm.ts` (mapeamento `source` → nome da página, marca `cs`) chamado por `src/app/actions/leads.ts`.
+- Chave: variável `LEAD_SITE_CHAVE` **só no servidor** (`.env.local` e Vercel → Environment Variables), sem o prefixo `NEXT_PUBLIC`. É o mesmo valor do secret `LEAD_SITE_CHAVE_CS` da função no Supabase do CRM.
+- Resultado: a linha em `leads` guarda `crm_status` (`enviado` ou `pendente`), `crm_cliente` (CLI-…), `crm_negocio` (NEG-…), `crm_erro` e `crm_enviado_em` — migration `supabase/migrations/0002_leads_crm.sql`. Falha no CRM nunca bloqueia o formulário: o lead fica `pendente` para reenvio.
+- Teste local: `LEAD_SITE_CHAVE` no `.env.local`, `npm run dev`, enviar o formulário em `/fabrica-de-pijamas` e conferir em Funis → Venda Direta — Leads no CRM.
+
 ### Catálogo
 
 Produtos, categorias e coleções vêm das tabelas do Supabase. Enquanto o banco não está configurado, o site usa os dados de exemplo de `src/lib/fallback-data.ts`, então ele **sempre renderiza**, inclusive no primeiro deploy.
@@ -177,7 +186,7 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 
 1. Acesse https://vercel.com/new e importe o repositório `Yanunesxz/Corpo-Sensual-Site`.
 2. Framework detectado: Next.js. Não precisa alterar build ou output.
-3. Em **Environment Variables**, cadastre as variáveis do `.env.example` (pelo menos `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `NEXT_PUBLIC_SITE_URL`).
+3. Em **Environment Variables**, cadastre as variáveis do `.env.example` (pelo menos `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `NEXT_PUBLIC_SITE_URL`). Para os leads chegarem ao CRM, cadastre também `LEAD_SITE_CHAVE` (sem o prefixo `NEXT_PUBLIC`).
 4. Deploy. A cada push na `main` o Vercel publica uma nova versão; pull requests ganham URL de preview.
 5. Em **Settings > Domains**, adicione `corposensual.com.br` e `www.corposensual.com.br` e siga as instruções de DNS. Só aponte o domínio quando o conteúdo estiver revisado; até lá o site do Wix continua no ar.
 

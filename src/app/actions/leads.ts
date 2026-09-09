@@ -3,7 +3,8 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSupabase } from "@/lib/supabase/client";
-import type { LeadInsert, LeadSource } from "@/lib/types";
+import { enviarLeadParaCrm } from "@/lib/crm";
+import type { LeadInsert, LeadRow, LeadSource } from "@/lib/types";
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
 
@@ -55,8 +56,12 @@ function echo(formData: FormData): LeadFormState["values"] {
 }
 
 /**
- * Recebe o formulário de lead, valida e grava no Supabase.
+ * Recebe o formulário de lead, valida, avisa o CRM e grava no Supabase.
  * Em caso de sucesso redireciona para a página de obrigado.
+ *
+ * Ordem: primeiro o CRM (cria o prospecto e o negócio no funil de leads), depois
+ * a gravação aqui com o resultado. Se o CRM não responder, o lead é gravado
+ * como `pendente` e pode ser reenviado depois — nunca se perde.
  */
 export async function submitLead(_prev: LeadFormState, formData: FormData): Promise<LeadFormState> {
   // Honeypot: bots preenchem o campo escondido. Fingimos sucesso e descartamos.
@@ -106,7 +111,19 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     utm_content: nullIfEmpty(d.utm_content),
   };
 
-  const { error } = await supabase.from("leads").insert(row);
+  // CRM (CSP 360): não bloqueia o cadastro — falha vira `pendente` e fica registrada.
+  const crm = await enviarLeadParaCrm(row);
+  if (crm.status === "pendente") console.warn("[leads] CRM pendente:", crm.erro);
+  const linha: LeadRow = {
+    ...row,
+    crm_status: crm.status,
+    crm_cliente: crm.status === "enviado" ? crm.cliente : null,
+    crm_negocio: crm.status === "enviado" ? crm.negocio : null,
+    crm_erro: crm.status === "pendente" ? crm.erro : null,
+    crm_enviado_em: crm.status === "enviado" ? new Date().toISOString() : null,
+  };
+
+  const { error } = await supabase.from("leads").insert(linha);
   if (error) {
     console.error("[leads] erro ao gravar lead:", error.message);
     return {
