@@ -27,12 +27,11 @@ export default async function ColecoesPage() {
       {/* Abertura no desenho do site atual: fundo azul-claro, título, apoio e botão */}
       <section className="bg-sky">
         <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
-          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Coleções</h1>
+          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Duas coleções por ano</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
-            Lançamos duas coleções por ano, uma de primavera/verão e uma de outono/inverno, com pijamas, short dolls,
-            camisolas e robes nas linhas feminina, masculina e infantil. Juntas, as duas coleções somam{" "}
-            {TOTAL_REFERENCIAS} referências: aqui você vê uma seleção, e o catálogo digital traz todas.{" "}
-            {site.commercial.salesNote}
+            Produzimos as duas do fio ao produto final, em Muriaé: Delícias de Verão (Primavera/Verão 2027) e
+            Entrelaços (Outono/Inverno 2026). Juntas somam {TOTAL_REFERENCIAS} referências. Aqui você vê uma seleção;
+            o catálogo digital traz todas, com grade e preços. {site.commercial.salesNote}
           </p>
           <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7">
             <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">

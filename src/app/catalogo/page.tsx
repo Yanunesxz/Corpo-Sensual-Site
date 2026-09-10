@@ -20,13 +20,13 @@ export default function CatalogoPage() {
         </div>
         {/* Formulário dentro do bloco azul-claro */}
         <div className="bg-sky px-5 py-14 md:px-12 md:py-20 lg:px-16">
-          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Receba o catálogo da nova coleção</h1>
+          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Receba o catálogo com grade e tabela de preços</h1>
           <p className="mt-5 max-w-md text-[1.0625rem] leading-[1.6] text-body">
-            Fábrica de pijamas e moda íntima em Muriaé, MG. Só a coleção de verão tem 145 referências: o{" "}
+            São 145 referências na Delícias de Verão, e o{" "}
             <Link href="/colecoes" className="underline">
-              site mostra uma parte
+              site publica só uma parte
             </Link>
-            , o catálogo traz todas, com grade e tabela de atacado. Preencha e a nossa equipe entra em contato.{" "}
+            . Preencha os dados da sua loja: a nossa equipe entra em contato e apresenta o representante da sua região.{" "}
             {site.commercial.noCnpjNote}
           </p>
           <div className="mt-8 max-w-lg">

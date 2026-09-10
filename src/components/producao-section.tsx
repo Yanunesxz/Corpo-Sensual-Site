@@ -34,10 +34,10 @@ export function ProducaoSection({ fundo = "bg-sky-soft", comLink = true }: Props
               grid recoloca o vídeo na coluna da esquerda, ao lado dos dois textos. */}
           <div className="lg:col-start-2 lg:row-start-1">
             <p className="label">Dentro da fábrica</p>
-            <h2 className="h-display mt-3 text-3xl md:text-[2.5rem]">Da costura à caixa</h2>
+            <h2 className="h-display mt-3 text-3xl md:text-[2.5rem]">Do fio à caixa lacrada</h2>
             <p className="mt-4 max-w-2xl text-[1.125rem] leading-[1.6]">
-              O caminho de uma peça na nossa produção, do momento em que sai da máquina até o pedido lacrado e pronto
-              para viajar. Fabricação própria, sem intermediário entre a costura e a sua loja.
+              Veja a peça sair da máquina, passar pelo acabamento e entrar na caixa lacrada. Tudo dentro da nossa
+              fábrica, em Muriaé. Entre a costura e a sua loja não existe intermediário.
             </p>
           </div>
 

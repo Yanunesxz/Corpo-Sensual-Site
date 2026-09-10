@@ -63,8 +63,8 @@ export default async function HomePage() {
       <section className="bg-sky-soft">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-5 py-14 md:flex-row md:items-center md:justify-between md:gap-10 md:px-8 md:py-20">
           <p className="max-w-2xl text-[1.125rem] leading-[1.6]">
-            <strong className="font-medium">Fábrica de pijamas e moda íntima</strong> em Muriaé, MG, há mais de 25 anos. Vendemos no atacado para
-            lojas de todo o Brasil, com coleções novas a cada temporada.
+            <strong className="font-medium">Fábrica própria de pijamas e moda íntima</strong> em Muriaé, MG, há mais de 25 anos. Produção
+            verticalizada, do fio ao produto final. Vendemos no atacado para lojas de todo o Brasil.
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <Link href="/fabrica-de-pijamas" className="link text-[15px]">
@@ -116,9 +116,9 @@ export default async function HomePage() {
         <section className="bg-sky-soft">
           <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
             <SectionHeading
-              title="Mais vendidas"
+              title="As que mais saem nas lojas"
               link={{ href: currentHref, label: "Ver mais referências" }}
-              description={`As peças com maior saída nas lojas. São só algumas: o mix tem ${TOTAL_REFERENCIAS} referências entre verão e inverno.`}
+              description={`Uma amostra do que mais sai. O mix tem ${TOTAL_REFERENCIAS} referências entre verão e inverno, e o catálogo digital traz todas, com grade e tabela de preços.`}
             />
             <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+5)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
               {products.map((p) => (
@@ -168,16 +168,15 @@ export default async function HomePage() {
       <section className="bg-sky">
         <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-16">
           <h2 className="h-display text-4xl md:text-[3.125rem]">
-            Revenda a<br />Corpo Sensual
+            Teste a marca sem<br />pedido mínimo
           </h2>
           <div className="max-w-md">
             <p className="text-[1.125rem] leading-[1.6]">
-              Cadastre a sua loja para receber o catálogo digital e o contato do representante da sua região.
+              Cadastre a sua loja e receba o catálogo digital e o contato do representante da região. 5% no Pix e troca em até 15 dias após receber, se a peça vier com defeito de fabricação.
             </p>
             {/* Divisória mais escura que a padrão para aparecer sobre o azul-claro */}
             <ul className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-base leading-[1.5]">
-              <li className="py-3">{commercial.salesNote}</li>
-              <li className="py-3">{commercial.noMinOrder}</li>
+              <li className="py-3">{commercial.wholesaleNote}</li>
               <li className="py-3">{commercial.pixDiscount}</li>
               <li className="py-3">{commercial.installments}</li>
               <li className="py-3">{commercial.freeShipping}*</li>
