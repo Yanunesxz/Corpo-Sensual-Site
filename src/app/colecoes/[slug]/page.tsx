@@ -54,7 +54,7 @@ export default async function ColecaoPage({ params }: Props) {
           { src: "campanha/piquenique", legenda: "Cena de piquenique da campanha" },
           { src: "campanha/familia", legenda: "Crianças brincando de pijama, linha família" },
           { src: "campanha/verao", legenda: "Cena de verão da campanha" },
-          { src: "campanha/fabrica", legenda: "Vista aérea da região da fábrica, em Muriaé" },
+          { src: "campanha/fabrica", legenda: "Vista aérea da região da fábrica, em Muriaé", comAudio: false },
         ]
       : [];
 
@@ -79,7 +79,7 @@ export default async function ColecaoPage({ params }: Props) {
               Ver peças
             </a>
           </div>
-          <p className="mt-4 text-sm text-white/85">*{site.commercial.exclusive}</p>
+          <p className="mt-4 text-sm text-white/85">*{site.commercial.salesNote} {site.commercial.noCnpjNote}</p>
         </div>
       </section>
 
@@ -114,7 +114,7 @@ export default async function ColecaoPage({ params }: Props) {
             <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
               {videos.map((v) => (
                 <li key={v.src} className="overflow-hidden rounded-media bg-sky-soft">
-                  <CampaignVideo src={v.src} legenda={v.legenda} />
+                  <CampaignVideo src={v.src} legenda={v.legenda} comAudio={v.comAudio !== false} />
                 </li>
               ))}
             </ul>
@@ -136,7 +136,7 @@ export default async function ColecaoPage({ params }: Props) {
             <div>
               <h2 className="h-display text-3xl md:text-[2.5rem]">Quer essas peças na sua loja?</h2>
               <p className="mt-5 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-                Vendemos no atacado para lojas com CNPJ. Cadastre-se para receber o catálogo completo com a tabela de
+                Vendemos no atacado, por grade. Cadastre-se para receber o catálogo completo com a tabela de
                 preços, ou fale com a gente.
               </p>
               <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">

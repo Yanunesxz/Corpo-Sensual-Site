@@ -60,7 +60,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
         </p>
       </div>
       <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-        Uma amostra da coleção. Venda no atacado, por grade, para lojas com CNPJ.
+        Uma amostra da coleção. Venda no atacado, por grade e com pedido mínimo.
       </p>
 
       {disponiveis.length > 1 && (

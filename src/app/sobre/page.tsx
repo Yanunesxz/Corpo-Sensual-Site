@@ -18,7 +18,7 @@ const facts = [
   { label: "O que fabricamos", value: "Pijamas, short dolls, camisolas e robes" },
   { label: "Linhas", value: "Feminina, masculina, infantil e gestante" },
   { label: "Coleções", value: "Duas por ano: primavera/verão e outono/inverno" },
-  { label: "Como vendemos", value: "No atacado, para lojas com CNPJ, por representantes em todo o Brasil" },
+  { label: "Como vendemos", value: "No atacado, por grade, por representantes em todo o Brasil" },
 ];
 
 const values = [
@@ -94,7 +94,7 @@ export default function SobrePage() {
       <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
         <h2 className="h-display text-3xl md:text-[2.5rem]">Como comprar</h2>
         <p className="mt-4 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
-          {site.commercial.exclusive} {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}.
+          Vendemos no atacado, por grade, por meio de representantes. {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}. {site.commercial.noCnpjNote}
         </p>
         <div className="mt-8 max-w-2xl">
           <Steps steps={passosLojista} />
@@ -128,7 +128,7 @@ export default function SobrePage() {
                 Falar com a gente
               </Link>
             </div>
-            <p className="mt-3 text-sm text-body">*{site.commercial.exclusive}</p>
+            <p className="mt-3 text-sm text-body">*{site.commercial.salesNote} {site.commercial.noCnpjNote}</p>
           </div>
         </div>
       </section>

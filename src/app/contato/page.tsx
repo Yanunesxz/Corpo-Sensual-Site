@@ -33,12 +33,16 @@ export default function ContatoPage() {
             <h2 className="h-display text-3xl md:text-[2.5rem]">Envie uma mensagem</h2>
             <ul className="mt-6 space-y-3 text-[1.0625rem] leading-[1.6] text-body">
               <li>
-                <strong className="font-medium text-ink">Lojista:</strong> informe o CNPJ e a cidade da loja. Encaminhamos ao
-                representante da sua região.
+                <strong className="font-medium text-ink">Lojista:</strong> diga a cidade da loja e, se tiver, o CNPJ.
+                Encaminhamos ao representante da sua região.
               </li>
               <li>
-                <strong className="font-medium text-ink">Consumidor:</strong> vendemos apenas para lojas. Diga a sua cidade e
-                indicamos onde encontrar as peças.
+                <strong className="font-medium text-ink">Ainda sem CNPJ:</strong> fale com a gente do mesmo jeito. Vendemos no
+                atacado, por grade e com pedido mínimo, e avaliamos o seu caso.
+              </li>
+              <li>
+                <strong className="font-medium text-ink">Consumidor:</strong> diga a sua cidade e indicamos a loja mais
+                perto de você.
               </li>
               <li>
                 <strong className="font-medium text-ink">Representante comercial:</strong> conte a sua região e experiência no

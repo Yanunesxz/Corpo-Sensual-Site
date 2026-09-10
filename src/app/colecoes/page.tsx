@@ -30,7 +30,7 @@ export default async function ColecoesPage() {
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Coleções</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
             Lançamos duas coleções por ano, uma de primavera/verão e uma de outono/inverno, com pijamas, short dolls,
-            camisolas e robes nas linhas feminina, masculina, infantil e gestante. {site.commercial.exclusive}
+            camisolas e robes nas linhas feminina, masculina, infantil e gestante. {site.commercial.salesNote}
           </p>
           <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7">
             <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">

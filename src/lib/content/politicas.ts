@@ -149,7 +149,7 @@ export const politicas: Politica[] = [
       {
         heading: "Relação comercial",
         paragraphs: [
-          "As vendas são realizadas no atacado, para pessoas jurídicas, por meio de representantes comerciais e da plataforma B2B. Preços, condições de pagamento e pedidos mínimos são informados pelo representante.",
+          "As vendas são realizadas no atacado, por meio de representantes comerciais e da plataforma B2B. Preços, condições de pagamento e pedidos mínimos são informados pelo representante.",
         ],
       },
       {

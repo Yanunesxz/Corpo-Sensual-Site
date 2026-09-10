@@ -71,7 +71,10 @@ export const site = {
   ],
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
   commercial: {
-    exclusive: "Venda exclusiva para lojas físicas com CNPJ ativo.",
+    /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
+    salesNote: "Venda no atacado, por grade e com pedido mínimo.",
+    /** Convite para quem ainda não tem CNPJ: o caso é avaliado, não recusado. */
+    noCnpjNote: "Ainda não tem CNPJ? Fale com a gente.",
     minOrder: "Investimento mínimo de R$ 1.200,00",
     installments: "Parcelamento em até 6x sem juros no cartão",
     freeShipping: "Frete grátis a partir de R$ 1.200,00",
