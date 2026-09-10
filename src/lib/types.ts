@@ -66,6 +66,8 @@ export type LeadInsert = {
   email: string;
   whatsapp: string;
   has_cnpj: boolean;
+  /** CNPJ (lojista) ou CPF (consumidor), só dígitos. */
+  document: string | null;
   company: string | null;
   city: string | null;
   state: string | null;

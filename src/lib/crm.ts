@@ -54,6 +54,10 @@ export async function enviarLeadParaCrm(lead: LeadInsert): Promise<ResultadoCrm>
     email: lead.email,
     whatsapp: lead.whatsapp,
     possui_cnpj: lead.has_cnpj ? "Sim" : "Não",
+    // O CRM procura o cliente pelo CNPJ, então o campo `cnpj` só leva CNPJ.
+    // Quem não tem loja informa CPF, que vai num campo próprio.
+    cnpj: lead.has_cnpj ? (lead.document ?? "") : "",
+    cpf: lead.has_cnpj ? "" : (lead.document ?? ""),
     cidade: lead.city ?? "",
     uf: lead.state ?? "",
     mensagem: lead.message ?? "",

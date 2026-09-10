@@ -110,6 +110,7 @@ create table if not exists public.leads (
   email        text not null,
   whatsapp     text not null,             -- só dígitos, com DDD
   has_cnpj     boolean not null default false,
+  document     text,                      -- CNPJ do lojista ou CPF do consumidor, só dígitos
   company      text,
   city         text,
   state        text,
