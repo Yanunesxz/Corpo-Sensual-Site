@@ -27,12 +27,12 @@ export default function SobrePage() {
       {/* Abertura da página: único título com .h-hero (letter-spacing do site atual) */}
       <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-14 md:px-8 md:pt-20 md:pb-20">
         <h1 className="h-hero max-w-3xl text-[2rem] md:text-[2.375rem]">
-          Conforto e estilo, feitos com atenção aos detalhes
+          Do fio ao pijama pronto, na nossa fábrica
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-[1.3] text-body">
-          A {site.name} é uma fábrica própria de pijamas, camisolas, robes e moda íntima em {site.legal.cidade},{" "}
-          {site.legal.uf}. Há mais de 25 anos vendemos no atacado para lojistas de todo o Brasil, por representantes e
-          pela plataforma digital de pedidos.
+          Fábrica própria de pijamas, camisolas, robes e moda íntima em {site.legal.cidade}, {site.legal.uf}, polo
+          nacional do setor. Há mais de 25 anos produzimos do fio ao produto final e vendemos no atacado para lojistas
+          de todo o Brasil, por representantes e pela plataforma B2B.
         </p>
       </section>
 

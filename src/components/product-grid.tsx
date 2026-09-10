@@ -88,11 +88,11 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
     <div>
       <h2 className="h-display text-3xl md:text-[2.5rem]">{activeName ?? title}</h2>
       <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-        Uma amostra da coleção. As duas coleções do ano somam {TOTAL_REFERENCIAS} referências, todas no{" "}
+        Uma amostra das coleções. São {TOTAL_REFERENCIAS} referências no ano, e o{" "}
         <Link href="/catalogo" className="underline">
           catálogo digital
-        </Link>
-        .
+        </Link>{" "}
+        traz todas.
       </p>
 
       {disponiveis.length > 1 && (
@@ -132,7 +132,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
 
       {/* Saída depois das peças: o catálogo é o próximo passo, não uma paginação. */}
       <div className="mt-10 flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-base leading-[1.6] text-body">Veja mais referências no catálogo, com grade de tamanhos e tabela de preços.</p>
+        <p className="text-base leading-[1.6] text-body">No catálogo você vê grade de tamanhos e preços antes de montar o pedido.</p>
         <Link href="/catalogo" className="btn btn-dark w-full shrink-0 whitespace-nowrap sm:w-auto">
           Quero receber o catálogo
         </Link>

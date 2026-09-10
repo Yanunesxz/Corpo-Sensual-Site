@@ -22,12 +22,12 @@ const passos = [
 ];
 
 const benefits = [
-  "Preço de fábrica, sem intermediários",
+  "Sem pedido mínimo: compre o valor que quiser",
+  "5% no Pix e parcelamento sem juros no cartão",
+  "Frete grátis: R$ 1.200 no Sudeste, R$ 2.000 nas demais",
+  "Sai em até 15 dias úteis; há peças a pronta entrega",
+  "Troca em até 15 dias por defeito de fabricação",
   "Grade completa: feminino, masculino e infantil",
-  "Coleções novas a cada temporada",
-  "Reposição rápida das referências que mais vendem",
-  "Pedidos online pela plataforma B2B, com acompanhamento",
-  "Representante dedicado na sua região",
 ];
 
 export default function FabricaPage() {
@@ -45,7 +45,7 @@ export default function FabricaPage() {
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
           {/* .h-hero e .link definem a cor escura do design system: sobre a foto forçamos o branco */}
           {/* 28px no celular: o título é longo e o espaçamento entre letras do .h-hero alarga a linha */}
-          <h1 className="h-hero max-w-3xl text-[1.75rem] text-white md:text-[2.375rem]">Pijamas direto da fábrica para a sua loja</h1>
+          <h1 className="h-hero max-w-3xl text-[1.75rem] text-white md:text-[2.375rem]">Pijamas direto da fábrica, sem pedido mínimo</h1>
           <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
             <a href="#formulario" className="btn btn-light w-full sm:w-auto">
               Quero ser lojista
@@ -54,15 +54,16 @@ export default function FabricaPage() {
               Perguntas frequentes
             </a>
           </div>
-          <p className="mt-4 text-sm text-white/85">*{site.commercial.salesNote} {site.commercial.noCnpjNote}</p>
+          <p className="mt-4 text-sm text-white/85">*{site.commercial.wholesaleNote} {site.commercial.noCnpjNote}</p>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
         <div>
           <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
-            Mais de 25 anos confeccionando moda íntima em Muriaé, MG, para lojas de todo o Brasil. São{" "}
-            {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site publica só uma parte:{" "}
+            Fábrica própria em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do fio ao produto final: corte,
+            costura e embalagem aqui dentro. São {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site
+            publica só uma parte:{" "}
             <Link href="/colecoes" className="underline">
               veja as coleções
             </Link>
@@ -91,8 +92,8 @@ export default function FabricaPage() {
         </div>
         {/* Formulário dentro do bloco azul-claro: título, condições em linha e botão escuro no fim */}
         <div id="formulario" className="scroll-mt-20 rounded-media bg-sky p-6 md:p-8">
-          <h2 className="h-display text-3xl md:text-[2.5rem]">Quero comprar da fábrica</h2>
-          <p className="mt-3 text-[1.0625rem] leading-[1.6] text-body">Cadastre-se e receba o contato do representante da sua região.</p>
+          <h2 className="h-display text-3xl md:text-[2.5rem]">Quero as peças que mais vendem</h2>
+          <p className="mt-3 text-[1.0625rem] leading-[1.6] text-body">Cadastre a sua loja. O representante da sua região manda a tabela de preços e a grade para você montar o primeiro pedido.</p>
           <CommercialTerms className="mt-6" />
           <div className="mt-7">
             <LeadForm source="fabrica-de-pijamas" submitLabel="Quero ser lojista" withMessage />

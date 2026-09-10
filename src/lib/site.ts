@@ -73,6 +73,8 @@ export const site = {
   commercial: {
     /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
     salesNote: "Venda no atacado, por grade, sem pedido mínimo.",
+    /** Para onde o título ao lado já diz que não há mínimo, e repetir soaria estranho. */
+    wholesaleNote: "Venda no atacado, por grade.",
     /** Convite para quem ainda não tem CNPJ: o caso é avaliado, não recusado. */
     noCnpjNote: "Ainda não tem CNPJ? Fale com a gente.",
     /** Não há valor mínimo de pedido. É argumento de venda, não ressalva. */
