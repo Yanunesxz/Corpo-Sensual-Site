@@ -52,6 +52,8 @@ export type Product = {
   sort_order: number;
   images: ProductImage[];
   category?: Pick<Category, "slug" | "name"> | null;
+  /** Só na linha infantil: separa menino de menina para a grade equilibrar as duas. */
+  genero?: "menino" | "menina" | null;
 };
 
 export type LeadSource =

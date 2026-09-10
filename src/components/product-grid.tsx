@@ -6,8 +6,17 @@ import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
-/** Teto de peças por linha. O resto do mix vai no catálogo digital. */
-const POR_LINHA = 6;
+/**
+ * Quantas peças de cada grupo a grade mostra. A linha infantil entra dividida
+ * em menino e menina para as duas aparecerem, em vez de uma sumir por ter
+ * referência mais bem ranqueada que a outra.
+ */
+const COTAS = [
+  { categoria: "masculino", genero: null, quantas: 6 },
+  { categoria: "feminino", genero: null, quantas: 6 },
+  { categoria: "infantil", genero: "menino", quantas: 3 },
+  { categoria: "infantil", genero: "menina", quantas: 3 },
+] as const;
 const EVENT = "cs:categoria";
 
 // A categoria ativa vive na URL (?categoria=...). Ler pela store externa mantém
@@ -32,18 +41,24 @@ type Props = {
 /**
  * Grade de peças da coleção, com filtro por categoria no navegador.
  *
- * Sem filtro mostra o mesmo tanto de cada linha, intercaladas; com filtro mostra
- * esse mesmo tanto da linha escolhida. A grade fica do mesmo tamanho em qualquer
- * filtro, e nenhuma linha parece menor só porque tem menos peça publicada aqui.
+ * Mostra uma cota fixa de cada grupo, as mais vendidas primeiro: seis masculinas,
+ * seis femininas, três infantis de menino e três de menina. Com filtro, mostra as
+ * cotas daquela linha. Assim a vitrine tem sempre a mesma cara, e nenhuma linha
+ * some só porque outra tem referência melhor ranqueada.
  * O restante do mix fica no catálogo digital, que o lojista recebe após o cadastro.
  */
-/** Pega as `porLinha` primeiras de cada categoria e intercala, para a grade não sair em blocos. */
-function equilibrar(products: Product[], categories: Category[], porLinha: number): Product[] {
-  const filas = categories
-    .map((c) => products.filter((p) => p.category?.slug === c.slug).slice(0, porLinha))
-    .filter((f) => f.length > 0);
+/** As peças de uma cota, as mais vendidas primeiro (a lista já vem por sort_order). */
+function daCota(products: Product[], cota: (typeof COTAS)[number]): Product[] {
+  return products
+    .filter((p) => p.category?.slug === cota.categoria && (!cota.genero || p.genero === cota.genero))
+    .slice(0, cota.quantas);
+}
+
+/** Intercala as filas para a grade não sair em blocos de uma linha só. */
+function intercalar(filas: Product[][]): Product[] {
+  const maior = Math.max(0, ...filas.map((f) => f.length));
   const saida: Product[] = [];
-  for (let i = 0; i < porLinha; i++) {
+  for (let i = 0; i < maior; i++) {
     for (const fila of filas) if (fila[i]) saida.push(fila[i]);
   }
   return saida;
@@ -55,15 +70,10 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
   const activeName = categories.find((c) => c.slug === active)?.name;
   // Só oferece as categorias que existem nesta coleção.
   const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
-  // Quantas cabem em TODAS as linhas desta coleção. Assim a grade tem sempre o
-  // mesmo tamanho, com ou sem filtro, e nenhuma linha aparece menor que as outras.
-  const porLinha = Math.min(
-    POR_LINHA,
-    ...disponiveis.map((c) => products.filter((p) => p.category?.slug === c.slug).length),
-  );
-  const shown = active
-    ? products.filter((p) => p.category?.slug === active).slice(0, porLinha)
-    : equilibrar(products, disponiveis, porLinha);
+  // Com filtro, só as cotas daquela linha; sem filtro, todas. Em qualquer caso as
+  // peças vêm das mais vendidas para as menos, que é a ordem em que a lista chega.
+  const cotas = COTAS.filter((c) => !active || c.categoria === active);
+  const shown = intercalar(cotas.map((c) => daCota(products, c)));
 
   function select(slug: string) {
     const url = new URL(window.location.href);

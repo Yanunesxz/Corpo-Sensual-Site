@@ -45,11 +45,11 @@ ${catalogo.colecoes
   .join(",\n")}
 on conflict (slug) do nothing;
 
-insert into public.products (ref, slug, name, description, category_id, collection_id, is_featured, sort_order)
-select v.ref, v.slug, v.name, v.description, c.id, col.id, v.rank <= 10, v.rank
+insert into public.products (ref, slug, name, description, category_id, collection_id, genero, is_featured, sort_order)
+select v.ref, v.slug, v.name, v.description, c.id, col.id, v.genero, v.rank <= 10, v.rank
 from (values
-${produtos.map((p) => `  (${q(p.ref)}, ${q(p.slug)}, ${q(p.nome)}, ${q(p.descricao)}, ${q(p.categoria)}, ${q(p.colecao ?? colecaoPadrao)}, ${p.rank})`).join(",\n")}
-) as v(ref, slug, name, description, category_slug, collection_slug, rank)
+${produtos.map((p) => `  (${q(p.ref)}, ${q(p.slug)}, ${q(p.nome)}, ${q(p.descricao)}, ${q(p.categoria)}, ${q(p.colecao ?? colecaoPadrao)}, ${p.genero ? q(p.genero) : "null"}, ${p.rank})`).join(",\n")}
+) as v(ref, slug, name, description, category_slug, collection_slug, genero, rank)
 join public.categories c on c.slug = v.category_slug
 left join public.collections col on col.slug = v.collection_slug
 on conflict (slug) do nothing;

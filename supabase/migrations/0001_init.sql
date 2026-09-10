@@ -71,6 +71,7 @@ create table if not exists public.products (
   description   text,
   category_id   uuid references public.categories(id) on delete set null,
   collection_id uuid references public.collections(id) on delete set null,
+  genero        text check (genero in ('menino', 'menina')),  -- só na linha infantil
   is_new        boolean not null default false,   -- aparece em "Chegou agora"
   is_featured   boolean not null default false,   -- aparece em "Em destaque"
   active        boolean not null default true,

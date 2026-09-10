@@ -118,7 +118,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       {(hasCnpj || v.has_cnpj) === "nao" && !isContact && (
         /* Fundo branco para o aviso ler bem também quando o formulário está no bloco azul. */
         <p className="rounded-field border border-line bg-white px-4 py-3 text-sm leading-relaxed text-body">
-          Sem CNPJ dá para conversar também. Vendemos no atacado, por grade e com pedido mínimo: envie os seus dados que
+          Sem CNPJ dá para conversar também. Vendemos no atacado e por grade, sem pedido mínimo: envie os seus dados que
           avaliamos o seu caso. Se você é consumidor, diga a sua cidade e indicamos a loja mais perto de você.
         </p>
       )}

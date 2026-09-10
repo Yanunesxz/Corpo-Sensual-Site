@@ -177,7 +177,7 @@ export default async function HomePage() {
             {/* Divisória mais escura que a padrão para aparecer sobre o azul-claro */}
             <ul className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-base leading-[1.5]">
               <li className="py-3">{commercial.salesNote}</li>
-              <li className="py-3">{commercial.minOrder}</li>
+              <li className="py-3">{commercial.noMinOrder}</li>
               <li className="py-3">{commercial.pixDiscount}</li>
               <li className="py-3">{commercial.installments}</li>
               <li className="py-3">{commercial.freeShipping}*</li>

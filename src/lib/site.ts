@@ -72,17 +72,18 @@ export const site = {
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
   commercial: {
     /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
-    salesNote: "Venda no atacado, por grade e com pedido mínimo.",
+    salesNote: "Venda no atacado, por grade, sem pedido mínimo.",
     /** Convite para quem ainda não tem CNPJ: o caso é avaliado, não recusado. */
     noCnpjNote: "Ainda não tem CNPJ? Fale com a gente.",
-    minOrder: "Investimento mínimo de R$ 1.200,00",
+    /** Não há valor mínimo de pedido. É argumento de venda, não ressalva. */
+    noMinOrder: "Sem pedido mínimo",
     installments: "Parcelamento sem juros no cartão",
     pixDiscount: "5% de desconto no Pix",
     freeShipping: "Frete grátis a partir de R$ 1.200,00 no Sudeste",
     /** O piso do frete grátis muda por região. Complementa `freeShipping`. */
     freeShippingNote: "Nas demais regiões, o frete grátis vale a partir de R$ 2.000,00.",
     paymentMethods: "Aceitamos Pix, boleto e cartão.",
-    leadTime: "O pedido sai da fábrica em até 15 dias úteis. Parte do mix fica a pronta entrega, com envio imediato.",
+    leadTime: "O pedido sai da fábrica em até 15 dias úteis. Temos referências a pronta entrega e, conforme o pedido, o envio pode sair no mesmo dia.",
     /** Prazo para pedir troca de peça com defeito, em dias corridos após o recebimento. */
     exchangeDays: 15,
   },

@@ -9,7 +9,7 @@ import type { Category, Collection, Product, ProductImage } from "./types";
  */
 
 const PRODUCT_SELECT =
-  "id, ref, slug, name, description, category_id, collection_id, is_new, is_featured, active, sort_order, images:product_images(id, product_id, url, alt, sort_order), category:categories(slug, name)";
+  "id, ref, slug, name, description, category_id, collection_id, genero, is_new, is_featured, active, sort_order, images:product_images(id, product_id, url, alt, sort_order), category:categories(slug, name)";
 
 type ProductRow = Omit<Product, "images" | "category"> & {
   images: ProductImage[] | null;

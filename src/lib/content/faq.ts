@@ -8,7 +8,7 @@ import type { FaqItem } from "@/components/faq";
 export const faqLojista: FaqItem[] = [
   {
     q: "Preciso ter CNPJ para comprar?",
-    a: "A maior parte dos nossos clientes são lojas com CNPJ, mas não é um pré-requisito fechado. A venda é no atacado, por grade e com pedido mínimo. Se você ainda não tem CNPJ, fale com a gente pela página de contato: avaliamos o seu caso com o representante da sua região.",
+    a: "A maior parte dos nossos clientes são lojas com CNPJ, mas não é um pré-requisito fechado. A venda é no atacado e por grade, sem valor mínimo de pedido. Se você ainda não tem CNPJ, fale com a gente pela página de contato: avaliamos o seu caso com o representante da sua região.",
   },
   {
     q: "Quais são as formas de pagamento?",
