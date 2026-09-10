@@ -30,11 +30,12 @@ export default function CatalogoPage() {
             {site.commercial.noCnpjNote}
           </p>
           <div className="mt-8 max-w-lg">
-            {/* Os três termos comerciais em linha, acima do formulário */}
+            {/* Condições comerciais em linha, acima do formulário */}
             <ul className="mb-7 flex flex-col gap-1.5 text-sm leading-relaxed text-body sm:flex-row sm:flex-wrap sm:gap-x-6">
               <li>{site.commercial.minOrder}</li>
+              <li>{site.commercial.pixDiscount}</li>
               <li>{site.commercial.installments}</li>
-              <li>Frete grátis (consulte a sua região)</li>
+              <li>Frete grátis a partir de R$ 1.200,00 no Sudeste</li>
             </ul>
             <LeadForm source="catalogo" submitLabel="Quero receber o catálogo" withMessage />
           </div>
