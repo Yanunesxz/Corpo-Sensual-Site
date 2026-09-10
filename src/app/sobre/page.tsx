@@ -66,7 +66,7 @@ export default function SobrePage() {
       <section className="bg-sky">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-8 px-5 py-16 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
           <h2 className="h-display text-4xl md:text-[3.125rem]">
-            Quer revender a<br />Corpo Sensual?
+            Quer a Corpo Sensual<br />na sua loja?
           </h2>
           <div className="md:shrink-0">
             <div className="flex flex-col gap-3 sm:flex-row">
