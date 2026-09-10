@@ -7,7 +7,7 @@ import { Faq } from "@/components/faq";
 import { HeroImage } from "@/components/hero-image";
 import { faqLojista } from "@/lib/content/faq";
 import { passosLojista } from "@/lib/content/lojistas";
-import { site } from "@/lib/site";
+import { site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { ProducaoSection } from "@/components/producao-section";
 
 export const metadata: Metadata = {
@@ -59,7 +59,12 @@ export default function FabricaPage() {
         <div>
           <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
             Mais de 25 anos confeccionando moda íntima em Muriaé, MG. Uma marca conhecida nacionalmente, com estrutura
-            para atender a sua loja com qualidade e agilidade.
+            para atender a sua loja com qualidade e agilidade. São {TOTAL_REFERENCIAS} referências nas duas coleções do
+            ano e o site publica só uma parte:{" "}
+            <Link href="/colecoes" className="underline">
+              veja as coleções
+            </Link>
+            .
           </p>
           <ul className="mt-8 divide-y divide-line border-y border-line">
             {benefits.map((b) => (

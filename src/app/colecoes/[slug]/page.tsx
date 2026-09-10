@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategories, getCollectionBySlug, getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site } from "@/lib/site";
+import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { CommercialTerms } from "@/components/commercial-terms";
 import { HeroImage } from "@/components/hero-image";
 import { ProductGrid } from "@/components/product-grid";
@@ -46,6 +46,8 @@ export default async function ColecaoPage({ params }: Props) {
   const showingBestSellers = ownProducts.length === 0;
   const products = showingBestSellers ? await getProducts({}) : ownProducts;
   const others = collections.filter((c) => c.id !== collection.id);
+  // Quantas referências esta coleção tem no catálogo fechado. O site publica só uma parte.
+  const referencias = REFERENCIAS_POR_COLECAO[collection.slug];
   const gallery = collection.gallery_urls ?? [];
   // Filmes gravados para a campanha desta coleção. Só a de verão tem ensaio filmado.
   const videos =
@@ -91,6 +93,16 @@ export default async function ColecaoPage({ params }: Props) {
             <div className="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-24">
               {collection.headline && <p className="h-display text-3xl md:text-[2.5rem]">{collection.headline}</p>}
               {collection.description && <p className="mt-5 text-[1.125rem] leading-[1.6] text-body">{collection.description}</p>}
+              {referencias && (
+                <p className="label mt-6">
+                  São {referencias} referências nesta coleção, entre feminino, masculino, infantil e gestante. O site
+                  mostra algumas; o{" "}
+                  <Link href="/catalogo" className="underline">
+                    catálogo completo
+                  </Link>{" "}
+                  traz todas.
+                </p>
+              )}
             </div>
           </section>
         )}
@@ -149,7 +161,7 @@ export default async function ColecaoPage({ params }: Props) {
               </div>
               {others.length > 0 && (
                 <p className="mt-8 text-sm text-body">
-                  Veja também:{" "}
+                  Somando as coleções do ano, são {TOTAL_REFERENCIAS} referências. Veja também:{" "}
                   {others.map((c, i) => (
                     <span key={c.id}>
                       {i > 0 && ", "}

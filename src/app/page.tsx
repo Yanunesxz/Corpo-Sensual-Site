@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site } from "@/lib/site";
+import { collectionShortName, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { HeroImage } from "@/components/hero-image";
@@ -80,6 +80,15 @@ export default async function HomePage() {
       {/* Categorias: foto de estúdio com o nome abaixo */}
       {categories.length > 0 && (
         <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+          {/* As fotos levam à coleção já filtrada, que mostra só uma parte. Deixa isso claro. */}
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+            <p className="label max-w-xl">
+              Feminino, masculino, infantil e gestante. Aqui aparece uma parte de cada linha.
+            </p>
+            <Link href="/colecoes" className="link text-[15px]">
+              Ver as coleções
+            </Link>
+          </div>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
             {categories.map((c) => (
               <li key={c.id}>
@@ -105,8 +114,8 @@ export default async function HomePage() {
           <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
             <SectionHeading
               title="Mais vendidas"
-              link={{ href: currentHref, label: "Ver a coleção completa" }}
-              description="As peças com maior saída nas lojas neste trimestre. Venda no atacado, por grade."
+              link={{ href: currentHref, label: "Ver mais referências" }}
+              description={`As peças com maior saída nas lojas neste trimestre. São só algumas: o mix tem ${TOTAL_REFERENCIAS} referências entre as coleções de verão e inverno. Venda no atacado, por grade.`}
             />
             <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+7)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
               {products.map((p) => (
@@ -115,7 +124,7 @@ export default async function HomePage() {
             </div>
             <div className="mt-8 md:hidden">
               <Link href={currentHref} className="btn btn-outline w-full">
-                Ver todas as peças
+                Ver mais peças da coleção
               </Link>
             </div>
           </div>

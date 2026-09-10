@@ -82,6 +82,19 @@ export const site = {
   },
 } as const;
 
+/**
+ * Quantas referências cada coleção tem no catálogo fechado. O site publica só
+ * uma parte delas: 145 vêm do PDF Verão 2027 e 65 do catálogo Entrelaços.
+ * Fica aqui para o número não ser digitado de novo em cada página.
+ */
+export const REFERENCIAS_POR_COLECAO: Record<string, number> = {
+  "delicias-de-verao": 145,
+  entrelacos: 65,
+};
+
+/** Soma das referências das coleções do ano. */
+export const TOTAL_REFERENCIAS = Object.values(REFERENCIAS_POR_COLECAO).reduce((soma, n) => soma + n, 0);
+
 /** Há pelo menos um canal direto de contato configurado? */
 export function hasDirectContact(): boolean {
   const c = site.contact;

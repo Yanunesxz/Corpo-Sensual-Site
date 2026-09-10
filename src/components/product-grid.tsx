@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSyncExternalStore } from "react";
+import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
@@ -60,7 +61,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
         </p>
       </div>
       <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-        Uma amostra da coleção. Venda no atacado, por grade e com pedido mínimo.
+        Uma amostra da coleção. As duas coleções do ano somam {TOTAL_REFERENCIAS} referências.
       </p>
 
       {disponiveis.length > 1 && (
@@ -101,7 +102,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
       {/* O catálogo completo é o próximo passo, não uma paginação. */}
       <div className="mt-12 rounded-media bg-sky p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 md:p-8">
         <div className="max-w-md">
-          <p className="h-display text-2xl md:text-3xl">Veja a coleção completa</p>
+          <p className="h-display text-2xl md:text-3xl">Veja mais referências</p>
           <p className="mt-3 text-base leading-[1.6] text-body">
             {list.length > MOSTRAR
               ? "Estas são algumas peças. O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."

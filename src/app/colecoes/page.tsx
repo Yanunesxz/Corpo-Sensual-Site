@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site } from "@/lib/site";
+import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -30,7 +30,9 @@ export default async function ColecoesPage() {
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Coleções</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
             Lançamos duas coleções por ano, uma de primavera/verão e uma de outono/inverno, com pijamas, short dolls,
-            camisolas e robes nas linhas feminina, masculina, infantil e gestante. {site.commercial.salesNote}
+            camisolas e robes nas linhas feminina, masculina, infantil e gestante. Juntas, as duas coleções somam{" "}
+            {TOTAL_REFERENCIAS} referências: aqui você vê uma seleção, e o catálogo digital traz todas.{" "}
+            {site.commercial.salesNote}
           </p>
           <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7">
             <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
@@ -73,7 +75,9 @@ export default async function ColecoesPage() {
                     {c.headline && <p className="mt-3 hidden max-w-md text-[1.125rem] leading-[1.6] text-white/90 lg:block">{c.headline}</p>}
                     {counts[i].total > 0 && (
                       <p className="mt-2 text-sm text-white/85">
-                        {counts[i].total} peças
+                        {REFERENCIAS_POR_COLECAO[c.slug]
+                          ? `${counts[i].total} de ${REFERENCIAS_POR_COLECAO[c.slug]} referências`
+                          : `${counts[i].total} peças`}
                         {counts[i].linhas.length > 0 && ` · ${counts[i].linhas.join(", ").toLowerCase()}`}
                       </p>
                     )}
