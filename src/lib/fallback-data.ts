@@ -19,7 +19,7 @@ type ColecaoJson = {
   capaCelular?: string | null;
   galeria: string[];
 };
-type ProdutoJson = { ref: string; rank: number; nome: string; descricao: string; categoria: string };
+type ProdutoJson = { ref: string; rank: number; nome: string; descricao: string; categoria: string; colecao: string };
 
 const categorias = catalogo.categorias as CategoriaJson[];
 const colecoes = catalogo.colecoes as ColecaoJson[];
@@ -61,7 +61,6 @@ export const fallbackCollections: Collection[] = colecoes.map((c, i) => ({
 }));
 
 const categoryName = Object.fromEntries(categorias.map((c) => [c.slug, c.nome]));
-const currentCollectionId = fallbackCollections[0]?.id ?? null;
 
 export const fallbackProducts: Product[] = produtos.map((p) => ({
   id: `p-${p.ref}`,
@@ -70,7 +69,7 @@ export const fallbackProducts: Product[] = produtos.map((p) => ({
   name: p.nome,
   description: p.descricao,
   category_id: `cat-${p.categoria}`,
-  collection_id: currentCollectionId,
+  collection_id: `col-${p.colecao}`,
   is_new: false,
   is_featured: p.rank <= 10,
   active: true,

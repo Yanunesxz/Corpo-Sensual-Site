@@ -13,7 +13,15 @@ export const metadata: Metadata = {
 
 export default async function ColecoesPage() {
   const collections = await getCollections();
-  const counts = await Promise.all(collections.map((c) => getProducts({ collectionId: c.id }).then((p) => p.length)));
+  // Quantas peças e quais linhas cada coleção tem, para o card dizer algo concreto.
+  const counts = await Promise.all(
+    collections.map((c) =>
+      getProducts({ collectionId: c.id }).then((p) => ({
+        total: p.length,
+        linhas: [...new Set(p.map((x) => x.category?.name).filter(Boolean))] as string[],
+      })),
+    ),
+  );
   return (
     <section className="mx-auto max-w-[1600px] px-2 pb-16 pt-8 md:pt-14">
       <div className="px-3 md:px-6">
@@ -55,7 +63,12 @@ export default async function ColecoesPage() {
                   <p className="label text-[13px]">{seasonLabel(c.season, c.year)}</p>
                   <p className="h-display mt-2 text-4xl md:text-6xl">{collectionShortName(c.name)}</p>
                   {c.headline && <p className="mt-2 hidden max-w-md text-base text-white/90 lg:block">{c.headline}</p>}
-                  {counts[i] > 0 && <p className="mt-2 text-sm text-white/85">{counts[i]} peças nas linhas feminina, masculina, infantil e gestante</p>}
+                  {counts[i].total > 0 && (
+                    <p className="mt-2 text-sm text-white/85">
+                      {counts[i].total} peças
+                      {counts[i].linhas.length > 0 && ` · ${counts[i].linhas.join(", ").toLowerCase()}`}
+                    </p>
+                  )}
                   <span className="link mt-3 inline-block text-[13px]">Ver coleção</span>
                 </div>
               </Link>

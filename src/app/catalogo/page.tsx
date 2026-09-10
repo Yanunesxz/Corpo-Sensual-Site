@@ -36,7 +36,7 @@ export default function CatalogoPage() {
             <p className="mb-6 text-sm leading-relaxed text-ink-soft">
               {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}. {site.commercial.freeShipping}.
             </p>
-            <LeadForm source="catalogo" submitLabel="Quero receber o catálogo" />
+            <LeadForm source="catalogo" submitLabel="Quero receber o catálogo" withMessage />
           </div>
           <div className="mt-10">
             <h2 className="h-display text-2xl">Como funciona</h2>
