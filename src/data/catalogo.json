@@ -15,11 +15,6 @@
       "slug": "infantil",
       "nome": "Infantil",
       "imagem": "/images/categorias/infantil.jpg"
-    },
-    {
-      "slug": "gestante",
-      "nome": "Gestante",
-      "imagem": "/images/categorias/gestante.jpg"
     }
   ],
   "colecoes": [
@@ -402,14 +397,6 @@
       "colecao": "delicias-de-verao"
     },
     {
-      "ref": "0325",
-      "rank": 48,
-      "nome": "Camisola de gestante estampada",
-      "descricao": "Camisola de alça para gestante, busto liso rosa e saia estampada com florzinhas e laço na cintura.",
-      "categoria": "gestante",
-      "colecao": "delicias-de-verao"
-    },
-    {
       "ref": "0704",
       "rank": 49,
       "nome": "Short doll de alça",
@@ -655,14 +642,6 @@
       "nome": "Pijama de calça canelado estampado",
       "descricao": "Blusa de manga curta azul-clara estampada e calça, em malha canelada.",
       "categoria": "feminino",
-      "colecao": "entrelacos"
-    },
-    {
-      "ref": "1030",
-      "rank": 179,
-      "nome": "Pijama gestante",
-      "descricao": "Blusa de manga longa rosa com abertura para amamentação e calça estampada de corações.",
-      "categoria": "gestante",
       "colecao": "entrelacos"
     },
     {

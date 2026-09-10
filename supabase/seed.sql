@@ -9,8 +9,7 @@
 insert into public.categories (slug, name, image_url, sort_order) values
   ('feminino', 'Feminino', '/images/categorias/feminino.jpg', 1),
   ('masculino', 'Masculino', '/images/categorias/masculino.jpg', 2),
-  ('infantil', 'Infantil', '/images/categorias/infantil.jpg', 3),
-  ('gestante', 'Gestante', '/images/categorias/gestante.jpg', 4)
+  ('infantil', 'Infantil', '/images/categorias/infantil.jpg', 3)
 on conflict (slug) do nothing;
 
 insert into public.collections (slug, name, season, year, headline, description, hero_image_url, hero_mobile_url, gallery_urls, sort_order) values
@@ -64,7 +63,6 @@ from (values
   ('0330', 'pijama-listrado-de-manga-masculino', 'Pijama listrado de manga masculino', 'Camiseta manga curta cinza mescla com listras pretas e bermuda preta lisa.', 'masculino', 'delicias-de-verao', 45),
   ('0499', 'pijama-bermuda-liganete', 'Pijama bermuda liganete', 'Blusa manga curta rosa com estampa de corações e bermuda vinho lisa, em liganete.', 'feminino', 'delicias-de-verao', 46),
   ('0103', 'pijama-infantil-masculino-em-malha', 'Pijama infantil masculino em malha', 'Conjunto infantil de camiseta manga curta com estampa de futebol e bermuda lisa verde, em malha.', 'infantil', 'delicias-de-verao', 47),
-  ('0325', 'camisola-de-gestante-estampada', 'Camisola de gestante estampada', 'Camisola de alça para gestante, busto liso rosa e saia estampada com florzinhas e laço na cintura.', 'gestante', 'delicias-de-verao', 48),
   ('0704', 'short-doll-de-alca', 'Short doll de alça', 'Conjunto de blusa de alça fina com decote V e short azul-marinho com vivo claro e cordão na cintura.', 'feminino', 'delicias-de-verao', 49),
   ('0093', 'camisola-de-alca-liganete-lisa', 'Camisola de alça liganete lisa', 'Camisola curta de alça fina em liganete lisa azul, com decote V e renda no busto.', 'feminino', 'delicias-de-verao', 50),
   ('0122', 'pijama-de-manga-em-malha', 'Pijama de manga em malha', 'Conjunto de blusa manga curta verde-água com estampa de tulipas e bermuda lisa azul-marinho, em malha.', 'feminino', 'delicias-de-verao', 51),
@@ -96,7 +94,6 @@ from (values
   ('1031', 'pijama-longo-mescla-liso-feminino', 'Pijama longo mescla liso feminino', 'Blusa de manga longa e calça com cordão no cós, em mescla cinza-escura.', 'feminino', 'entrelacos', 147),
   ('1002', 'pijama-longo-mescla-liso-masculino', 'Pijama longo mescla liso masculino', 'Blusa de manga longa e calça em mescla grafite. Linha masculina.', 'masculino', 'entrelacos', 167),
   ('0223', 'pijama-de-calca-canelado-estampado', 'Pijama de calça canelado estampado', 'Blusa de manga curta azul-clara estampada e calça, em malha canelada.', 'feminino', 'entrelacos', 170),
-  ('1030', 'pijama-gestante', 'Pijama gestante', 'Blusa de manga longa rosa com abertura para amamentação e calça estampada de corações.', 'gestante', 'entrelacos', 179),
   ('1025', 'pijama-listrado-masculino', 'Pijama listrado masculino', 'Camiseta de manga curta listrada e calça cinza. Linha masculina.', 'masculino', 'entrelacos', 195),
   ('1003', 'pijama-liso-feminino', 'Pijama liso feminino', 'Blusa de manga curta rosa com botões e calça combinando.', 'feminino', 'entrelacos', 205),
   ('0222', 'pijama-de-calca-canelado-liso', 'Pijama de calça canelado liso', 'Blusa de manga curta azul-clara e calça, em malha canelada lisa.', 'feminino', 'entrelacos', 206),
@@ -109,5 +106,5 @@ on conflict (slug) do nothing;
 insert into public.product_images (product_id, url, alt, sort_order)
 select p.id, '/images/produtos/' || p.ref || '.jpg', p.name || ', ref. ' || p.ref, 1
 from public.products p
-where p.ref in ('0810', '0118', '0130', '1043', '0131', '0848', '0115', '2130', '0123', '0550', '1034', '0126', '1042', '0851', '0502', '0390', '0080', '1035', '0355', '0135', '0354', '0853', '0125', '0720', '0350', '0300', '0716', '1036', '0110', '0601', '0129', '0501', '0690', '4130', '2134', '0310', '0316', '0116', '2131', '2226', '0330', '0499', '0103', '0325', '0704', '0093', '0122', '0128', '0359', '0570', '0121', '0605', '0719', '0730', '2014', '1023', '1007', '1024', '1021', '1020', '1027', '1026', '0990', '1009', '1001', '1008', '0854', '1004', '1032', '1005', '1033', '0852', '1031', '1002', '0223', '1030', '1025', '1003', '0222', '0981')
+where p.ref in ('0810', '0118', '0130', '1043', '0131', '0848', '0115', '2130', '0123', '0550', '1034', '0126', '1042', '0851', '0502', '0390', '0080', '1035', '0355', '0135', '0354', '0853', '0125', '0720', '0350', '0300', '0716', '1036', '0110', '0601', '0129', '0501', '0690', '4130', '2134', '0310', '0316', '0116', '2131', '2226', '0330', '0499', '0103', '0704', '0093', '0122', '0128', '0359', '0570', '0121', '0605', '0719', '0730', '2014', '1023', '1007', '1024', '1021', '1020', '1027', '1026', '0990', '1009', '1001', '1008', '0854', '1004', '1032', '1005', '1033', '0852', '1031', '1002', '0223', '1025', '1003', '0222', '0981')
   and not exists (select 1 from public.product_images i where i.product_id = p.id);

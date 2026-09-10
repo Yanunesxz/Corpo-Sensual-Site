@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Steps } from "@/components/steps";
 import { LeadForm } from "@/components/lead-form";
 import { CommercialTerms } from "@/components/commercial-terms";
 import { Faq } from "@/components/faq";
 import { HeroImage } from "@/components/hero-image";
 import { faqLojista } from "@/lib/content/faq";
-import { passosLojista } from "@/lib/content/lojistas";
 import { site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { ProducaoSection } from "@/components/producao-section";
 
@@ -16,16 +14,21 @@ export const metadata: Metadata = {
     "Compre pijamas, camisolas e robes direto da fábrica. Grade completa, reposição rápida e atendimento por representante em todo o Brasil. Perguntas frequentes de lojistas.",
 };
 
+/** Como a compra funciona. Fica só aqui: /sobre manda o lojista para esta página. */
+const passos = [
+  { title: "Cadastro", description: "Você informa os dados da sua loja no formulário." },
+  { title: "Representante", description: "Quem atende a sua região apresenta o catálogo, os preços e as condições." },
+  { title: "Primeiro pedido", description: "Você monta a grade e acompanha a produção e o envio." },
+];
+
 const benefits = [
   "Preço de fábrica, sem intermediários",
-  "Grade completa: feminino, masculino, infantil e gestante",
+  "Grade completa: feminino, masculino e infantil",
   "Coleções novas a cada temporada",
   "Reposição rápida das referências que mais vendem",
   "Pedidos online pela plataforma B2B, com acompanhamento",
   "Representante dedicado na sua região",
 ];
-
-const steps = passosLojista;
 
 export default function FabricaPage() {
   return (
@@ -58,9 +61,8 @@ export default function FabricaPage() {
       <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
         <div>
           <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
-            Mais de 25 anos confeccionando moda íntima em Muriaé, MG. Uma marca conhecida nacionalmente, com estrutura
-            para atender a sua loja com qualidade e agilidade. São {TOTAL_REFERENCIAS} referências nas duas coleções do
-            ano e o site publica só uma parte:{" "}
+            Mais de 25 anos confeccionando moda íntima em Muriaé, MG, para lojas de todo o Brasil. São{" "}
+            {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site publica só uma parte:{" "}
             <Link href="/colecoes" className="underline">
               veja as coleções
             </Link>
@@ -73,12 +75,19 @@ export default function FabricaPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-10">
-            <h2 className="h-display text-2xl md:text-3xl">Como funciona</h2>
-            <div className="mt-6">
-              <Steps steps={steps} />
-            </div>
-          </div>
+
+          {/* Único lugar do site que explica o processo de compra. /sobre aponta para cá. */}
+          <h2 className="h-display mt-10 text-2xl">Como funciona</h2>
+          <ol className="mt-4 space-y-3">
+            {passos.map((p, i) => (
+              <li key={p.title} className="flex gap-3 text-[15px] leading-[1.6]">
+                <span className="label shrink-0 tabular-nums opacity-70">{String(i + 1).padStart(2, "0")}</span>
+                <span>
+                  <strong className="font-medium text-ink">{p.title}.</strong> {p.description}
+                </span>
+              </li>
+            ))}
+          </ol>
         </div>
         {/* Formulário dentro do bloco azul-claro: título, condições em linha e botão escuro no fim */}
         <div id="formulario" className="scroll-mt-20 rounded-media bg-sky p-6 md:p-8">

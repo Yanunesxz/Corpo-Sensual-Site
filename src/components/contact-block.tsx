@@ -54,7 +54,8 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
       )}
 
       <div className="text-[1.0625rem] leading-[1.6]">
-        <p className="label">Canais</p>
+        {/* Na própria página de contato, sem canais configurados, o formulário já é o canal. */}
+        {(channels.length > 0 || !onContactPage) && <p className="label">Canais</p>}
         {channels.length > 0 ? (
           <ul className="mt-1 flex flex-col">
             {channels.map((ch) => (
@@ -70,13 +71,15 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-body">
-            Use o{" "}
-            <a href={formHref} className="underline underline-offset-[5px]">
-              {onContactPage ? "formulário abaixo" : "formulário da página de contato"}
-            </a>{" "}
-            e retornamos em horário comercial.
-          </p>
+          !onContactPage && (
+            <p className="mt-2 text-body">
+              Use o{" "}
+              <a href={formHref} className="underline underline-offset-[5px]">
+                formulário da página de contato
+              </a>{" "}
+              e retornamos em horário comercial.
+            </p>
+          )
         )}
         {hideAddress ? (
           <Link href="/contato" className={`${linkClass} mt-2 text-[15px]`}>

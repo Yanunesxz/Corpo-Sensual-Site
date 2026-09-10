@@ -6,8 +6,8 @@ import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
-/** Quantas peças a página mostra. O resto vai no catálogo digital. */
-const MOSTRAR = 10;
+/** Quantas peças cada linha mostra. O resto do mix vai no catálogo digital. */
+const POR_LINHA = 6;
 const EVENT = "cs:categoria";
 
 // A categoria ativa vive na URL (?categoria=...). Ler pela store externa mantém
@@ -30,18 +30,34 @@ type Props = {
 };
 
 /**
- * Grade de peças da coleção: mostra no máximo 10 referências, com filtro por
- * categoria no navegador. O restante do mix fica no catálogo digital, que o
- * lojista recebe depois do cadastro.
+ * Grade de peças da coleção, com filtro por categoria no navegador.
+ *
+ * Sem filtro mostra o mesmo tanto de cada linha, intercaladas; com filtro mostra
+ * esse mesmo tanto da linha escolhida. A grade fica do mesmo tamanho em qualquer
+ * filtro, e nenhuma linha parece menor só porque tem menos peça publicada aqui.
+ * O restante do mix fica no catálogo digital, que o lojista recebe após o cadastro.
  */
+/** Pega as `porLinha` primeiras de cada categoria e intercala, para a grade não sair em blocos. */
+function equilibrar(products: Product[], categories: Category[], porLinha: number): Product[] {
+  const filas = categories
+    .map((c) => products.filter((p) => p.category?.slug === c.slug).slice(0, porLinha))
+    .filter((f) => f.length > 0);
+  const saida: Product[] = [];
+  for (let i = 0; i < porLinha; i++) {
+    for (const fila of filas) if (fila[i]) saida.push(fila[i]);
+  }
+  return saida;
+}
+
 export function ProductGrid({ products, categories, title = "Peças" }: Props) {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const list = active ? products.filter((p) => p.category?.slug === active) : products;
-  const shown = list.slice(0, MOSTRAR);
   const activeName = categories.find((c) => c.slug === active)?.name;
   // Só oferece as categorias que existem nesta coleção.
   const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
+  const shown = active
+    ? products.filter((p) => p.category?.slug === active).slice(0, POR_LINHA)
+    : equilibrar(products, disponiveis, POR_LINHA);
 
   function select(slug: string) {
     const url = new URL(window.location.href);
@@ -54,14 +70,13 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <h2 className="h-display text-3xl md:text-[2.5rem]">{activeName ?? title}</h2>
-        <p className="text-sm text-body">
-          {shown.length < list.length ? `${shown.length} de ${list.length} peças` : `${list.length} ${list.length === 1 ? "peça" : "peças"}`}
-        </p>
-      </div>
+      <h2 className="h-display text-3xl md:text-[2.5rem]">{activeName ?? title}</h2>
       <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-        Uma amostra da coleção. As duas coleções do ano somam {TOTAL_REFERENCIAS} referências.
+        Uma amostra da coleção. As duas coleções do ano somam {TOTAL_REFERENCIAS} referências, todas no{" "}
+        <Link href="/catalogo" className="underline">
+          catálogo digital
+        </Link>
+        .
       </p>
 
       {disponiveis.length > 1 && (
@@ -99,17 +114,10 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
         </div>
       )}
 
-      {/* O catálogo completo é o próximo passo, não uma paginação. */}
-      <div className="mt-12 rounded-media bg-sky p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 md:p-8">
-        <div className="max-w-md">
-          <p className="h-display text-2xl md:text-3xl">Veja mais referências</p>
-          <p className="mt-3 text-base leading-[1.6] text-body">
-            {list.length > MOSTRAR
-              ? "Estas são algumas peças. O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."
-              : "O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."}
-          </p>
-        </div>
-        <Link href="/catalogo" className="btn btn-dark mt-5 w-full shrink-0 whitespace-nowrap sm:mt-0 sm:w-auto">
+      {/* Saída depois das peças: o catálogo é o próximo passo, não uma paginação. */}
+      <div className="mt-10 flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-base leading-[1.6] text-body">Veja mais referências no catálogo, com grade de tamanhos e tabela de preços.</p>
+        <Link href="/catalogo" className="btn btn-dark w-full shrink-0 whitespace-nowrap sm:w-auto">
           Quero receber o catálogo
         </Link>
       </div>

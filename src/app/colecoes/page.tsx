@@ -30,7 +30,7 @@ export default async function ColecoesPage() {
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Coleções</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
             Lançamos duas coleções por ano, uma de primavera/verão e uma de outono/inverno, com pijamas, short dolls,
-            camisolas e robes nas linhas feminina, masculina, infantil e gestante. Juntas, as duas coleções somam{" "}
+            camisolas e robes nas linhas feminina, masculina e infantil. Juntas, as duas coleções somam{" "}
             {TOTAL_REFERENCIAS} referências: aqui você vê uma seleção, e o catálogo digital traz todas.{" "}
             {site.commercial.salesNote}
           </p>
@@ -76,7 +76,7 @@ export default async function ColecoesPage() {
                     {counts[i].total > 0 && (
                       <p className="mt-2 text-sm text-white/85">
                         {REFERENCIAS_POR_COLECAO[c.slug]
-                          ? `${counts[i].total} de ${REFERENCIAS_POR_COLECAO[c.slug]} referências`
+                          ? `${REFERENCIAS_POR_COLECAO[c.slug]} referências`
                           : `${counts[i].total} peças`}
                         {counts[i].linhas.length > 0 && ` · ${counts[i].linhas.join(", ").toLowerCase()}`}
                       </p>

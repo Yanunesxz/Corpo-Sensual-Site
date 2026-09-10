@@ -11,14 +11,6 @@ export const faqLojista: FaqItem[] = [
     a: "A maior parte dos nossos clientes são lojas com CNPJ, mas não é um pré-requisito fechado. A venda é no atacado, por grade e com pedido mínimo. Se você ainda não tem CNPJ, fale com a gente pela página de contato: avaliamos o seu caso com o representante da sua região.",
   },
   {
-    q: "Qual é o pedido mínimo?",
-    a: `${site.commercial.minOrder} por pedido. A grade de tamanhos e as quantidades por referência são definidas com o representante.`,
-  },
-  {
-    q: "Quais são as formas de pagamento?",
-    a: `${site.commercial.installments}. Outras condições podem ser combinadas com o representante da sua região.`,
-  },
-  {
     q: "Como funciona o frete?",
     a: `${site.commercial.freeShipping}. ${site.commercial.freeShippingNote} Abaixo desse valor, o frete é calculado por pedido, conforme peso e destino.`,
   },
@@ -28,11 +20,7 @@ export const faqLojista: FaqItem[] = [
   },
   {
     q: "Quais linhas vocês fabricam?",
-    a: "Pijamas, short dolls, camisolas e robes nas linhas feminina, masculina, infantil e gestante. As coleções são renovadas a cada temporada: uma de primavera/verão e uma de outono/inverno.",
-  },
-  {
-    q: "Como recebo o catálogo e a tabela de preços?",
-    a: "Preencha o formulário de catálogo. Nossa equipe confirma os dados da loja e libera o catálogo digital com as referências, a grade e a tabela de atacado.",
+    a: "Pijamas, short dolls, camisolas e robes nas linhas feminina, masculina e infantil. As coleções são renovadas a cada temporada: uma de primavera/verão e uma de outono/inverno.",
   },
   {
     q: "Vocês têm representante na minha região?",
