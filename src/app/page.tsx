@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site } from "@/lib/site";
+import { collectionShortName, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { HeroImage } from "@/components/hero-image";
 import { CampaignVideo } from "@/components/campaign-video";
+import { ProducaoSection } from "@/components/producao-section";
 
 // Revalida o catálogo a cada hora sem precisar de novo deploy.
 export const revalidate = 3600;
@@ -42,7 +43,7 @@ export default async function HomePage() {
                 Ver coleção
               </Link>
             </div>
-            <p className="mt-5 text-sm text-body">*{commercial.exclusive}</p>
+            <p className="mt-5 text-sm text-body">*{commercial.salesNote} {commercial.noCnpjNote}</p>
           </div>
         </div>
       </section>
@@ -79,6 +80,15 @@ export default async function HomePage() {
       {/* Categorias: foto de estúdio com o nome abaixo */}
       {categories.length > 0 && (
         <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+          {/* As fotos levam à coleção já filtrada, que mostra só uma parte. Deixa isso claro. */}
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
+            <p className="label max-w-xl">
+              Feminino, masculino, infantil e gestante. Aqui aparece uma parte de cada linha.
+            </p>
+            <Link href="/colecoes" className="link text-[15px]">
+              Ver as coleções
+            </Link>
+          </div>
           <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
             {categories.map((c) => (
               <li key={c.id}>
@@ -104,8 +114,8 @@ export default async function HomePage() {
           <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
             <SectionHeading
               title="Mais vendidas"
-              link={{ href: currentHref, label: "Ver a coleção completa" }}
-              description="As peças com maior saída nas lojas neste trimestre. Venda no atacado, para lojas com CNPJ."
+              link={{ href: currentHref, label: "Ver mais referências" }}
+              description={`As peças com maior saída nas lojas neste trimestre. São só algumas: o mix tem ${TOTAL_REFERENCIAS} referências entre as coleções de verão e inverno. Venda no atacado, por grade.`}
             />
             <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+7)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
               {products.map((p) => (
@@ -114,7 +124,7 @@ export default async function HomePage() {
             </div>
             <div className="mt-8 md:hidden">
               <Link href={currentHref} className="btn btn-outline w-full">
-                Ver todas as peças
+                Ver mais peças da coleção
               </Link>
             </div>
           </div>
@@ -152,8 +162,11 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Vídeo real da produção: a peça sendo confeccionada, embalada e despachada */}
+      <ProducaoSection fundo="bg-sky-soft" />
+
       {/* Campanha em vídeo: cenas do ensaio da coleção */}
-      <section className="bg-sky-soft">
+      <section>
         <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
           <div className="max-w-2xl">
             <h2 className="h-display text-3xl md:text-[2.5rem]">A campanha em movimento</h2>
@@ -166,10 +179,10 @@ export default async function HomePage() {
               { src: "campanha/piquenique", legenda: "Cena de piquenique da campanha Delícias de Verão" },
               { src: "campanha/familia", legenda: "Crianças brincando de pijama, linha família" },
               { src: "campanha/verao", legenda: "Cena de verão da campanha" },
-              { src: "campanha/fabrica", legenda: "Vista aérea da região da fábrica, em Muriaé" },
+              { src: "campanha/fabrica", legenda: "Vista aérea da região da fábrica, em Muriaé", comAudio: false },
             ].map((v) => (
               <li key={v.src} className="overflow-hidden rounded-media bg-sky">
-                <CampaignVideo src={v.src} legenda={v.legenda} />
+                <CampaignVideo src={v.src} legenda={v.legenda} comAudio={v.comAudio !== false} />
               </li>
             ))}
           </ul>
@@ -190,7 +203,7 @@ export default async function HomePage() {
             </p>
             {/* Divisória mais escura que a padrão para aparecer sobre o azul-claro */}
             <ul className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-base leading-[1.5]">
-              <li className="py-3">{commercial.exclusive}</li>
+              <li className="py-3">{commercial.salesNote}</li>
               <li className="py-3">{commercial.minOrder}</li>
               <li className="py-3">{commercial.installments}</li>
               <li className="py-3">{commercial.freeShipping}*</li>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState, useState } from "react";
 import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
+import { formatarDocumento } from "@/lib/documento";
 import type { LeadSource } from "@/lib/types";
 import { site } from "@/lib/site";
 
@@ -33,6 +34,10 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     initialLeadState,
   );
   const [hasCnpj, setHasCnpj] = useState<string>(state.values?.has_cnpj ?? "");
+  // Documento é controlado para receber a máscara enquanto a pessoa digita.
+  const [documento, setDocumento] = useState<string>(state.values?.document ?? "");
+  // Sem escolha ainda, o campo já nasce como CNPJ: é o caso da maioria (lojista).
+  const ehLojista = (hasCnpj || state.values?.has_cnpj || "sim") !== "nao";
 
   const err = state.errors ?? {};
   const v = state.values ?? {};
@@ -50,16 +55,17 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </label>
       </div>
 
-      <Field label="Nome" name="name" error={err.name}>
-        <input id="name" className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} aria-describedby={err.name ? "name-error" : undefined} defaultValue={v.name} placeholder="Como podemos te chamar?" />
+      {/* Rótulos e exemplos iguais aos do site oficial da empresa. */}
+      <Field label="Nome Completo" name="name" error={err.name}>
+        <input id="name" className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} aria-describedby={err.name ? "name-error" : undefined} defaultValue={v.name} />
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="E-mail" name="email" error={err.email}>
-          <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} aria-describedby={err.email ? "email-error" : undefined} defaultValue={v.email} placeholder="voce@empresa.com.br" />
+        <Field label="Seu E-mail*" name="email" error={err.email}>
+          <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} aria-describedby={err.email ? "email-error" : undefined} defaultValue={v.email} placeholder="Ex: compras@empresa.com" />
         </Field>
         <Field label="WhatsApp" name="whatsapp" error={err.whatsapp}>
-          <input id="whatsapp" className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} aria-describedby={err.whatsapp ? "whatsapp-error" : undefined} defaultValue={v.whatsapp} placeholder="(DDD) número" />
+          <input id="whatsapp" className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} aria-describedby={err.whatsapp ? "whatsapp-error" : undefined} defaultValue={v.whatsapp} placeholder="Ex: 32 90000-9999" />
         </Field>
       </div>
 
@@ -74,30 +80,52 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             required
             aria-invalid={Boolean(err.has_cnpj)}
             aria-describedby={err.has_cnpj ? "has_cnpj-error" : undefined}
-            onChange={(e) => setHasCnpj(e.target.value)}
+            onChange={(e) => {
+              setHasCnpj(e.target.value);
+              // Trocou de CNPJ para CPF (ou o contrário): o que estava digitado não serve mais.
+              setDocumento("");
+            }}
           >
             <option value="" disabled>
               Selecionar
             </option>
-            <option value="sim">{isContact ? "Lojista, tenho CNPJ" : "Sim, tenho loja com CNPJ"}</option>
-            <option value="nao">{isContact ? "Consumidor ou outro contato" : "Ainda não"}</option>
+            <option value="sim">{isContact ? "Lojista, tenho CNPJ" : "Sim"}</option>
+            <option value="nao">{isContact ? "Consumidor ou outro contato" : "Não"}</option>
           </select>
         </Field>
-        <Field label="Nome da loja (opcional)" name="company" error={err.company}>
-          <input id="company" className="field" name="company" autoComplete="organization" defaultValue={v.company} placeholder="Loja ou marca" />
+        {/* Lojista informa o CNPJ; quem não tem loja informa o CPF. */}
+        <Field label={ehLojista ? "CNPJ" : "CPF"} name="document" error={err.document}>
+          <input
+            id="document"
+            className="field"
+            name="document"
+            inputMode="numeric"
+            autoComplete="off"
+            required={!isContact}
+            aria-invalid={Boolean(err.document)}
+            aria-describedby={err.document ? "document-error" : undefined}
+            value={documento}
+            onChange={(e) => setDocumento(formatarDocumento(e.target.value, ehLojista ? "cnpj" : "cpf"))}
+            placeholder={ehLojista ? "00.000.000/0000-00" : "000.000.000-00"}
+            maxLength={ehLojista ? 18 : 14}
+          />
         </Field>
       </div>
+
+      <Field label="Nome da loja (opcional)" name="company" error={err.company}>
+        <input id="company" className="field" name="company" autoComplete="organization" defaultValue={v.company} placeholder="Ex: Loja Bem Dormir" />
+      </Field>
       {(hasCnpj || v.has_cnpj) === "nao" && !isContact && (
         /* Fundo branco para o aviso ler bem também quando o formulário está no bloco azul. */
         <p className="rounded-field border border-line bg-white px-4 py-3 text-sm leading-relaxed text-body">
-          Vendemos apenas para lojas com CNPJ ativo. Se você é consumidor, envie mesmo assim com a sua cidade: indicamos
-          onde encontrar as peças.
+          Sem CNPJ dá para conversar também. Vendemos no atacado, por grade e com pedido mínimo: envie os seus dados que
+          avaliamos o seu caso. Se você é consumidor, diga a sua cidade e indicamos a loja mais perto de você.
         </p>
       )}
 
       <div className="grid grid-cols-[1fr_5.5rem] gap-4">
         <Field label="Cidade" name="city" error={err.city}>
-          <input id="city" className="field" name="city" autoComplete="address-level2" defaultValue={v.city} placeholder="Cidade" />
+          <input id="city" className="field" name="city" autoComplete="address-level2" defaultValue={v.city} placeholder="Ex: Muriaé" />
         </Field>
         <Field label="UF" name="state" error={err.state}>
           <input id="state" className="field uppercase" name="state" autoComplete="address-level1" maxLength={2} autoCapitalize="characters" defaultValue={v.state} placeholder="MG" />

@@ -238,6 +238,24 @@ body {
     }
   }
 
+  /*
+    Foto de hero com direção de arte (ver components/hero-image.tsx): o ponto de
+    interesse muda no mesmo ponto de corte em que a <picture> troca de arquivo.
+  */
+  .hero-foto {
+    object-position: var(--pos-celular, center 30%);
+  }
+  @media (min-width: 768px) {
+    .hero-foto-md {
+      object-position: var(--pos-tela, center 35%);
+    }
+  }
+  @media (min-width: 1024px) {
+    .hero-foto-lg {
+      object-position: var(--pos-tela, center 35%);
+    }
+  }
+
   /* Foto com leve aproximação no hover */
   .zoom-img img {
     transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);

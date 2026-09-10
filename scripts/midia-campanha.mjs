@@ -52,7 +52,7 @@ for (const f of fotos) {
   } else {
     img = img.resize({ width: largura, withoutEnlargement: true });
   }
-  await img.jpeg({ quality: 82, mozjpeg: true, progressive: true }).toFile(destino);
+  await img.jpeg({ quality: f.qualidade ?? 85, mozjpeg: true, progressive: true, chromaSubsampling: "4:4:4" }).toFile(destino);
   const m = await sharp(destino).metadata();
   console.log(`foto   ${f.saida}  ${m.width}x${m.height}  ${mb(destino)} MB`);
 }
@@ -76,7 +76,9 @@ for (const v of videos) {
       "-y", "-v", "error",
       ...recorte, "-i", v.origem, ...limite,
       ...corte,
-      "-an",                       // sem áudio: o vídeo toca mudo, em laço
+      // O áudio original é mantido: o vídeo começa mudo (exigência do navegador
+      // para tocar sozinho) e o visitante liga o som pelo botão.
+      ...(v.semAudio ? ["-an"] : ["-c:a", "aac", "-b:a", "128k", "-ac", "2"]),
       "-c:v", "libx264", "-profile:v", "high", "-preset", "slow",
       "-crf", String(v.crf ?? 27),
       "-pix_fmt", "yuv420p",

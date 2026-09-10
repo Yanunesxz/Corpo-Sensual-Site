@@ -66,6 +66,8 @@ export type LeadInsert = {
   email: string;
   whatsapp: string;
   has_cnpj: boolean;
+  /** CNPJ (lojista) ou CPF (consumidor), só dígitos. */
+  document: string | null;
   company: string | null;
   city: string | null;
   state: string | null;
@@ -78,4 +80,13 @@ export type LeadInsert = {
   utm_campaign: string | null;
   utm_term: string | null;
   utm_content: string | null;
+};
+
+/** Linha gravada em `leads`: o lead mais o resultado do envio ao CRM (migration 0002). */
+export type LeadRow = LeadInsert & {
+  crm_status: "enviado" | "pendente";
+  crm_cliente: string | null;
+  crm_negocio: string | null;
+  crm_erro: string | null;
+  crm_enviado_em: string | null;
 };

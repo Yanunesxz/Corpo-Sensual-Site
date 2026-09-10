@@ -71,13 +71,29 @@ export const site = {
   ],
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
   commercial: {
-    exclusive: "Venda exclusiva para lojas físicas com CNPJ ativo.",
+    /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
+    salesNote: "Venda no atacado, por grade e com pedido mínimo.",
+    /** Convite para quem ainda não tem CNPJ: o caso é avaliado, não recusado. */
+    noCnpjNote: "Ainda não tem CNPJ? Fale com a gente.",
     minOrder: "Investimento mínimo de R$ 1.200,00",
     installments: "Parcelamento em até 6x sem juros no cartão",
     freeShipping: "Frete grátis a partir de R$ 1.200,00",
     freeShippingNote: "Consulte as condições de frete grátis para a sua região.",
   },
 } as const;
+
+/**
+ * Quantas referências cada coleção tem no catálogo fechado. O site publica só
+ * uma parte delas: 145 vêm do PDF Verão 2027 e 65 do catálogo Entrelaços.
+ * Fica aqui para o número não ser digitado de novo em cada página.
+ */
+export const REFERENCIAS_POR_COLECAO: Record<string, number> = {
+  "delicias-de-verao": 145,
+  entrelacos: 65,
+};
+
+/** Soma das referências das coleções do ano. */
+export const TOTAL_REFERENCIAS = Object.values(REFERENCIAS_POR_COLECAO).reduce((soma, n) => soma + n, 0);
 
 /** Há pelo menos um canal direto de contato configurado? */
 export function hasDirectContact(): boolean {

@@ -31,7 +31,7 @@ export default function CashbackPage() {
           <p className="mt-5 max-w-2xl text-[1.0625rem] leading-[1.6] text-body">
             Nosso programa de fidelidade para lojistas devolve parte do valor de cada pedido em crédito para as próximas
             compras. Os percentuais, a validade do crédito e as regras completas são informados pelo seu representante no
-            cadastro. Exclusivo para lojas com CNPJ ativo.
+            cadastro.
           </p>
           <a href="#formulario" className="btn btn-dark mt-7 w-full sm:w-auto">
             Quero participar

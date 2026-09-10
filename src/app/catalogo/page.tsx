@@ -30,8 +30,9 @@ export default function CatalogoPage() {
         <div className="bg-sky px-5 py-14 md:px-12 md:py-20 lg:px-16">
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Receba o catálogo da nova coleção</h1>
           <p className="mt-5 max-w-md text-[1.0625rem] leading-[1.6] text-body">
-            Fábrica de pijamas e moda íntima em Muriaé, MG. O catálogo traz a coleção completa, com referências, grade de
-            tamanhos e a tabela de preços de atacado. {site.commercial.exclusive}
+            Fábrica de pijamas e moda íntima em Muriaé, MG. Só a coleção de verão tem 145 referências, com grade de
+            tamanhos e a tabela de preços de atacado. O site publica uma parte delas; o catálogo traz todas.{" "}
+            {site.commercial.salesNote} {site.commercial.noCnpjNote}
           </p>
           <div className="mt-8 max-w-lg">
             {/* Os três termos comerciais em linha, acima do formulário */}

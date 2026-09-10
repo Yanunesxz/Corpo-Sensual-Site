@@ -17,7 +17,7 @@ export function CommercialTerms({ className = "" }: { className?: string }) {
         ))}
       </ul>
       <p className="mx-auto mt-8 max-w-2xl text-sm leading-relaxed text-body">
-        *{commercial.exclusive} {commercial.freeShippingNote}
+        *{commercial.salesNote} {commercial.freeShippingNote} {commercial.noCnpjNote}
       </p>
     </div>
   );

@@ -3,7 +3,9 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSupabase } from "@/lib/supabase/client";
-import type { LeadInsert, LeadSource } from "@/lib/types";
+import { enviarLeadParaCrm } from "@/lib/crm";
+import { documentoValido, somenteDigitos } from "@/lib/documento";
+import type { LeadInsert, LeadRow, LeadSource } from "@/lib/types";
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
 
@@ -15,6 +17,7 @@ const leadSchema = z.object({
     .transform((v) => v.replace(/\D/g, ""))
     .refine((v) => v.length >= 10 && v.length <= 13, "Informe o WhatsApp com DDD."),
   has_cnpj: z.enum(["sim", "nao"], { message: "Escolha uma opção." }),
+  document: optionalText(20),
   company: optionalText(120),
   city: optionalText(120),
   state: optionalText(2),
@@ -27,6 +30,21 @@ const leadSchema = z.object({
   utm_campaign: optionalText(200),
   utm_term: optionalText(200),
   utm_content: optionalText(200),
+}).superRefine((d, ctx) => {
+  // Lojista informa CNPJ; consumidor informa CPF. Na página de contato o
+  // documento é opcional: quem só quer saber onde comprar não precisa dele.
+  const tipo = d.has_cnpj === "sim" ? "cnpj" : "cpf";
+  const preenchido = somenteDigitos(d.document).length > 0;
+  const obrigatorio = d.source !== "contato";
+  if (!preenchido) {
+    if (obrigatorio) {
+      ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? "Informe o CNPJ da loja." : "Informe o seu CPF." });
+    }
+    return;
+  }
+  if (!documentoValido(d.document, tipo)) {
+    ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? "CNPJ inválido. Confira os números." : "CPF inválido. Confira os números." });
+  }
 });
 
 // Arquivos "use server" só podem exportar funções assíncronas (e tipos).
@@ -35,7 +53,7 @@ export type LeadFormState = {
   message?: string;
   errors?: Partial<Record<string, string>>;
   /** O que a pessoa digitou, devolvido para o formulário não apagar após um erro. */
-  values?: Partial<Record<"name" | "email" | "whatsapp" | "has_cnpj" | "company" | "city" | "state" | "message", string>>;
+  values?: Partial<Record<"name" | "email" | "whatsapp" | "has_cnpj" | "document" | "company" | "city" | "state" | "message", string>>;
 };
 
 const nullIfEmpty = (v: string) => (v ? v : null);
@@ -47,6 +65,7 @@ function echo(formData: FormData): LeadFormState["values"] {
     email: pick("email"),
     whatsapp: pick("whatsapp"),
     has_cnpj: pick("has_cnpj"),
+    document: pick("document"),
     company: pick("company"),
     city: pick("city"),
     state: pick("state"),
@@ -55,8 +74,12 @@ function echo(formData: FormData): LeadFormState["values"] {
 }
 
 /**
- * Recebe o formulário de lead, valida e grava no Supabase.
+ * Recebe o formulário de lead, valida, avisa o CRM e grava no Supabase.
  * Em caso de sucesso redireciona para a página de obrigado.
+ *
+ * Ordem: primeiro o CRM (cria o prospecto e o negócio no funil de leads), depois
+ * a gravação aqui com o resultado. Se o CRM não responder, o lead é gravado
+ * como `pendente` e pode ser reenviado depois — nunca se perde.
  */
 export async function submitLead(_prev: LeadFormState, formData: FormData): Promise<LeadFormState> {
   // Honeypot: bots preenchem o campo escondido. Fingimos sucesso e descartamos.
@@ -77,21 +100,12 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
   const d = parsed.data;
   const source = d.source as LeadSource;
 
-  const supabase = getSupabase();
-  if (!supabase) {
-    console.error("[leads] Supabase não configurado; lead não foi gravado.");
-    return {
-      ok: false,
-      message: "Nosso cadastro está temporariamente indisponível. Tente de novo em instantes ou use outro canal.",
-      values: echo(formData),
-    };
-  }
-
   const row: LeadInsert = {
     name: d.name,
     email: d.email.toLowerCase(),
     whatsapp: d.whatsapp,
     has_cnpj: d.has_cnpj === "sim",
+    document: nullIfEmpty(somenteDigitos(d.document)),
     company: nullIfEmpty(d.company),
     city: nullIfEmpty(d.city),
     state: nullIfEmpty(d.state.toUpperCase()),
@@ -106,7 +120,33 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     utm_content: nullIfEmpty(d.utm_content),
   };
 
-  const { error } = await supabase.from("leads").insert(row);
+  // CRM (CSP 360): é o destino principal do lead. Falha vira `pendente` na cópia local.
+  const crm = await enviarLeadParaCrm(row);
+  if (crm.status === "pendente") console.warn("[leads] CRM pendente:", crm.erro);
+
+  // Cópia local em `leads` (auditoria e fila de reenvio). Sem Supabase do site
+  // configurado, o lead segue só pelo CRM — o formulário não pode travar por isso.
+  const supabase = getSupabase();
+  if (!supabase) {
+    if (crm.status === "enviado") redirect(`/obrigado?origem=${source}`);
+    console.error("[leads] Supabase do site não configurado e CRM não respondeu; lead não foi gravado.");
+    return {
+      ok: false,
+      message: "Nosso cadastro está temporariamente indisponível. Tente de novo em instantes ou use outro canal.",
+      values: echo(formData),
+    };
+  }
+
+  const linha: LeadRow = {
+    ...row,
+    crm_status: crm.status,
+    crm_cliente: crm.status === "enviado" ? crm.cliente : null,
+    crm_negocio: crm.status === "enviado" ? crm.negocio : null,
+    crm_erro: crm.status === "pendente" ? crm.erro : null,
+    crm_enviado_em: crm.status === "enviado" ? new Date().toISOString() : null,
+  };
+
+  const { error } = await supabase.from("leads").insert(linha);
   if (error) {
     console.error("[leads] erro ao gravar lead:", error.message);
     return {
