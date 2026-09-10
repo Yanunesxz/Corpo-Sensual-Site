@@ -6,7 +6,7 @@ import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
-/** Quantas peças cada linha mostra. O resto do mix vai no catálogo digital. */
+/** Teto de peças por linha. O resto do mix vai no catálogo digital. */
 const POR_LINHA = 6;
 const EVENT = "cs:categoria";
 
@@ -55,9 +55,15 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
   const activeName = categories.find((c) => c.slug === active)?.name;
   // Só oferece as categorias que existem nesta coleção.
   const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
+  // Quantas cabem em TODAS as linhas desta coleção. Assim a grade tem sempre o
+  // mesmo tamanho, com ou sem filtro, e nenhuma linha aparece menor que as outras.
+  const porLinha = Math.min(
+    POR_LINHA,
+    ...disponiveis.map((c) => products.filter((p) => p.category?.slug === c.slug).length),
+  );
   const shown = active
-    ? products.filter((p) => p.category?.slug === active).slice(0, POR_LINHA)
-    : equilibrar(products, disponiveis, POR_LINHA);
+    ? products.filter((p) => p.category?.slug === active).slice(0, porLinha)
+    : equilibrar(products, disponiveis, porLinha);
 
   function select(slug: string) {
     const url = new URL(window.location.href);
