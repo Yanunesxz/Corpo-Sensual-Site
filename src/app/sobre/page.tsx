@@ -18,7 +18,7 @@ const facts = [
   { label: "Fábrica própria", value: "Produção verticalizada, do fio ao produto final" },
   { label: "Qualidade", value: "Tecidos selecionados, tecnologia anti-pilling e acabamento cuidado" },
   { label: "Como vendemos", value: "No atacado, por grade, por representantes em todo o Brasil" },
-  { label: "Condições", value: `${site.commercial.minOrder}, ${site.commercial.installments.toLowerCase()} e ${site.commercial.pixDiscount.toLowerCase()}` },
+  { label: "Condições", value: `${site.commercial.noMinOrder}, ${site.commercial.installments.toLowerCase()} e ${site.commercial.pixDiscount.toLowerCase()}` },
 ];
 
 export default function SobrePage() {

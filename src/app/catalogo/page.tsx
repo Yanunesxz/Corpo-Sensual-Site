@@ -32,7 +32,7 @@ export default function CatalogoPage() {
           <div className="mt-8 max-w-lg">
             {/* Condições comerciais em linha, acima do formulário */}
             <ul className="mb-7 flex flex-col gap-1.5 text-sm leading-relaxed text-body sm:flex-row sm:flex-wrap sm:gap-x-6">
-              <li>{site.commercial.minOrder}</li>
+              <li>{site.commercial.noMinOrder}</li>
               <li>{site.commercial.pixDiscount}</li>
               <li>{site.commercial.installments}</li>
               <li>Frete grátis a partir de R$ 1.200,00 no Sudeste</li>

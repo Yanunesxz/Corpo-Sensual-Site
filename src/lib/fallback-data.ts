@@ -19,7 +19,7 @@ type ColecaoJson = {
   capaCelular?: string | null;
   galeria: string[];
 };
-type ProdutoJson = { ref: string; rank: number; nome: string; descricao: string; categoria: string; colecao: string };
+type ProdutoJson = { ref: string; rank: number; nome: string; descricao: string; categoria: string; colecao: string; genero?: "menino" | "menina" };
 
 const categorias = catalogo.categorias as CategoriaJson[];
 const colecoes = catalogo.colecoes as ColecaoJson[];
@@ -78,4 +78,5 @@ export const fallbackProducts: Product[] = produtos.map((p) => ({
     { id: `i-${p.ref}`, product_id: `p-${p.ref}`, url: `/images/produtos/${p.ref}.jpg`, alt: `${p.nome}, ref. ${p.ref}`, sort_order: 1 },
   ],
   category: { slug: p.categoria, name: categoryName[p.categoria] ?? p.categoria },
+  genero: p.genero ?? null,
 }));

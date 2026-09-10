@@ -22,7 +22,7 @@ export default function ContatoPage() {
               </li>
               <li>
                 <strong className="font-medium text-ink">Ainda sem CNPJ:</strong> fale com a gente do mesmo jeito. Vendemos no
-                atacado, por grade e com pedido mínimo, e avaliamos o seu caso.
+                atacado e por grade, sem pedido mínimo, e avaliamos o seu caso.
               </li>
               <li>
                 <strong className="font-medium text-ink">Consumidor:</strong> diga a sua cidade e indicamos a loja mais

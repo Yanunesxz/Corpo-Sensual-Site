@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
  */
 export function CommercialTerms({ className = "" }: { className?: string }) {
   const { commercial } = site;
-  const items = [commercial.minOrder, commercial.installments, commercial.pixDiscount, commercial.freeShipping];
+  const items = [commercial.noMinOrder, commercial.pixDiscount, commercial.installments, commercial.freeShipping];
   return (
     <div className={`border-y border-line py-10 text-center md:py-12 ${className}`}>
       <ul className="grid gap-7 sm:grid-cols-2 sm:gap-y-8 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-line">
