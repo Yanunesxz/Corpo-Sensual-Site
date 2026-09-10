@@ -10,7 +10,9 @@ type Props = {
   formHref?: string;
 };
 
-const linkClass = "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[6px] transition-opacity hover:opacity-55";
+/* Mesmo desenho do .link do design system, com 44px de altura de toque. */
+const linkClass =
+  "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[5px] transition-opacity hover:opacity-60";
 
 /**
  * Endereço, canais e horário. Usado na página de contato, no Sobre e no fim das coleções.
@@ -27,57 +29,61 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
   ].filter(Boolean) as { href: string; label: string; external: boolean }[];
 
   return (
-    <div className={`grid gap-8 ${compact || hideAddress ? "" : "md:grid-cols-2"}`}>
+    <div className={`grid gap-10 ${compact || hideAddress ? "" : "md:grid-cols-2 md:gap-12"}`}>
       {!hideAddress && (
-        <address className="text-[15px] not-italic leading-relaxed">
-          <p className="label text-ink-soft">Fábrica e atendimento</p>
-          <p className="mt-2">
+        <address className="text-[1.0625rem] not-italic leading-[1.6]">
+          <p className="label">Fábrica e atendimento</p>
+          <p className="mt-2 text-ink">
             {site.legal.razaoSocial}
             <br />
             {site.legal.endereco}
             <br />
             {site.legal.cidade}, {site.legal.uf}, CEP <span className="whitespace-nowrap">{site.legal.cep}</span>
           </p>
-          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className={`${linkClass} text-[13px]`}>
+          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className={`${linkClass} text-[15px]`}>
             Abrir no Google Maps
           </a>
           {c.hours && (
             <p className="mt-3">
-              <span className="label text-ink-soft">Horário</span>
+              <span className="label">Horário</span>
               <br />
-              {c.hours}
+              <span className="text-ink">{c.hours}</span>
             </p>
           )}
         </address>
       )}
 
-      <div className="text-[15px] leading-relaxed">
-        <p className="label text-ink-soft">Canais</p>
+      <div className="text-[1.0625rem] leading-[1.6]">
+        <p className="label">Canais</p>
         {channels.length > 0 ? (
           <ul className="mt-1 flex flex-col">
             {channels.map((ch) => (
               <li key={ch.href} className="flex">
-                <a href={ch.href} className={linkClass} {...(ch.external ? { target: "_blank", rel: "noreferrer" } : {})}>
+                <a
+                  href={ch.href}
+                  className={`${linkClass} text-ink`}
+                  {...(ch.external ? { target: "_blank", rel: "noreferrer" } : {})}
+                >
                   {ch.label}
                 </a>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="mt-2 text-ink-soft">
+          <p className="mt-2 text-body">
             Use o{" "}
-            <a href={formHref} className="underline">
+            <a href={formHref} className="underline underline-offset-[5px]">
               {onContactPage ? "formulário abaixo" : "formulário da página de contato"}
             </a>{" "}
             e retornamos em horário comercial.
           </p>
         )}
         {hideAddress ? (
-          <Link href="/contato" className={`${linkClass} mt-2 text-[13px]`}>
+          <Link href="/contato" className={`${linkClass} mt-2 text-[15px]`}>
             Endereço, mapa e CNPJ
           </Link>
         ) : (
-          <p className="mt-4 text-sm text-ink-soft">
+          <p className="mt-5 text-sm text-body">
             CNPJ <span className="whitespace-nowrap">{site.legal.cnpj}</span>
           </p>
         )}

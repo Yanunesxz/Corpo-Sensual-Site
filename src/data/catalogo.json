@@ -4,39 +4,39 @@
     {
       "slug": "feminino",
       "nome": "Feminino",
-      "imagem": "/images/produtos/0126.jpg"
+      "imagem": "/images/categorias/feminino.jpg"
     },
     {
       "slug": "masculino",
       "nome": "Masculino",
-      "imagem": "/images/produtos/0716.jpg"
+      "imagem": "/images/categorias/masculino.jpg"
     },
     {
       "slug": "infantil",
       "nome": "Infantil",
-      "imagem": "/images/produtos/0810.jpg"
+      "imagem": "/images/categorias/infantil.jpg"
     },
     {
       "slug": "gestante",
       "nome": "Gestante",
-      "imagem": "/images/produtos/0325.jpg"
+      "imagem": "/images/categorias/gestante.jpg"
     }
   ],
   "colecoes": [
     {
-      "slug": "frescor",
-      "nome": "Coleção Frescor",
+      "slug": "delicias-de-verao",
+      "nome": "Delícias de Verão",
       "temporada": "verao",
-      "ano": 2026,
-      "chamada": "Respire o agora. Viva o momento!",
-      "descricao": "Nesta coleção, convidamos você a desacelerar: respirar fundo, vestir o presente e se deixar levar pelo frescor. Pijamas com tecidos leves que abraçam o corpo com suavidade e conectam você ao que realmente importa: o bem-estar.",
-      "capa": "/images/colecoes/frescor-2.jpg",
-      "capaCelular": "/images/colecoes/frescor-1.jpg",
+      "ano": 2027,
+      "chamada": "Entre pausas gostosas ao ar livre e pequenos momentos do dia a dia.",
+      "descricao": "A nova coleção traduz as delícias da estação em peças leves, confortáveis e versáteis para viver o verão com naturalidade.",
+      "capa": "/images/colecoes/delicias-campanha.jpg",
+      "capaCelular": "/images/colecoes/delicias-campanha-celular.jpg",
       "galeria": [
-        "/images/colecoes/frescor-1.jpg",
-        "/images/colecoes/frescor-4.jpg",
-        "/images/colecoes/frescor-3.jpg",
-        "/images/colecoes/frescor-2.jpg"
+        "/images/colecoes/delicias-1.jpg",
+        "/images/colecoes/delicias-2.jpg",
+        "/images/colecoes/delicias-3.jpg",
+        "/images/colecoes/delicias-4.jpg"
       ]
     },
     {
@@ -63,7 +63,7 @@
       "nome": "Short doll regata mescla infantil",
       "descricao": "Regata azul estampada com short listrado colorido, conjunto infantil feminino.",
       "categoria": "infantil",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0118",
@@ -71,7 +71,7 @@
       "nome": "Short doll regata infantil",
       "descricao": "Regata azul com estampa de baleia e short azul-claro liso, conjunto infantil feminino.",
       "categoria": "infantil",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0130",
@@ -79,7 +79,7 @@
       "nome": "Pijama bordado de manga masculino",
       "descricao": "Camiseta de manga curta gola V com bordado no peito e short, em azul-marinho liso.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1043",
@@ -87,7 +87,7 @@
       "nome": "Pijama de alça suede liso",
       "descricao": "Blusa de alça fina azul-claro com botões e viés, e short listrado azul e branco, em suede.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0131",
@@ -95,7 +95,7 @@
       "nome": "Short de malha masculino",
       "descricao": "Short masculino de malha lisa em verde, com cós elástico; modelo sem camisa.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0848",
@@ -103,7 +103,7 @@
       "nome": "Pijama regata canelado",
       "descricao": "Regata canelada bege com viés marrom e short marrom com cordão no cós.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0115",
@@ -111,7 +111,7 @@
       "nome": "Short doll de alça em malha",
       "descricao": "Blusa de alça com estampa \"Gelato\" e short verde-oliva liso, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "2130",
@@ -119,7 +119,7 @@
       "nome": "Pijama aberto bordado de manga masculino",
       "descricao": "Camisa aberta de manga curta com botões e bordado no peito, com short, em azul-claro liso.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0123",
@@ -127,7 +127,7 @@
       "nome": "Pijama aberto de manga bordado",
       "descricao": "Blusa aberta de manga curta com botões e bermuda, em verde-claro liso.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0550",
@@ -135,7 +135,7 @@
       "nome": "Short liganete masculino",
       "descricao": "Short masculino em liganete azul-marinho estampado, com cós elástico; modelo sem camisa.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1034",
@@ -143,7 +143,7 @@
       "nome": "Pijama de alça canelado listrado",
       "descricao": "Regata de alça fina e short com cordão na cintura, em malha canelada listrada.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0126",
@@ -151,7 +151,7 @@
       "nome": "Camisola bordada aberta",
       "descricao": "Camisola aberta com botões na frente e manga curta, verde-claro lisa, comprimento acima do joelho.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1042",
@@ -159,7 +159,7 @@
       "nome": "Pijama de alça suede feminino",
       "descricao": "Regata de alça fina com estampa no peito e short estampado floral, em suede.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0851",
@@ -167,7 +167,7 @@
       "nome": "Pijama americano liso",
       "descricao": "Camisa de manga curta com gola, botões e vivo rosa, com short combinando, em rosa-claro.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0502",
@@ -175,7 +175,7 @@
       "nome": "Short doll de alça em liganete",
       "descricao": "Conjunto de blusa de alça fina e short em liganete, estampa de tucanos em fundo verde-claro.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0390",
@@ -183,7 +183,7 @@
       "nome": "Short doll nadador",
       "descricao": "Conjunto de regata nadador off-white com estampa no peito e short verde estampado de corações.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0080",
@@ -191,7 +191,7 @@
       "nome": "Short doll com renda em liganete",
       "descricao": "Conjunto de blusa de alça fina com renda no decote e short, liso, em liganete azul.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1035",
@@ -199,7 +199,7 @@
       "nome": "Pijama de alça canelado liso",
       "descricao": "Conjunto de blusa de alça com viés branco e short com cordão, liso, em malha canelada marrom.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0355",
@@ -207,7 +207,7 @@
       "nome": "Short doll regata canelado",
       "descricao": "Conjunto de regata com detalhe de coração no decote e short com cordão, liso, em malha canelada.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0135",
@@ -215,7 +215,7 @@
       "nome": "Short estampado masculino em malha PV",
       "descricao": "Short masculino em malha PV, estampado com âncoras em fundo azul-marinho, cós elástico.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0354",
@@ -223,7 +223,7 @@
       "nome": "Short doll de alça canelado",
       "descricao": "Conjunto de blusa de alça fina e short com cordão, liso, em malha canelada azul-claro.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0853",
@@ -231,7 +231,7 @@
       "nome": "Pijama americano curto",
       "descricao": "Camisa de manga curta com gola e botões, mais short, em rosa com bolinhas brancas.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0125",
@@ -239,7 +239,7 @@
       "nome": "Camisola bordada de manga",
       "descricao": "Camisola curta de manga curta, lisa, com bordado floral e botões no decote.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0720",
@@ -247,7 +247,7 @@
       "nome": "Short doll de alça estampado",
       "descricao": "Blusa de alça fina listrada em branco e rosa com short rosa liso.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0350",
@@ -255,7 +255,7 @@
       "nome": "Camisola bordada aberta curta",
       "descricao": "Camisola curta de manga curta, aberta na frente com botões e bordado floral no decote.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0300",
@@ -263,7 +263,7 @@
       "nome": "Robe de seda",
       "descricao": "Robe curto preto acetinado, de manga curta, com faixa para amarrar na cintura.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0716",
@@ -271,7 +271,7 @@
       "nome": "Pijama de liganete masculino",
       "descricao": "Camiseta de manga curta com estampa no peito e short, em liganete marrom liso.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1036",
@@ -279,7 +279,7 @@
       "nome": "Pijama de alça família feminino",
       "descricao": "Blusa de alça fina com estampa \"Oh happy day!\" e short com cordão, em azul-marinho.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0110",
@@ -287,7 +287,7 @@
       "nome": "Short doll regata em malha",
       "descricao": "Regata rosa com estampa Pizza Lover Club e short liso vinho, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0601",
@@ -295,7 +295,7 @@
       "nome": "Short doll regata em liganete",
       "descricao": "Regata e short em liganete verde com estampa de borboletas e corações.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0129",
@@ -303,7 +303,7 @@
       "nome": "Pijama bordado regata masculino",
       "descricao": "Regata e bermuda lisas em cinza, com bordado pequeno no peito.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0501",
@@ -311,7 +311,7 @@
       "nome": "Pijama regata estampado em liganete",
       "descricao": "Regata e bermuda em liganete azul com estampa de margaridas.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0690",
@@ -319,7 +319,7 @@
       "nome": "Pijama manga curta com pescador",
       "descricao": "Blusa manga curta verde-água com estampa de tulipas e calça pescador azul-marinho.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "4130",
@@ -327,7 +327,7 @@
       "nome": "Pijama aberto com calça masculino",
       "descricao": "Camisa aberta de botões, manga curta com vivo branco, e calça comprida, em verde-oliva.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "2134",
@@ -335,7 +335,7 @@
       "nome": "Short doll regata estampado",
       "descricao": "Regata branca com estampa floral e bermuda lisa azul-claro.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0310",
@@ -343,7 +343,7 @@
       "nome": "Pijama regata em malha",
       "descricao": "Conjunto de regata off-white com bolso estampado e bermuda verde-oliva, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0316",
@@ -351,7 +351,7 @@
       "nome": "Short doll nadador de onça",
       "descricao": "Regata nadador verde-água com estampa de tartaruga e flores e short estampado de onça.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0116",
@@ -359,7 +359,7 @@
       "nome": "Short doll de alça de bolinhas",
       "descricao": "Blusa de alça fina rosa com estampa de limonada e short vinho de bolinhas, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "2131",
@@ -367,7 +367,7 @@
       "nome": "Pijama regata floral em malha",
       "descricao": "Regata azul-claro com decote V e bermuda off-white de estampa floral, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "2226",
@@ -375,7 +375,7 @@
       "nome": "Camisola aberta xadrez",
       "descricao": "Camisola sem manga com abertura frontal de botões e estampa xadrez em tons de rosa.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0330",
@@ -383,7 +383,7 @@
       "nome": "Pijama listrado de manga masculino",
       "descricao": "Camiseta manga curta cinza mescla com listras pretas e bermuda preta lisa.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0499",
@@ -391,7 +391,7 @@
       "nome": "Pijama bermuda liganete",
       "descricao": "Blusa manga curta rosa com estampa de corações e bermuda vinho lisa, em liganete.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0103",
@@ -399,7 +399,7 @@
       "nome": "Pijama infantil masculino em malha",
       "descricao": "Conjunto infantil de camiseta manga curta com estampa de futebol e bermuda lisa verde, em malha.",
       "categoria": "infantil",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0325",
@@ -407,7 +407,7 @@
       "nome": "Camisola de gestante estampada",
       "descricao": "Camisola de alça para gestante, busto liso rosa e saia estampada com florzinhas e laço na cintura.",
       "categoria": "gestante",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0704",
@@ -415,7 +415,7 @@
       "nome": "Short doll de alça",
       "descricao": "Conjunto de blusa de alça fina com decote V e short azul-marinho com vivo claro e cordão na cintura.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0093",
@@ -423,7 +423,7 @@
       "nome": "Camisola de alça liganete lisa",
       "descricao": "Camisola curta de alça fina em liganete lisa azul, com decote V e renda no busto.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0122",
@@ -431,7 +431,7 @@
       "nome": "Pijama de manga em malha",
       "descricao": "Conjunto de blusa manga curta verde-água com estampa de tulipas e bermuda lisa azul-marinho, em malha.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0128",
@@ -439,7 +439,7 @@
       "nome": "Pijama aberto de manga estampado",
       "descricao": "Conjunto de blusa aberta com botões e manga curta, rosa com estampa floral, e bermuda lisa vinho.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0359",
@@ -447,7 +447,7 @@
       "nome": "Short doll regata jovem",
       "descricao": "Conjunto de regata rosa clara estampada e short xadrez rosa com cordão na cintura.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0570",
@@ -455,7 +455,7 @@
       "nome": "Pijama liganete masculino",
       "descricao": "Camiseta de manga curta com estampa miúda escura e short liso cinza, em liganete.",
       "categoria": "masculino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0121",
@@ -463,7 +463,7 @@
       "nome": "Short doll de alça infantil",
       "descricao": "Regata de alça fina com estampa de borboleta e short liso, em verde-água, para menina.",
       "categoria": "infantil",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0605",
@@ -471,7 +471,7 @@
       "nome": "Camisola regata liganete",
       "descricao": "Camisola regata curta em liganete, verde com estampa de flores e corações.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0719",
@@ -479,7 +479,7 @@
       "nome": "Pijama aberto estampado de manga",
       "descricao": "Blusa de manga curta aberta com botões, azul lisa, e bermuda branca estampada com flores.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "0730",
@@ -487,7 +487,7 @@
       "nome": "Short doll nadador estampado",
       "descricao": "Regata nadador listrada em cinza e preto com short liso preto.",
       "categoria": "feminino",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "2014",
@@ -495,7 +495,7 @@
       "nome": "Short doll regata infantil feminino",
       "descricao": "Regata listrada rosa e branca com babado na barra e short com babados, para menina.",
       "categoria": "infantil",
-      "colecao": "frescor"
+      "colecao": "delicias-de-verao"
     },
     {
       "ref": "1023",

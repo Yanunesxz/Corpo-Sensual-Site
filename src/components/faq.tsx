@@ -7,7 +7,8 @@ export function Faq({ items, id }: { items: FaqItem[]; id?: string }) {
       {items.map((item) => (
         <details key={item.q}>
           <summary>{item.q}</summary>
-          <p className="pb-5 text-[15px] leading-relaxed text-ink-soft">{item.a}</p>
+          {/* Largura limitada para a linha de leitura não ficar longa demais no desktop */}
+          <p className="max-w-2xl pb-5 pr-1 text-[1.0625rem] leading-[1.6] text-body">{item.a}</p>
         </details>
       ))}
     </div>

@@ -22,43 +22,53 @@ export default function CatalogoPage() {
   return (
     <>
       <section className="grid lg:grid-cols-2">
-        <div className="relative aspect-[16/10] bg-stone sm:aspect-[16/9] lg:aspect-auto lg:min-h-[85svh]">
+        {/* Foto de campanha em bloco cheio: sem cantos arredondados, como no site atual */}
+        <div className="relative aspect-[16/10] bg-sky-soft sm:aspect-[16/9] lg:aspect-auto lg:min-h-[85svh]">
           <Image src="/images/colecoes/frescor-1.jpg" alt="Coleção Frescor" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover object-[center_20%]" />
         </div>
-        <div className="px-5 py-10 md:px-12 md:py-16 lg:px-16">
-          <p className="label">Catálogo digital</p>
-          <h1 className="h-display mt-3 text-4xl md:text-6xl">Receba o catálogo da nova coleção</h1>
-          <p className="mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft">
+        {/* Formulário dentro do bloco azul-claro */}
+        <div className="bg-sky px-5 py-14 md:px-12 md:py-20 lg:px-16">
+          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Receba o catálogo da nova coleção</h1>
+          <p className="mt-5 max-w-md text-[1.0625rem] leading-[1.6] text-body">
             Fábrica de pijamas e moda íntima em Muriaé, MG. O catálogo traz a coleção completa, com referências, grade de
             tamanhos e a tabela de preços de atacado. {site.commercial.exclusive}
           </p>
           <div className="mt-8 max-w-lg">
-            <p className="mb-6 text-sm leading-relaxed text-ink-soft">
-              {site.commercial.minOrder}, {site.commercial.installments.toLowerCase()}. {site.commercial.freeShipping}.
-            </p>
+            {/* Os três termos comerciais em linha, acima do formulário */}
+            <ul className="mb-7 flex flex-col gap-1.5 text-sm leading-relaxed text-body sm:flex-row sm:flex-wrap sm:gap-x-6">
+              <li>{site.commercial.minOrder}</li>
+              <li>{site.commercial.installments}</li>
+              <li>{site.commercial.freeShipping}</li>
+            </ul>
             <LeadForm source="catalogo" submitLabel="Quero receber o catálogo" withMessage />
           </div>
-          <div className="mt-10">
-            <h2 className="h-display text-2xl">Como funciona</h2>
-            <div className="mt-4">
-              <Steps steps={steps} />
-            </div>
-          </div>
-          <p className="mt-6 text-sm text-ink-soft">
-            Quer ver as peças antes?{" "}
-            <Link href="/colecoes" className="underline">
-              Veja as coleções
-            </Link>
-            . Prefere falar com alguém?{" "}
-            <Link href="/contato" className="underline">
-              Contato
-            </Link>
-            .
-          </p>
         </div>
       </section>
-      <section className="mx-auto max-w-[1600px] px-5 pb-16 pt-6 md:px-8">
-        <CommercialTerms />
+
+      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+        <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
+          <div>
+            <h2 className="h-display text-3xl md:text-[2.5rem]">Como funciona</h2>
+            <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">
+              Quer ver as peças antes?{" "}
+              <Link href="/colecoes" className="underline">
+                Veja as coleções
+              </Link>
+              . Prefere falar com alguém?{" "}
+              <Link href="/contato" className="underline">
+                Contato
+              </Link>
+              .
+            </p>
+          </div>
+          <Steps steps={steps} />
+        </div>
+      </section>
+
+      <section className="bg-sky-soft">
+        <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+          <CommercialTerms />
+        </div>
       </section>
     </>
   );

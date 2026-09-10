@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -46,13 +47,16 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-paper">
       <div className="mx-auto flex h-16 max-w-[1600px] items-center justify-between px-5 md:grid md:grid-cols-[1fr_auto_1fr] md:px-8">
+        {/* Assinatura do site atual: monograma + nome em caixa normal */}
         <Link
           href="/"
-          className="inline-flex h-11 items-center font-serif text-[1.35rem] leading-none tracking-tight"
+          className="inline-flex h-11 items-center gap-2.5 text-ink"
           aria-label="Corpo Sensual, página inicial"
           onClick={() => setOpen(false)}
         >
-          {site.name}
+          {/* eager, e não priority, para não disputar o preload com a foto de campanha */}
+          <Image src="/images/logo-cs.png" alt="" width={160} height={160} loading="eager" className="h-6 w-6 md:h-7 md:w-7" />
+          <span className="whitespace-nowrap text-[1.125rem] font-light leading-none md:text-[1.25rem]">{site.name}</span>
         </Link>
 
         <nav className="hidden items-center gap-7 md:flex" aria-label="Principal">
@@ -62,7 +66,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`inline-flex h-11 items-center text-[13px] tracking-wide transition-opacity hover:opacity-60 ${active ? "underline underline-offset-[6px]" : ""}`}
+                className={`inline-flex h-11 items-center text-[15px] text-ink transition-opacity hover:opacity-60 ${active ? "underline underline-offset-[6px]" : ""}`}
               >
                 {item.label}
               </Link>
@@ -71,7 +75,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center justify-end gap-3 md:gap-5">
-          <Link href="/catalogo" className="link inline-flex h-11 items-center text-[13px]" onClick={() => setOpen(false)}>
+          <Link href="/catalogo" className="link inline-flex h-11 items-center text-[13px] md:text-[15px]" onClick={() => setOpen(false)}>
             <span className="md:hidden">Catálogo</span>
             <span className="hidden md:inline">Receber catálogo</span>
           </Link>
@@ -110,7 +114,7 @@ export function SiteHeader() {
             </Link>
           </nav>
 
-          <div className="mt-8 border-t border-line pt-6 text-sm leading-relaxed text-ink-soft">
+          <div className="mt-8 border-t border-line pt-6 text-sm leading-relaxed text-body">
             <p className="label text-ink">Contato</p>
             <p className="mt-3">
               {site.legal.endereco}

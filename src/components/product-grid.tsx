@@ -54,18 +54,18 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
   return (
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-        <h2 className="h-display text-3xl md:text-5xl">{activeName ?? title}</h2>
-        <p className="text-sm text-ink-soft">
+        <h2 className="h-display text-3xl md:text-[2.5rem]">{activeName ?? title}</h2>
+        <p className="text-sm text-body">
           {shown.length < list.length ? `${shown.length} de ${list.length} peças` : `${list.length} ${list.length === 1 ? "peça" : "peças"}`}
         </p>
       </div>
-      <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-soft">
+      <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
         Uma amostra da coleção. Venda no atacado, por grade, para lojas com CNPJ.
       </p>
 
       {disponiveis.length > 1 && (
         <div
-          className="sticky top-16 z-20 -mx-5 mt-5 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:static md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:py-0"
+          className="sticky top-16 z-20 -mx-5 mt-6 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:static md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:py-0"
           role="group"
           aria-label="Filtrar por categoria"
         >
@@ -87,9 +87,11 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
       )}
 
       {shown.length === 0 ? (
-        <p className="mt-8 border-y border-line py-10 text-center text-sm text-ink-soft">Nenhuma peça publicada nesta categoria ainda.</p>
+        <p className="mt-8 rounded-media border border-line bg-sky-soft py-10 text-center text-base text-body">
+          Nenhuma peça publicada nesta categoria ainda.
+        </p>
       ) : (
-        <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5">
+        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-5">
           {shown.map((p, i) => (
             <ProductCard key={p.id} product={p} priority={i < 2} />
           ))}
@@ -97,10 +99,10 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
       )}
 
       {/* O catálogo completo é o próximo passo, não uma paginação. */}
-      <div className="mt-10 border-t border-line pt-8 sm:flex sm:items-center sm:justify-between sm:gap-8">
+      <div className="mt-12 rounded-media bg-sky p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 md:p-8">
         <div className="max-w-md">
           <p className="h-display text-2xl md:text-3xl">Veja a coleção completa</p>
-          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+          <p className="mt-3 text-base leading-[1.6] text-body">
             {list.length > MOSTRAR
               ? "Estas são algumas peças. O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."
               : "O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."}
