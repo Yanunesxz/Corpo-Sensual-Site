@@ -51,7 +51,7 @@ export default async function HomePage() {
       {/* Foto de campanha em bloco cheio, logo abaixo do hero (sem cantos, como no site atual) */}
       <div className="relative h-[70svh] max-h-[860px] min-h-[420px] bg-sky-soft md:h-[80svh]">
         <HeroImage
-          desktop={current?.hero_image_url ?? "/images/colecoes/frescor-2.jpg"}
+          desktop={current?.hero_image_url ?? "/images/colecoes/delicias-campanha.jpg"}
           mobile={current?.hero_mobile_url}
           priority
           desktopPosition="center 35%"

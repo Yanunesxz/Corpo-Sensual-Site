@@ -33,9 +33,9 @@ const messages: Record<string, { title: string; text: string }> = {
 
 // Fotos de campanha usadas só como ilustração da faixa do Instagram.
 const vitrine = [
-  "/images/colecoes/frescor-1.jpg",
+  "/images/colecoes/delicias-1.jpg",
   "/images/colecoes/entrelacos-2.jpg",
-  "/images/colecoes/frescor-3.jpg",
+  "/images/colecoes/delicias-4.jpg",
   "/images/colecoes/entrelacos-4.jpg",
 ];
 
