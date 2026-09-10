@@ -5,7 +5,7 @@ export function ProductCard({ product, priority = false }: { product: Product; p
   const image = product.images[0];
   return (
     <article>
-      <div className="zoom-img relative aspect-[4/5] overflow-hidden bg-stone">
+      <div className="zoom-img relative aspect-[4/5] overflow-hidden rounded-media bg-sky-soft">
         {image ? (
           <Image
             src={image.url}
@@ -16,13 +16,14 @@ export function ProductCard({ product, priority = false }: { product: Product; p
             priority={priority}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-ink-soft">Sem foto</div>
+          <div className="flex h-full items-center justify-center text-sm text-body">Sem foto</div>
         )}
       </div>
       <div className="mt-3">
-        <h3 className="text-sm leading-snug">{product.name}</h3>
-        <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-[13px] text-ink-soft">
-          {product.ref && <span className="label">Ref. {product.ref}</span>}
+        <h3 className="text-base leading-snug text-ink">{product.name}</h3>
+        {/* Referência e linha ficam discretas, um degrau abaixo do nome */}
+        <p className="mt-1 flex flex-wrap items-baseline gap-x-3 text-sm text-body">
+          {product.ref && <span>Ref. {product.ref}</span>}
           {product.category && <span>{product.category.name}</span>}
         </p>
       </div>

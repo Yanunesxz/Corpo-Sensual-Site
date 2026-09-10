@@ -1,20 +1,24 @@
 import { site } from "@/lib/site";
 
-/** Condições comerciais para lojistas. Empilha até o tablet; fica em linha só em telas largas. */
+/**
+ * Condições comerciais para lojistas, como no site atual: três colunas
+ * centralizadas e a nota com asterisco logo abaixo. Empilha no celular.
+ */
 export function CommercialTerms({ className = "" }: { className?: string }) {
   const { commercial } = site;
   const items = [commercial.minOrder, commercial.installments, commercial.freeShipping];
   return (
-    <div className={`border-y border-line py-6 ${className}`}>
-      <div className="grid gap-4 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-10">
-        <p className="text-sm font-medium">{commercial.exclusive}</p>
-        <ul className="flex flex-col gap-2 text-sm md:flex-row md:flex-wrap md:gap-x-8 md:gap-y-2 lg:justify-end">
-          {items.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </div>
-      <p className="mt-3 text-xs text-ink-soft">*{commercial.freeShippingNote}</p>
+    <div className={`border-y border-line py-10 text-center md:py-12 ${className}`}>
+      <ul className="grid gap-7 md:grid-cols-3 md:gap-0 md:divide-x md:divide-line">
+        {items.map((item) => (
+          <li key={item} className="h-display text-xl leading-snug md:px-8 md:text-[1.375rem]">
+            {item}
+          </li>
+        ))}
+      </ul>
+      <p className="mx-auto mt-8 max-w-2xl text-sm leading-relaxed text-body">
+        *{commercial.exclusive} {commercial.freeShippingNote}
+      </p>
     </div>
   );
 }

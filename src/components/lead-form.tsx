@@ -88,7 +88,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </Field>
       </div>
       {(hasCnpj || v.has_cnpj) === "nao" && !isContact && (
-        <p className="border-l-2 border-line pl-3 text-sm leading-relaxed text-ink-soft">
+        /* Fundo branco para o aviso ler bem também quando o formulário está no bloco azul. */
+        <p className="rounded-field border border-line bg-white px-4 py-3 text-sm leading-relaxed text-body">
           Vendemos apenas para lojas com CNPJ ativo. Se você é consumidor, envie mesmo assim com a sua cidade: indicamos
           onde encontrar as peças.
         </p>
@@ -110,7 +111,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       )}
 
       {state.message && !state.ok && (
-        <p role="alert" className="border border-red-200 bg-red-50 px-4 py-3 text-sm leading-relaxed text-red-800">
+        <p role="alert" className="rounded-field border border-red-200 bg-red-50 px-4 py-3 text-sm leading-relaxed text-red-800">
           {state.message}{" "}
           {c.whatsappUrl ? (
             <a className="underline" href={c.whatsappUrl} target="_blank" rel="noreferrer">
@@ -132,7 +133,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         {pending ? "Enviando..." : submitLabel}
       </button>
 
-      <p className="text-xs leading-relaxed text-ink-soft">
+      <p className="text-sm leading-relaxed text-body">
         Ao continuar você concorda com a nossa{" "}
         <Link href="/politicas/privacidade" className="underline">
           política de privacidade
@@ -140,7 +141,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         . Usamos seus dados apenas para responder ao seu contato.
       </p>
       {!isContact && (
-        <p className="text-sm text-ink-soft">
+        <p className="text-sm text-body">
           Prefere falar direto?{" "}
           {c.whatsappUrl ? (
             <a className="underline" href={c.whatsappUrl} target="_blank" rel="noreferrer">
@@ -164,12 +165,13 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 function Field({ label, name, error, children }: { label: string; name: string; error?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label htmlFor={name} className="label mb-1.5 block text-ink-soft">
+      {/* Rótulo acima do campo, em texto normal pequeno (o site atual não usa caixa alta) */}
+      <label htmlFor={name} className="mb-1.5 block text-sm font-normal text-body">
         {label}
       </label>
       {children}
       {error && (
-        <p id={`${name}-error`} className="mt-1.5 text-xs text-red-700" role="alert">
+        <p id={`${name}-error`} className="mt-1.5 text-[13px] text-red-700" role="alert">
           {error}
         </p>
       )}

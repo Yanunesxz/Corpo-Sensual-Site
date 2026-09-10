@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { site, whatsappLink } from "@/lib/site";
 
@@ -30,6 +31,14 @@ const messages: Record<string, { title: string; text: string }> = {
   },
 };
 
+// Fotos de campanha usadas só como ilustração da faixa do Instagram.
+const vitrine = [
+  "/images/colecoes/frescor-1.jpg",
+  "/images/colecoes/entrelacos-2.jpg",
+  "/images/colecoes/frescor-3.jpg",
+  "/images/colecoes/entrelacos-4.jpg",
+];
+
 export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigado">) {
   const { origem } = await searchParams;
   const key = typeof origem === "string" && origem in messages ? origem : "default";
@@ -38,42 +47,58 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
   const c = site.contact;
 
   return (
-    <section className="mx-auto flex min-h-[70svh] max-w-2xl flex-col justify-center px-5 py-16 md:px-8">
-      <p className="label">Obrigado</p>
-      <h1 className="h-display mt-3 text-5xl md:text-7xl">{m.title}</h1>
-      <p className="mt-5 max-w-md text-[15px] leading-relaxed text-ink-soft">{m.text}</p>
-      <p className="mt-3 max-w-md text-[15px] leading-relaxed text-ink-soft">
-        Retornamos em horário comercial{c.hours ? `, ${c.hours.toLowerCase()}` : ""}. Fique de olho no telefone e no e-mail
-        informados.
-      </p>
+    <>
+      <section className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
+        <div className="max-w-2xl">
+          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">{m.title}</h1>
+          <p className="mt-6 text-lg leading-[1.3] text-body">{m.text}</p>
+          <p className="mt-3 text-lg leading-[1.3] text-body">
+            Retornamos em horário comercial{c.hours ? `, ${c.hours.toLowerCase()}` : ""}. Fique de olho no telefone e no e-mail
+            informados.
+          </p>
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
-        {wa ? (
-          <a href={wa} target="_blank" rel="noreferrer" className="btn btn-dark w-full sm:w-auto">
-            Falar agora no WhatsApp
-          </a>
-        ) : (
-          <Link href="/colecoes" className="btn btn-dark w-full sm:w-auto">
-            Ver as coleções
-          </Link>
-        )}
-        <Link href="/fabrica-de-pijamas#perguntas" className="link self-start text-[13px] sm:self-auto">
-          Perguntas frequentes
-        </Link>
-        <Link href="/contato" className="link self-start text-[13px] sm:self-auto">
-          Outros contatos
-        </Link>
-      </div>
+          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
+            {wa ? (
+              <a href={wa} target="_blank" rel="noreferrer" className="btn btn-dark w-full sm:w-auto">
+                Falar agora no WhatsApp
+              </a>
+            ) : (
+              <Link href="/colecoes" className="btn btn-dark w-full sm:w-auto">
+                Ver as coleções
+              </Link>
+            )}
+            <Link href="/fabrica-de-pijamas#perguntas" className="link self-start text-sm sm:self-auto">
+              Perguntas frequentes
+            </Link>
+            <Link href="/contato" className="link self-start text-sm sm:self-auto">
+              Outros contatos
+            </Link>
+          </div>
+        </div>
+      </section>
 
+      {/* Faixa azul-clara do Instagram, como na página de obrigado do site atual */}
       {c.instagram && (
-        <p className="mt-10 text-sm text-ink-soft">
-          Enquanto isso, acompanhe as novidades no Instagram{" "}
-          <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className="underline">
-            @{c.instagram}
-          </a>
-          .
-        </p>
+        <section className="bg-sky">
+          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+            <h2 className="h-display max-w-md text-3xl md:text-[2.5rem]">Siga o nosso perfil do Instagram</h2>
+            <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
+              Enquanto isso, acompanhe as novidades no Instagram{" "}
+              <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className="link">
+                @{c.instagram}
+              </a>
+              .
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-5">
+              {vitrine.map((src) => (
+                <div key={src} className="relative aspect-[4/5] overflow-hidden rounded-media bg-sky-soft">
+                  <Image src={src} alt="" fill sizes="(min-width: 768px) 25vw, 50vw" className="object-cover" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
-    </section>
+    </>
   );
 }

@@ -1,15 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Inter, Oswald } from "next/font/google";
+import { Fahkwang, Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { site } from "@/lib/site";
 
-const oswald = Oswald({
+// Fontes do site atual: Fahkwang nos títulos, Montserrat nos botões e uma
+// grotesca leve no texto corrido (o Wix usa Helvetica Light; aqui Inter 300).
+const fahkwang = Fahkwang({
   subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-oswald",
+  weight: ["300", "400", "500"],
+  variable: "--font-fahkwang",
   display: "swap",
 });
 
@@ -19,10 +21,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const bodoni = Bodoni_Moda({
+const montserrat = Montserrat({
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-bodoni",
+  weight: ["400", "500"],
+  variable: "--font-montserrat",
   display: "swap",
 });
 
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#e6f5fe",
   width: "device-width",
   initialScale: 1,
 };
@@ -76,7 +78,7 @@ const organizationJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${oswald.variable} ${inter.variable} ${bodoni.variable} h-full`}>
+    <html lang="pt-BR" className={`${fahkwang.variable} ${inter.variable} ${montserrat.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <SiteHeader />

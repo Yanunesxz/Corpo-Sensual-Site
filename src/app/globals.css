@@ -1,28 +1,43 @@
 @import "tailwindcss";
 
 /*
-  Identidade visual. Referências: SKIMS (foto em tela cheia, títulos
-  condensados em caixa alta, links sublinhados, cantos retos, quase sem cor)
-  e Any Any (mosaico de categorias, nome da coleção em serifa).
-  Tudo o que é cor, fonte e acabamento sai daqui.
+  Design system clonado do site atual (Wix), medido nas páginas
+  /colecao-verao, /fabrica-pijamas e /fabrica-pijamas-obrigado:
+
+  - Títulos em Fahkwang 400, caixa normal (não é caixa alta), cor #1B1919.
+  - Texto corrido em Helvetica Light; aqui usamos Inter 300/400, cor #403F2B.
+  - Botões em Montserrat, fundo #1B1919, cantos de 10px, altura 50px.
+  - Seções alternam branco e azul-claro #E6F5FE (às vezes a 50% ou 30%).
+  - Fotos com cantos arredondados.
+
+  Duas diferenças propositais em relação ao Wix, por acessibilidade no celular:
+  campo de formulário com 16px de fonte (evita o zoom automático do iPhone) e
+  alvos de toque de no mínimo 44px.
 */
 @theme {
   --color-paper: #ffffff;
-  --color-stone: #f4f2ee;
-  --color-stone-dark: #e8e4de;
-  --color-ink: #2d2a26;
-  --color-ink-soft: #736d66;
-  --color-line: #dedad3;
+  --color-sky: #e6f5fe;
+  --color-sky-soft: #f2fafe;
+  --color-sky-faint: #f7fcff;
+  --color-ink: #1b1919;
+  --color-body: #403f2b;
+  --color-line: #dbe7ee;
+  --color-line-strong: rgba(0, 0, 0, 0.4);
 
-  --font-display: var(--font-oswald), "Arial Narrow", "Helvetica Neue", sans-serif;
+  --font-display: var(--font-fahkwang), "Fahkwang", Georgia, serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-bodoni), "Didot", "Bodoni MT", serif;
+  --font-button: var(--font-montserrat), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --radius-media: 0.875rem;
+  --radius-btn: 10px;
+  --radius-field: 5px;
 }
 
 body {
   background: var(--color-paper);
-  color: var(--color-ink);
+  color: var(--color-body);
   font-family: var(--font-sans);
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -31,107 +46,77 @@ body {
   color: white;
 }
 
-/*
-  Classes de componente ficam em @layer components para que as utilitárias
-  do Tailwind (ex.: "text-sm", "py-3") consigam sobrescrevê-las quando usadas
-  junto no mesmo elemento.
-*/
 @layer components {
-  /* Título condensado em caixa alta (SKIMS) */
+  /* Título da marca: Fahkwang, caixa normal, entrelinha curta */
   .h-display {
     font-family: var(--font-display);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    /* --tw-leading mantém o 0.95 mesmo quando um utilitário text-* define line-height. */
-    --tw-leading: 0.95;
-    line-height: 0.95;
+    font-weight: 400;
+    color: var(--color-ink);
+    --tw-leading: 1.15;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
     text-wrap: balance;
   }
 
-  /* Nome de coleção em serifa itálica (Any Any) */
-  .h-serif {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: -0.01em;
-    line-height: 1;
-  }
-
-  /* Rótulo pequeno em caixa alta */
-  .label {
+  /* Abertura de página, como o hero do site atual */
+  .h-hero {
     font-family: var(--font-display);
     font-weight: 400;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    color: var(--color-ink);
+    --tw-leading: 1.2;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
   }
 
-  /*
-    Link sublinhado. O padding/margin negativos ampliam a área de toque
-    (~40px de altura) sem mudar o layout visível.
-  */
+  /* Texto de apoio acima do título. No site atual não é caixa alta. */
+  .label {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.9375rem;
+    color: var(--color-body);
+    letter-spacing: normal;
+    text-transform: none;
+  }
+
+  /* Link sublinhado, com área de toque ampliada sem mudar o desenho */
   .link {
     display: inline-block;
     padding: 0.6rem 0;
     margin: -0.6rem 0;
+    color: var(--color-ink);
     text-decoration: underline;
-    text-underline-offset: 6px;
+    text-underline-offset: 5px;
     text-decoration-thickness: 1px;
     transition: opacity 0.15s ease;
   }
   .link:hover {
-    opacity: 0.55;
+    opacity: 0.6;
   }
 
-  /* Sombra suave na base da foto para o texto ler bem (mais forte no celular, onde o texto cobre mais da foto) */
-  .shade::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(45, 42, 38, 0.6), rgba(45, 42, 38, 0) 60%);
-    pointer-events: none;
-  }
-  @media (max-width: 1023px) {
-    .shade::after {
-      background: linear-gradient(to top, rgba(45, 42, 38, 0.75), rgba(45, 42, 38, 0.3) 40%, rgba(45, 42, 38, 0) 70%);
-    }
-  }
-
-  /* Botão flutuante do WhatsApp some enquanto um campo está em foco no celular (teclado aberto) */
-  @media (max-width: 767px) {
-    body:has(.field:focus) .wa-fab {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s;
-    }
-  }
-
-  /* Botões: retos, caixa alta, 1px, alvo de toque de 48px */
+  /* Botão do site atual: Montserrat, fundo escuro, canto de 10px */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    min-height: 48px;
-    padding: 0.85rem 1.5rem;
+    min-height: 50px;
+    padding: 0.75rem 2rem;
     border: 1px solid transparent;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    line-height: 1;
+    border-radius: var(--radius-btn);
+    font-family: var(--font-button);
+    font-size: 1.0625rem;
+    font-weight: 400;
+    line-height: 1.1;
     text-align: center;
-    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
   }
   .btn-dark {
     background: var(--color-ink);
     border-color: var(--color-ink);
-    color: white;
+    color: #fff;
   }
   .btn-dark:hover {
-    background: #000;
-    border-color: #000;
+    opacity: 0.85;
   }
   .btn-dark:disabled {
     opacity: 0.6;
@@ -144,29 +129,31 @@ body {
   }
   .btn-outline:hover {
     background: var(--color-ink);
-    color: white;
+    color: #fff;
   }
   .btn-light {
-    background: white;
-    border-color: white;
+    background: #fff;
+    border-color: #fff;
     color: var(--color-ink);
   }
   .btn-light:hover {
-    background: var(--color-stone);
-    border-color: var(--color-stone);
+    background: var(--color-sky);
+    border-color: var(--color-sky);
   }
 
-  /* Campos de formulário: 16px evita o zoom automático do iOS ao focar */
+  /* Campo de formulário. 16px de fonte para o iPhone não dar zoom no foco. */
   .field {
     width: 100%;
     min-height: 48px;
-    border: 1px solid var(--color-line);
-    background: white;
-    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-field);
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-sans);
     font-size: 1rem;
-    color: var(--color-ink);
+    font-weight: 400;
+    color: #232222;
     outline: none;
-    border-radius: 0;
     transition: border-color 0.15s ease;
   }
   .field:focus {
@@ -176,24 +163,27 @@ body {
     border-color: #b3261e;
   }
   .field::placeholder {
-    color: #a39d95;
+    color: #8f8f86;
   }
   select.field {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%232d2a26' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%231b1919' stroke-width='1.6'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.9rem center;
     padding-right: 2.4rem;
   }
 
-  /* Chip de filtro: alvo de toque de 44px */
+  /* Filtro de categoria */
   .chip {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
-    padding: 0 1rem;
+    padding: 0 1.1rem;
     border: 1px solid var(--color-line);
-    font-size: 0.8125rem;
+    border-radius: var(--radius-btn);
+    background: #fff;
+    font-size: 0.9375rem;
+    color: var(--color-ink);
     transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
   }
   .chip:hover {
@@ -202,7 +192,7 @@ body {
   .chip-active {
     border-color: var(--color-ink);
     background: var(--color-ink);
-    color: white;
+    color: #fff;
   }
 
   /* Perguntas frequentes com <details> nativo */
@@ -215,8 +205,9 @@ body {
     gap: 1rem;
     padding: 1rem 0;
     min-height: 48px;
-    font-size: 0.95rem;
-    font-weight: 500;
+    font-size: 1.0625rem;
+    font-weight: 400;
+    color: var(--color-ink);
   }
   .faq summary::-webkit-details-marker {
     display: none;
@@ -225,20 +216,43 @@ body {
     content: "+";
     flex: none;
     font-family: var(--font-display);
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     line-height: 1;
-    color: var(--color-ink-soft);
+    color: var(--color-body);
   }
   .faq details[open] summary::after {
     content: "\2013";
   }
 
-  /* Foto com leve zoom no hover */
+  /* Sombra na base da foto para o texto sobreposto ler bem */
+  .shade::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(27, 25, 25, 0.6), rgba(27, 25, 25, 0) 60%);
+    pointer-events: none;
+  }
+  @media (max-width: 1023px) {
+    .shade::after {
+      background: linear-gradient(to top, rgba(27, 25, 25, 0.72), rgba(27, 25, 25, 0.28) 42%, rgba(27, 25, 25, 0) 72%);
+    }
+  }
+
+  /* Foto com leve aproximação no hover */
   .zoom-img img {
     transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .zoom-img:hover img {
     transform: scale(1.03);
+  }
+
+  /* Botão flutuante do WhatsApp some quando o teclado abre no celular */
+  @media (max-width: 767px) {
+    body:has(.field:focus) .wa-fab {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+    }
   }
 }
 
