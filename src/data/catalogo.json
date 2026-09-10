@@ -15,11 +15,6 @@
       "slug": "infantil",
       "nome": "Infantil",
       "imagem": "/images/categorias/infantil.jpg"
-    },
-    {
-      "slug": "gestante",
-      "nome": "Gestante",
-      "imagem": "/images/categorias/gestante.jpg"
     }
   ],
   "colecoes": [
@@ -402,14 +397,6 @@
       "colecao": "delicias-de-verao"
     },
     {
-      "ref": "0325",
-      "rank": 48,
-      "nome": "Camisola de gestante estampada",
-      "descricao": "Camisola de alça para gestante, busto liso rosa e saia estampada com florzinhas e laço na cintura.",
-      "categoria": "gestante",
-      "colecao": "delicias-de-verao"
-    },
-    {
       "ref": "0704",
       "rank": 49,
       "nome": "Short doll de alça",
@@ -658,14 +645,6 @@
       "colecao": "entrelacos"
     },
     {
-      "ref": "1030",
-      "rank": 179,
-      "nome": "Pijama gestante",
-      "descricao": "Blusa de manga longa rosa com abertura para amamentação e calça estampada de corações.",
-      "categoria": "gestante",
-      "colecao": "entrelacos"
-    },
-    {
       "ref": "1025",
       "rank": 195,
       "nome": "Pijama listrado masculino",
@@ -696,6 +675,566 @@
       "descricao": "Blusa de manga longa cinza com estampa e calça listrada. Linha infantil feminina.",
       "categoria": "infantil",
       "colecao": "entrelacos"
+    },
+    {
+      "ref": "0015",
+      "rank": 901,
+      "nome": "Camisola de alça estampada gelato",
+      "descricao": "Camisola de alça fina off-white com estampa de taça de sorvete e a palavra Gelato, com viés verde-militar na gola e nas alças.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0070",
+      "rank": 902,
+      "nome": "Short doll de alça com renda",
+      "descricao": "Blusa de alça rosa lisa com renda no decote e short liso na mesma cor rosa.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0072",
+      "rank": 903,
+      "nome": "Camisola de alça lisa com renda",
+      "descricao": "Camisola de alça fina rosa lisa, com detalhe de renda no decote e fenda lateral na barra.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0083",
+      "rank": 904,
+      "nome": "Camisola aberta estampada de coração",
+      "descricao": "Camisola sem manga abotoada na frente, azul com estampa de corações em tons de azul e branco.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0085",
+      "rank": 905,
+      "nome": "Pijama regata gola V com bermuda",
+      "descricao": "Regata verde-água lisa com gola V e bermuda azul-marinho estampada de corações brancos.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0086",
+      "rank": 906,
+      "nome": "Pijama manga curta estampa de coração",
+      "descricao": "Blusa de manga curta e calça comprida no mesmo tecido mescla escuro, com estampa de corações brancos.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0087",
+      "rank": 907,
+      "nome": "Camisola aberta estampa de corações",
+      "descricao": "Camisola de manga curta abotoada na frente, rosa com estampa de corações brancos.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0088",
+      "rank": 908,
+      "nome": "Pijama aberto floral manga curta",
+      "descricao": "Blusa de manga curta abotoada na frente com gola V e short combinando, em rosa com estampa floral miúda branca.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0091",
+      "rank": 909,
+      "nome": "Camisola de alça poá com renda",
+      "descricao": "Camisola de alça fina preta com estampa de poá branco e renda preta no decote em V.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0094",
+      "rank": 910,
+      "nome": "Camisola regata estampada com botões",
+      "descricao": "Camisola sem manga azul-marinho mesclada com estampa de beija-flores rosas e folhas verdes, com abertura de botões no decote.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0102",
+      "rank": 911,
+      "nome": "Pijama estampado game infantil",
+      "descricao": "Camiseta de manga curta bordô mescla com estampa de controle de videogame e short listrado em bordô e branco.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0104",
+      "rank": 912,
+      "nome": "Short doll regata game infantil",
+      "descricao": "Regata vinho mescla com estampa de controle de videogame e short listrado vinho e branco, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0107",
+      "rank": 913,
+      "nome": "Short doll regata estampado",
+      "descricao": "Regata azul com estampa escrita e peixe no peito e vivo rosa, com short estampado azul-claro e cordão na cintura.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0108",
+      "rank": 914,
+      "nome": "Samba-canção estampado infantil",
+      "descricao": "Short samba-canção de cetim azul-marinho com estampa geométrica em vermelho e rosa, com elástico na cintura.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0109",
+      "rank": 915,
+      "nome": "Short doll regata estampado",
+      "descricao": "Regata rosa-claro com viés vinho e estampa de garrafa de limonada com frutas, e short vinho com poá de bolinhas e corações.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0111",
+      "rank": 916,
+      "nome": "Camisola regata rosa estampada",
+      "descricao": "Camisola regata rosa-claro com viés vinho no decote e cavas e estampa de pizza na frente.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0114",
+      "rank": 917,
+      "nome": "Short doll regata estampado infantil",
+      "descricao": "Regata azul com escrita estampada no peito e short azul-claro com estampa de ondas e óculos de sol, conjunto infantil feminino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0119",
+      "rank": 918,
+      "nome": "Short doll de alça estampado infantil",
+      "descricao": "Regata de alça rosa claro com estampa de limonada e acabamento rendado no decote, com short bordô de poás e coraçõezinhos.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0124",
+      "rank": 919,
+      "nome": "Short doll estampa de baleias infantil",
+      "descricao": "Camiseta de manga curta rosa claro com estampa de baleias e frase, com short rosa liso, conjunto infantil feminino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0139",
+      "rank": 920,
+      "nome": "Short doll regata infantil",
+      "descricao": "Regata azul-claro com estampa de carros de corrida e short azul liso, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0203",
+      "rank": 921,
+      "nome": "Pijama estampado dinossauro infantil",
+      "descricao": "Camiseta de manga curta azul-clara estampada com dinossauros em azul-marinho e short combinando na mesma estampa.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0216",
+      "rank": 922,
+      "nome": "Short doll de alça estampado",
+      "descricao": "Regata de alça fina verde-água com estampa de tartaruga e flores rosas, e short verde-água com estampa manchada.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0219",
+      "rank": 923,
+      "nome": "Short doll de alça tartaruga infantil",
+      "descricao": "Regata de alça verde-água com estampa de tartaruga e flores rosa, com short estampado no mesmo tom.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0239",
+      "rank": 924,
+      "nome": "Short doll regata dinossauros infantil",
+      "descricao": "Regata e short em azul-claro com estampa de dinossauros em azul-marinho, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0301",
+      "rank": 925,
+      "nome": "Robe liso transpassado",
+      "descricao": "Robe azul-marinho liso, transpassado com amarração na lateral e manga curta ampla.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0304",
+      "rank": 926,
+      "nome": "Pijama de manga curta masculino",
+      "descricao": "Camiseta de manga curta bege com estampa de tartaruga no peito e bermuda azul-marinho estampada com veleiros.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0305",
+      "rank": 927,
+      "nome": "Pijama de manga curta infantil",
+      "descricao": "Camiseta de manga curta bege com estampa de tartaruga no peito e short azul-marinho estampado com barcos, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0306",
+      "rank": 928,
+      "nome": "Conjunto regata tartaruga infantil",
+      "descricao": "Regata bege com estampa de tartaruga no peito e short azul-marinho estampado com veleiros, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0307",
+      "rank": 929,
+      "nome": "Short doll regata com estampa marinha",
+      "descricao": "Regata off-white com viés laranja e estampa de tartaruga, onda e conchas, com short azul-marinho estampado de veleiros.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0308",
+      "rank": 930,
+      "nome": "Short doll regata estampa marinha",
+      "descricao": "Regata off-white com estampa de tartaruga, onda e conchas, com short azul-marinho estampado de veleiros.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0309",
+      "rank": 931,
+      "nome": "Short doll regata estampa marinha infantil",
+      "descricao": "Regata off-white com estampa de tartaruga, onda e conchas, com short azul-marinho estampado de barcos.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0329",
+      "rank": 932,
+      "nome": "Pijama regata listrado masculino",
+      "descricao": "Regata cinza-mescla com listras brancas e bermuda verde-água lisa, conjunto masculino.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0358",
+      "rank": 933,
+      "nome": "Short doll de alça bordado xadrez",
+      "descricao": "Blusa de alça rosa-claro com estampa de meias-luas e bordado no peito, com short xadrez rosa e branco.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0380",
+      "rank": 934,
+      "nome": "Camisola regata bordada lisa",
+      "descricao": "Camisola regata nadador verde-militar lisa com bordado de corações e a frase love yourself no peito.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0402",
+      "rank": 935,
+      "nome": "Pijama manga curta masculino estampado",
+      "descricao": "Camiseta de manga curta azul com frase estampada no peito e bermuda azul-claro com estampa quadriculada.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0403",
+      "rank": 936,
+      "nome": "Short doll regata estampado masculino",
+      "descricao": "Regata azul com estampa escrita e peixe no peito, com short estampado azul-claro, conjunto masculino.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0404",
+      "rank": 937,
+      "nome": "Pijama bordado peixe infantil",
+      "descricao": "Camiseta de manga curta azul com bordado de peixe e letras no peito, com bermuda estampada em tons de azul-claro e branco.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0407",
+      "rank": 938,
+      "nome": "Short doll regata infantil masculino",
+      "descricao": "Regata azul com escrita e peixinho estampados, com short azul-claro de estampa quadriculada aquarelada.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0429",
+      "rank": 939,
+      "nome": "Pijama regata mescla masculino",
+      "descricao": "Regata bordô mescla lisa com short listrado em bordô e branco.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0430",
+      "rank": 940,
+      "nome": "Pijama de manga curta mescla masculino",
+      "descricao": "Camiseta de manga curta gola careca em mescla vinho com etiqueta no peito e bermuda listrada em vinho e branco.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0500",
+      "rank": 941,
+      "nome": "Camisola de alça estampada tucano",
+      "descricao": "Camisola de alça fina verde-claro com estampa de tucanos pretos de bico laranja por toda a peça.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0582",
+      "rank": 942,
+      "nome": "Pijama regata estampado com bermuda",
+      "descricao": "Regata verde-água estampada de borboletas e corações com renda no decote V, e bermuda verde lisa.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0590",
+      "rank": 943,
+      "nome": "Pijama pescador regata estampado",
+      "descricao": "Regata off-white com estampa de flores e abertura de botões no decote, com calça pescador salmão lisa.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0650",
+      "rank": 944,
+      "nome": "Camisola listrada com botões",
+      "descricao": "Camisola de manga curta listrada em vermelho e branco, com abertura de botões azuis no decote.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0702",
+      "rank": 945,
+      "nome": "Camisola de alça com viés",
+      "descricao": "Camisola de alça azul-marinho lisa com estampa escrita no peito e viés branco no decote e na barra.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0703",
+      "rank": 946,
+      "nome": "Camisola regata lisa com viés",
+      "descricao": "Camisola regata rosa lisa com a palavra inspire escrita no peito e viés azul-marinho na gola, nas cavas e na barra.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0706",
+      "rank": 947,
+      "nome": "Short doll de manga curta estampado",
+      "descricao": "Camiseta de manga curta verde claro com escrita e flor estampadas e viés azul-marinho, com short da mesma cor com cordão.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0710",
+      "rank": 948,
+      "nome": "Camisola de alça listrada",
+      "descricao": "Camisola de alça fina branca com listras rosa e acabamento rosa liso no decote e nas alças.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0714",
+      "rank": 949,
+      "nome": "Pijama xadrez manga curta",
+      "descricao": "Camiseta de manga curta xadrez em rosa, branco e bege com short combinando de cordão na cintura.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0715",
+      "rank": 950,
+      "nome": "Camisola manga curta listrada",
+      "descricao": "Camisola de manga curta listrada em vermelho e branco, com vivo azul-marinho nas laterais.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0750",
+      "rank": 951,
+      "nome": "Short doll de alça borboleta",
+      "descricao": "Regata de alça verde-água mescla com estampa de borboletas rosa e azul, com short rosa liso.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0760",
+      "rank": 952,
+      "nome": "Short doll regata borboletas",
+      "descricao": "Regata verde-água mescla com estampa de borboletas rosa e azul e short rosa liso.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0770",
+      "rank": 953,
+      "nome": "Camisola regata nadador mescla",
+      "descricao": "Camisola regata de cavas nadador em rosa mescla, lisa, com viés vinho na gola e nas cavas.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0800",
+      "rank": 954,
+      "nome": "Short doll regata mescla listrado",
+      "descricao": "Regata rosa mescla com short listrado em rosa, cinza e azul.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0815",
+      "rank": 955,
+      "nome": "Short doll de alça estampado juvenil",
+      "descricao": "Regata de alça verde-água com estampa escrita no peito e elástico na barra, com short listrado em cinza, azul e verde-água.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0816",
+      "rank": 956,
+      "nome": "Short doll regata juvenil estampado",
+      "descricao": "Regata azul-clara com estampa floral e letras no peito, com short listrado em coral, azul e cinza.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0819",
+      "rank": 957,
+      "nome": "Pijama de manga curta xadrez",
+      "descricao": "Blusa de manga curta e short em xadrez rosa e branco, com cordão de amarrar na cintura.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0841",
+      "rank": 958,
+      "nome": "Short doll de alça listrado",
+      "descricao": "Regata de alça verde-água com estampa pequena no peito e short listrado em azul, verde e mescla.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0845",
+      "rank": 959,
+      "nome": "Short doll regata listrado",
+      "descricao": "Regata azul-claro com estampa floral e escrita no peito e short listrado em coral, azul e cinza.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0901",
+      "rank": 960,
+      "nome": "Short doll regata com câmera estampada",
+      "descricao": "Regata bege com estampa de câmera fotográfica e frase, com short listrado azul-marinho e branco.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "0911",
+      "rank": 961,
+      "nome": "Short doll de alça estampado",
+      "descricao": "Regata de alça fina rosa-claro com estampa de câmera fotográfica e letras, com short listrado azul-marinho e branco.",
+      "categoria": "feminino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1010",
+      "rank": 962,
+      "nome": "Pijama estampado futebol infantil",
+      "descricao": "Camiseta de manga curta creme com estampa de bola de futebol e letras no peito, com short verde-militar liso.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1011",
+      "rank": 963,
+      "nome": "Pijama regata estampado infantil masculino",
+      "descricao": "Regata azul-claro com estampa de etiquetas e frases no peito, e short azul liso.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1012",
+      "rank": 964,
+      "nome": "Pijama regata mescla infantil",
+      "descricao": "Regata bordô mescla com estampa escrita no peito e short listrado em bordô e branco.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1013",
+      "rank": 965,
+      "nome": "Pijama de manga curta mescla infantil",
+      "descricao": "Camiseta de manga curta em mescla vinho com estampa no peito e bermuda listrada em vinho e branco, conjunto infantil masculino.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1037",
+      "rank": 966,
+      "nome": "Pijama manga curta liso masculino",
+      "descricao": "Camiseta de manga curta azul-marinho com frase estampada no peito e short azul-marinho com faixa clara na lateral.",
+      "categoria": "masculino",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1038",
+      "rank": 967,
+      "nome": "Short doll de alça infantil",
+      "descricao": "Regata de alça azul-marinho com estampa escrita e coração bordado, com short azul-marinho de faixa lateral azul-claro e cordão na cintura.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1039",
+      "rank": 968,
+      "nome": "Pijama estampado manga curta infantil",
+      "descricao": "Camiseta de manga curta azul-marinho com estampa de carinha e letras no peito, com short azul-marinho de faixa lateral azul-clara.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1040",
+      "rank": 969,
+      "nome": "Short doll de alça bordado",
+      "descricao": "Regata de alça fina azul-marinho com bordado de frase e coração, e short combinando com faixa branca na lateral e cordão.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
+    },
+    {
+      "ref": "1041",
+      "rank": 970,
+      "nome": "Pijama manga curta azul-marinho infantil",
+      "descricao": "Camiseta de manga curta azul-marinho com estampa pequena no peito e short azul-marinho com listra branca lateral.",
+      "categoria": "infantil",
+      "colecao": "delicias-de-verao"
     }
   ]
 }

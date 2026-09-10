@@ -5,7 +5,6 @@ import { collectionShortName, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib
 import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { HeroImage } from "@/components/hero-image";
-import { CampaignVideo } from "@/components/campaign-video";
 import { ProducaoSection } from "@/components/producao-section";
 
 // Revalida o catálogo a cada hora sem precisar de novo deploy.
@@ -19,6 +18,7 @@ export default async function HomePage() {
   ]);
   const current = collections[0] ?? null;
   const currentHref = current ? `/colecoes/${current.slug}` : "/colecoes";
+  const outras = collections.filter((c) => c.id !== current?.id).slice(0, 2);
   const { commercial } = site;
 
   return (
@@ -82,20 +82,22 @@ export default async function HomePage() {
         <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
           {/* As fotos levam à coleção já filtrada, que mostra só uma parte. Deixa isso claro. */}
           <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-            <p className="label max-w-xl">
-              Feminino, masculino, infantil e gestante. Aqui aparece uma parte de cada linha.
-            </p>
+            <p className="label max-w-xl">Aqui aparece uma parte de cada linha.</p>
             <Link href="/colecoes" className="link text-[15px]">
               Ver as coleções
             </Link>
           </div>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-4">
-            {categories.map((c) => (
-              <li key={c.id}>
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3">
+            {categories.map((c, i) => {
+              // Com três linhas, a última sobraria sozinha na grade de duas colunas
+              // do celular: ela ocupa a largura toda, numa faixa mais baixa.
+              const sozinha = categories.length % 2 === 1 && i === categories.length - 1;
+              return (
+              <li key={c.id} className={sozinha ? "col-span-2 lg:col-span-1" : undefined}>
                 <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="group block">
-                  <span className="zoom-img relative block aspect-[4/5] overflow-hidden rounded-media bg-sky-soft">
+                  <span className={`zoom-img relative block overflow-hidden rounded-media bg-sky-soft ${sozinha ? "aspect-[16/10] lg:aspect-[4/5]" : "aspect-[4/5]"}`}>
                     {c.image_url && (
-                      <Image src={c.image_url} alt={c.name} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                      <Image src={c.image_url} alt={c.name} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover object-[center_30%]" />
                     )}
                   </span>
                   <span className="h-display mt-3 block text-2xl transition-opacity group-hover:opacity-60 md:text-[1.75rem]">
@@ -103,21 +105,22 @@ export default async function HomePage() {
                   </span>
                 </Link>
               </li>
-            ))}
+              );
+            })}
           </ul>
         </section>
       )}
 
-      {/* Mais vendidas: 6 no celular, 9 no tablet, 10 no desktop */}
+      {/* Mais vendidas: 4 no celular, 9 no tablet, 10 no desktop */}
       {products.length > 0 && (
         <section className="bg-sky-soft">
           <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
             <SectionHeading
               title="Mais vendidas"
               link={{ href: currentHref, label: "Ver mais referências" }}
-              description={`As peças com maior saída nas lojas neste trimestre. São só algumas: o mix tem ${TOTAL_REFERENCIAS} referências entre as coleções de verão e inverno. Venda no atacado, por grade.`}
+              description={`As peças com maior saída nas lojas. São só algumas: o mix tem ${TOTAL_REFERENCIAS} referências entre verão e inverno.`}
             />
-            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+7)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
+            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+5)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -131,16 +134,12 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Coleções: dois blocos de foto */}
-      {collections.length > 0 && (
+      {/* Coleções: só as que ainda não apareceram no topo */}
+      {outras.length > 0 && (
         <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
           <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
-            {collections.slice(0, 2).map((c, i) => {
-              // Evita repetir no bloco a foto usada no hero (vertical ou horizontal).
-              const photo =
-                (i === 0 ? c.gallery_urls?.find((u) => u !== c.hero_mobile_url && u !== c.hero_image_url) : null) ||
-                c.hero_mobile_url ||
-                c.hero_image_url;
+            {outras.map((c) => {
+              const photo = c.hero_mobile_url || c.hero_image_url;
               return (
                 <li key={c.id}>
                   <Link
@@ -163,31 +162,7 @@ export default async function HomePage() {
       )}
 
       {/* Vídeo real da produção: a peça sendo confeccionada, embalada e despachada */}
-      <ProducaoSection fundo="bg-sky-soft" />
-
-      {/* Campanha em vídeo: cenas do ensaio da coleção */}
-      <section>
-        <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
-          <div className="max-w-2xl">
-            <h2 className="h-display text-3xl md:text-[2.5rem]">A campanha em movimento</h2>
-            <p className="mt-4 text-[1.125rem] leading-[1.6]">
-              Cenas do ensaio da coleção, gravadas em Muriaé e na região da fábrica.
-            </p>
-          </div>
-          <ul className="mt-8 grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
-            {[
-              { src: "campanha/piquenique", legenda: "Cena de piquenique da campanha Delícias de Verão" },
-              { src: "campanha/familia", legenda: "Crianças brincando de pijama, linha família" },
-              { src: "campanha/verao", legenda: "Cena de verão da campanha" },
-              { src: "campanha/fabrica", legenda: "Vista aérea da região da fábrica, em Muriaé", comAudio: false },
-            ].map((v) => (
-              <li key={v.src} className="overflow-hidden rounded-media bg-sky">
-                <CampaignVideo src={v.src} legenda={v.legenda} comAudio={v.comAudio !== false} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <ProducaoSection fundo="bg-paper" />
 
       {/* Lojistas: seção de destaque, no azul-claro cheio */}
       <section className="bg-sky">
@@ -197,9 +172,7 @@ export default async function HomePage() {
           </h2>
           <div className="max-w-md">
             <p className="text-[1.125rem] leading-[1.6]">
-              Mais de 25 anos de fábrica em Muriaé, MG, uma marca conhecida nacionalmente e coleções novas a cada
-              temporada. Cadastre a sua loja para receber o catálogo digital e o contato do representante da sua
-              região.
+              Cadastre a sua loja para receber o catálogo digital e o contato do representante da sua região.
             </p>
             {/* Divisória mais escura que a padrão para aparecer sobre o azul-claro */}
             <ul className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-base leading-[1.5]">
@@ -218,23 +191,6 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Marca */}
-      <section className="mx-auto max-w-3xl px-5 py-16 text-center md:py-24">
-        <p className="h-display text-3xl md:text-[2.5rem]">
-          Confeccionamos conforto e estilo, combinados a tecidos de boa qualidade, design moderno e atenção aos
-          detalhes.
-        </p>
-        <p className="mt-6 text-[1.125rem] leading-[1.6] text-body">Já são mais de 25 anos de expertise dedicados ao bem‑estar e à qualidade.</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
-          <Link href="/sobre" className="link text-[15px]">
-            Sobre a Corpo Sensual
-          </Link>
-          <Link href="/contato" className="link text-[15px]">
-            Onde estamos
-          </Link>
         </div>
       </section>
     </>
