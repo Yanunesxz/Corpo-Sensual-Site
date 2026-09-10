@@ -1,23 +1,141 @@
 {
-  "_comentario": "Campanha Delícias de Verão (Verão 2026/2027). Origens no servidor da empresa: \\\\192.168.0.2\\Comercial\\MARKETER CORPO SENSUAL\\CA_VERAO_2027. Rode com: node scripts/midia-campanha.mjs",
+  "_comentario": "Campanha Delícias de Verão (Verão 2026/2027). Origens no servidor da empresa: \\\\192.168.0.2\\Comercial\\MARKETER CORPO SENSUAL\\CA_VERAO_2027. Rode com: node scripts/midia-campanha.mjs. As fotos de hero saem grandes de propósito: o Next serve o tamanho certo para cada tela e uma tela de notebook em 2x pede quase 3000px de largura.",
   "fotos": [
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4479.jpg", "saida": "colecoes/delicias-campanha.jpg", "largura": 2400, "proporcao": "16/9", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4680.jpg", "saida": "colecoes/delicias-campanha-celular.jpg", "largura": 1200, "proporcao": "3/4", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4680.jpg", "saida": "colecoes/delicias-sticky.jpg", "largura": 1600, "proporcao": "2/3", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4797.jpg", "saida": "colecoes/delicias-1.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4451.jpg", "saida": "colecoes/delicias-2.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4954.jpg", "saida": "colecoes/delicias-3.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A5125.jpg", "saida": "colecoes/delicias-4.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4451.jpg", "saida": "categorias/feminino.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4448.jpg", "saida": "categorias/masculino.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4931.jpg", "saida": "categorias/infantil.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4384.jpg", "saida": "categorias/gestante.jpg", "largura": 1200, "proporcao": "4/5", "foco": "attention" },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4585.jpg", "saida": "colecoes/delicias-detalhe.jpg", "largura": 2000, "proporcao": "3/2", "foco": "attention" }
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4479.jpg",
+      "saida": "colecoes/delicias-campanha.jpg",
+      "largura": 3840,
+      "proporcao": "16/9",
+      "foco": "attention",
+      "qualidade": 92
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4680.jpg",
+      "saida": "colecoes/delicias-campanha-celular.jpg",
+      "largura": 1600,
+      "proporcao": "3/4",
+      "foco": "attention",
+      "qualidade": 92
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4475.jpg",
+      "saida": "colecoes/fabrica-campanha.jpg",
+      "largura": 3840,
+      "proporcao": "16/9",
+      "foco": "attention",
+      "qualidade": 92
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4797.jpg",
+      "saida": "colecoes/fabrica-campanha-celular.jpg",
+      "largura": 1600,
+      "proporcao": "3/4",
+      "foco": "attention",
+      "qualidade": 92
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4797.jpg",
+      "saida": "colecoes/delicias-1.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4451.jpg",
+      "saida": "colecoes/delicias-2.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4954.jpg",
+      "saida": "colecoes/delicias-3.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A5125.jpg",
+      "saida": "colecoes/delicias-4.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4451.jpg",
+      "saida": "categorias/feminino.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4448.jpg",
+      "saida": "categorias/masculino.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4931.jpg",
+      "saida": "categorias/infantil.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4384.jpg",
+      "saida": "categorias/gestante.jpg",
+      "largura": 1400,
+      "proporcao": "4/5",
+      "foco": "attention",
+      "qualidade": 88
+    }
   ],
   "videos": [
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/05_CONTEUDOS/CENA PIQUENIQUE.mp4", "saida": "campanha/piquenique", "duracao": 10, "altura": 1280, "crf": 28 },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/10.mp4", "saida": "campanha/familia", "inicio": 1, "duracao": 11, "altura": 1280, "crf": 28 },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/4.mp4", "saida": "campanha/verao", "inicio": 1, "duracao": 11, "altura": 1280, "crf": 28 },
-    { "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/Respiro 2.mp4", "saida": "campanha/fabrica", "inicio": 2, "duracao": 10, "altura": 1080, "crf": 28 }
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/05_CONTEUDOS/CENA PIQUENIQUE.mp4",
+      "saida": "campanha/piquenique",
+      "duracao": 10,
+      "altura": 1280,
+      "crf": 28
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/10.mp4",
+      "saida": "campanha/familia",
+      "inicio": 1,
+      "duracao": 11,
+      "altura": 1280,
+      "crf": 28
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/4.mp4",
+      "saida": "campanha/verao",
+      "inicio": 1,
+      "duracao": 11,
+      "altura": 1280,
+      "crf": 28
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/Respiro 2.mp4",
+      "saida": "campanha/fabrica",
+      "inicio": 2,
+      "duracao": 10,
+      "altura": 1080,
+      "crf": 28,
+      "semAudio": true
+    },
+    {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/05_CONTEUDOS/PRODUCAO_DA COSTURA A CAIXA.mp4",
+      "saida": "producao/da-costura-a-caixa",
+      "altura": 900,
+      "crf": 31
+    }
   ]
 }

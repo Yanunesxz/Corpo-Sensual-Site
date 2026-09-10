@@ -8,6 +8,7 @@ import { HeroImage } from "@/components/hero-image";
 import { faqLojista } from "@/lib/content/faq";
 import { passosLojista } from "@/lib/content/lojistas";
 import { site } from "@/lib/site";
+import { ProducaoSection } from "@/components/producao-section";
 
 export const metadata: Metadata = {
   title: "Fábrica de pijamas para lojistas",
@@ -30,7 +31,14 @@ export default function FabricaPage() {
   return (
     <>
       <section className="shade relative h-[60svh] min-h-[420px] max-h-[720px] bg-sky-soft">
-        <HeroImage desktop="/images/colecoes/frescor-3.jpg" mobile="/images/colecoes/frescor-4.jpg" priority desktopPosition="center 30%" mobilePosition="center 20%" switchAt="lg" />
+        <HeroImage
+          desktop="/images/colecoes/fabrica-campanha.jpg"
+          mobile="/images/colecoes/fabrica-campanha-celular.jpg"
+          priority
+          desktopPosition="center 35%"
+          mobilePosition="center 30%"
+          switchAt="lg"
+        />
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
           {/* .h-hero e .link definem a cor escura do design system: sobre a foto forçamos o branco */}
           {/* 28px no celular: o título é longo e o espaçamento entre letras do .h-hero alarga a linha */}
@@ -43,7 +51,7 @@ export default function FabricaPage() {
               Perguntas frequentes
             </a>
           </div>
-          <p className="mt-4 text-sm text-white/85">*{site.commercial.exclusive}</p>
+          <p className="mt-4 text-sm text-white/85">*{site.commercial.salesNote} {site.commercial.noCnpjNote}</p>
         </div>
       </section>
 
@@ -77,6 +85,9 @@ export default function FabricaPage() {
           </div>
         </div>
       </section>
+
+      {/* Vídeo real da produção, logo depois do formulário */}
+      <ProducaoSection fundo="bg-sky" comLink={false} />
 
       <section id="perguntas" className="scroll-mt-20 bg-sky-soft">
         <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
