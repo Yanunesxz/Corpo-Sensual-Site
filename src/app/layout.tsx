@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} | Pijamas e moda íntima para lojistas`,
     description: site.description,
-    images: [{ url: "/images/colecoes/frescor-2.jpg", width: 1600, height: 1067, alt: site.name }],
+    images: [{ url: "/images/colecoes/delicias-campanha.jpg", width: 3840, height: 2160, alt: site.name }],
   },
   robots: { index: true, follow: true },
 };

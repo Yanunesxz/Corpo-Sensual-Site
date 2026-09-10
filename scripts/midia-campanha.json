@@ -104,7 +104,8 @@
       "saida": "campanha/piquenique",
       "duracao": 10,
       "altura": 1280,
-      "crf": 28
+      "crf": 28,
+      "fps": 25
     },
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/10.mp4",
@@ -112,7 +113,8 @@
       "inicio": 1,
       "duracao": 11,
       "altura": 1280,
-      "crf": 28
+      "crf": 28,
+      "fps": 25
     },
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/4.mp4",
@@ -120,7 +122,8 @@
       "inicio": 1,
       "duracao": 11,
       "altura": 1280,
-      "crf": 28
+      "crf": 28,
+      "fps": 25
     },
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/03_VIDEOS EDITADOS/Respiro 2.mp4",
@@ -129,13 +132,14 @@
       "duracao": 10,
       "altura": 1080,
       "crf": 28,
-      "semAudio": true
+      "semAudio": true,
+      "fps": 25
     },
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/05_CONTEUDOS/PRODUCAO_DA COSTURA A CAIXA.mp4",
       "saida": "producao/da-costura-a-caixa",
-      "altura": 900,
-      "crf": 31
+      "altura": 1024,
+      "crf": 26
     }
   ]
 }

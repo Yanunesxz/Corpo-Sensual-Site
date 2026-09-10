@@ -83,7 +83,9 @@ for (const v of videos) {
       "-crf", String(v.crf ?? 27),
       "-pix_fmt", "yuv420p",
       "-movflags", "+faststart",   // começa a tocar antes de baixar tudo
-      "-r", "25",
+      // Sem "fps" no manifesto mantém a taxa da fonte. Baixar 30 para 25 economiza
+      // pouco e cria trepidação em cena com movimento de mão, como a da costura.
+      ...(v.fps ? ["-r", String(v.fps)] : []),
       destino,
     ],
     { stdio: ["ignore", "inherit", "inherit"] },
