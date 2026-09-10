@@ -94,7 +94,7 @@ export const politicas: Politica[] = [
       {
         heading: "Defeitos de fabricação",
         paragraphs: [
-          "Peças com defeito de fabricação podem ser trocadas mediante comunicação ao representante ou pela página de contato do site em até 30 dias após o recebimento, com foto do defeito e número do pedido.",
+          "Peças com defeito de fabricação podem ser trocadas mediante comunicação ao representante ou pela página de contato do site em até 15 dias após o recebimento, com foto do defeito e número do pedido.",
         ],
       },
       {
@@ -121,13 +121,13 @@ export const politicas: Politica[] = [
       {
         heading: "Prazos",
         paragraphs: [
-          "O prazo de produção e envio é informado pelo representante no fechamento do pedido e varia conforme a coleção e a quantidade. O prazo de transporte depende da transportadora e da região de entrega.",
+          "O pedido sai da nossa fábrica em até 15 dias úteis. Parte do mix fica a pronta entrega e, nesse caso, o envio é imediato. O prazo de transporte depende da transportadora e da região de entrega, e é somado a esse prazo.",
         ],
       },
       {
         heading: "Frete e acompanhamento",
         paragraphs: [
-          "O valor do frete é calculado por pedido, de acordo com o peso e o destino. Após o despacho, enviamos o código de rastreamento para acompanhamento.",
+          "O frete é grátis a partir de R$ 1.200,00 para a região Sudeste e a partir de R$ 2.000,00 para as demais regiões. Abaixo desses valores, o frete é calculado por pedido, de acordo com o peso e o destino. Após o despacho, enviamos o código de rastreamento para acompanhamento.",
         ],
       },
     ],
@@ -149,7 +149,7 @@ export const politicas: Politica[] = [
       {
         heading: "Relação comercial",
         paragraphs: [
-          "As vendas são realizadas no atacado, por meio de representantes comerciais e da plataforma B2B. Preços, condições de pagamento e pedidos mínimos são informados pelo representante.",
+          "As vendas são realizadas no atacado, por meio de representantes comerciais e da plataforma B2B. Aceitamos Pix, boleto e cartão; no Pix há 5% de desconto e no cartão o parcelamento é sem juros. Preços, pedidos mínimos e demais condições são informados pelo representante.",
         ],
       },
       {
