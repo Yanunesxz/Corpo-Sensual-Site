@@ -22,7 +22,7 @@ const produtos = catalogo.produtos.slice().sort((a, b) => a.rank - b.rank).map((
   return { ...p, slug };
 });
 
-const colecaoAtual = catalogo.colecoes[0]?.slug ?? null;
+const colecaoPadrao = catalogo.colecoes[0]?.slug ?? null;
 
 let sql = `-- =============================================================================
 -- GERADO por scripts/gerar-seed.mjs a partir de src/data/catalogo.json.
@@ -48,10 +48,10 @@ on conflict (slug) do nothing;
 insert into public.products (ref, slug, name, description, category_id, collection_id, is_featured, sort_order)
 select v.ref, v.slug, v.name, v.description, c.id, col.id, v.rank <= 10, v.rank
 from (values
-${produtos.map((p) => `  (${q(p.ref)}, ${q(p.slug)}, ${q(p.nome)}, ${q(p.descricao)}, ${q(p.categoria)}, ${p.rank})`).join(",\n")}
-) as v(ref, slug, name, description, category_slug, rank)
+${produtos.map((p) => `  (${q(p.ref)}, ${q(p.slug)}, ${q(p.nome)}, ${q(p.descricao)}, ${q(p.categoria)}, ${q(p.colecao ?? colecaoPadrao)}, ${p.rank})`).join(",\n")}
+) as v(ref, slug, name, description, category_slug, collection_slug, rank)
 join public.categories c on c.slug = v.category_slug
-left join public.collections col on col.slug = ${q(colecaoAtual)}
+left join public.collections col on col.slug = v.collection_slug
 on conflict (slug) do nothing;
 
 insert into public.product_images (product_id, url, alt, sort_order)

@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import type { Category, Product } from "@/lib/types";
 import { ProductCard } from "./product-card";
 
-const PAGE = 12;
+/** Quantas peças a página mostra. O resto vai no catálogo digital. */
+const MOSTRAR = 10;
 const EVENT = "cs:categoria";
 
 // A categoria ativa vive na URL (?categoria=...). Ler pela store externa mantém
-// o HTML pré-renderizado com todas as peças (servidor devolve "") e sincroniza
-// no navegador sem efeitos com setState.
+// o HTML pré-renderizado (servidor devolve "") e sincroniza no navegador.
 function subscribe(cb: () => void) {
   window.addEventListener("popstate", cb);
   window.addEventListener(EVENT, cb);
@@ -28,17 +29,18 @@ type Props = {
 };
 
 /**
- * Grade de peças com filtro por categoria e "Ver mais" no celular/tablet,
- * tudo no navegador. No desktop todas as peças aparecem de uma vez.
+ * Grade de peças da coleção: mostra no máximo 10 referências, com filtro por
+ * categoria no navegador. O restante do mix fica no catálogo digital, que o
+ * lojista recebe depois do cadastro.
  */
 export function ProductGrid({ products, categories, title = "Peças" }: Props) {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const [limits, setLimits] = useState<Record<string, number>>({});
-  const limit = limits[active] ?? PAGE;
 
   const list = active ? products.filter((p) => p.category?.slug === active) : products;
+  const shown = list.slice(0, MOSTRAR);
   const activeName = categories.find((c) => c.slug === active)?.name;
-  const hasMore = list.length > limit;
+  // Só oferece as categorias que existem nesta coleção.
+  const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
 
   function select(slug: string) {
     const url = new URL(window.location.href);
@@ -54,14 +56,14 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <h2 className="h-display text-3xl md:text-5xl">{activeName ?? title}</h2>
         <p className="text-sm text-ink-soft">
-          {list.length} {list.length === 1 ? "peça" : "peças"}
+          {shown.length < list.length ? `${shown.length} de ${list.length} peças` : `${list.length} ${list.length === 1 ? "peça" : "peças"}`}
         </p>
       </div>
       <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-soft">
-        Venda no atacado, por grade, para lojas com CNPJ. Anote a referência de cada peça e informe ao representante.
+        Uma amostra da coleção. Venda no atacado, por grade, para lojas com CNPJ.
       </p>
 
-      {categories.length > 0 && (
+      {disponiveis.length > 1 && (
         <div
           className="sticky top-16 z-20 -mx-5 mt-5 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:static md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:py-0"
           role="group"
@@ -70,7 +72,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
           <button type="button" className={`chip shrink-0 whitespace-nowrap ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
             Todas
           </button>
-          {categories.map((c) => (
+          {disponiveis.map((c) => (
             <button
               key={c.id}
               type="button"
@@ -84,28 +86,30 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
         </div>
       )}
 
-      {list.length === 0 ? (
+      {shown.length === 0 ? (
         <p className="mt-8 border-y border-line py-10 text-center text-sm text-ink-soft">Nenhuma peça publicada nesta categoria ainda.</p>
       ) : (
         <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5">
-          {list.map((p, i) => (
-            <div key={p.id} className={i >= limit ? "hidden lg:block" : undefined}>
-              <ProductCard product={p} priority={i < 2} />
-            </div>
+          {shown.map((p, i) => (
+            <ProductCard key={p.id} product={p} priority={i < 2} />
           ))}
         </div>
       )}
 
-      {hasMore && (
-        <div className="mt-10 flex flex-col items-center gap-3 lg:hidden">
-          <button type="button" className="btn btn-outline w-full sm:w-auto" onClick={() => setLimits({ ...limits, [active]: limit + PAGE })}>
-            Ver mais peças
-          </button>
-          <p className="text-xs text-ink-soft">
-            Mostrando {Math.min(limit, list.length)} de {list.length}
+      {/* O catálogo completo é o próximo passo, não uma paginação. */}
+      <div className="mt-10 border-t border-line pt-8 sm:flex sm:items-center sm:justify-between sm:gap-8">
+        <div className="max-w-md">
+          <p className="h-display text-2xl md:text-3xl">Veja a coleção completa</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">
+            {list.length > MOSTRAR
+              ? "Estas são algumas peças. O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."
+              : "O catálogo digital traz o mix completo, com grade de tamanhos, cores e a tabela de preços de atacado."}
           </p>
         </div>
-      )}
+        <Link href="/catalogo" className="btn btn-dark mt-5 w-full shrink-0 whitespace-nowrap sm:mt-0 sm:w-auto">
+          Quero receber o catálogo
+        </Link>
+      </div>
     </div>
   );
 }
