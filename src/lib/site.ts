@@ -42,7 +42,7 @@ export const site = {
   name: "Corpo Sensual",
   tagline: "Fábrica de pijamas e moda íntima em Muriaé, MG. Venda no atacado para lojas de todo o Brasil.",
   description:
-    "Confecção de pijamas, camisolas, robes e moda íntima para lojistas de todo o Brasil. Fábrica própria em Muriaé, MG, há mais de 25 anos.",
+    "Fábrica própria de pijamas, camisolas, robes e moda íntima em Muriaé, MG, há mais de 25 anos. Atacado para lojistas de todo o Brasil, sem pedido mínimo.",
   url: resolveSiteUrl(),
   legal,
   /** Endereço em uma linha e link para o mapa. */

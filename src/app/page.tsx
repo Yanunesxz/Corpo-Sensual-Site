@@ -167,7 +167,7 @@ export default async function HomePage() {
       {/* Lojistas: seção de destaque, no azul-claro cheio */}
       <section className="bg-sky">
         <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-16">
-          <h2 className="h-display text-4xl md:text-[3.125rem]">
+          <h2 className="h-display text-3xl md:text-[3.125rem]">
             Teste a marca sem<br />pedido mínimo
           </h2>
           <div className="max-w-md">

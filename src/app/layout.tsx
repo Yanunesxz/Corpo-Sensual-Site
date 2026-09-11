@@ -41,7 +41,9 @@ export const metadata: Metadata = {
     siteName: site.name,
     title: `${site.name} | Pijamas e moda íntima para lojistas`,
     description: site.description,
-    images: [{ url: "/images/colecoes/delicias-campanha.jpg", width: 3840, height: 2160, alt: site.name }],
+    // Cartão de 1200x630 e 84 KB, recortado da foto de campanha. O arquivo original
+    // tem 1,7 MB e o robô de pré-visualização do WhatsApp descarta imagem desse peso.
+    images: [{ url: "/images/og-corpo-sensual.jpg", width: 1200, height: 630, alt: site.name }],
   },
   robots: { index: true, follow: true },
 };

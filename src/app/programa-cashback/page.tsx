@@ -8,10 +8,9 @@ export const metadata: Metadata = {
 };
 
 const perks = [
-  "Crédito automático a cada pedido faturado",
-  "Saldo consultável com o representante e na plataforma B2B",
-  "Uso do crédito em qualquer coleção, sem burocracia",
-  "Condições especiais em lançamentos para participantes",
+  "Crédito a cada pedido faturado",
+  "Saldo consultável com o seu representante",
+  "Crédito usado nas próximas compras",
 ];
 
 export default function CashbackPage() {
@@ -20,7 +19,7 @@ export default function CashbackPage() {
       <section className="bg-sky">
         <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
           <p className="label">Programa Cashback</p>
-          <h1 className="h-hero mt-3 max-w-3xl text-[2rem] md:text-[2.375rem]">Quem compra mais, ganha mais</h1>
+          <h1 className="h-hero mt-3 max-w-3xl text-[2rem] md:text-[2.375rem]">Crédito que volta a cada pedido</h1>
           <p className="mt-5 max-w-2xl text-[1.0625rem] leading-[1.6] text-body">
             Nosso programa de fidelidade para lojistas devolve parte do valor de cada pedido em crédito para as próximas
             compras. Os percentuais, a validade do crédito e as regras completas são informados pelo seu representante no

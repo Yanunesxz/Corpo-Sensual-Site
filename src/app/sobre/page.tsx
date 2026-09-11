@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Sobre",
   description:
-    "Há mais de 25 anos a Corpo Sensual confecciona pijamas, camisolas, robes e moda íntima em Muriaé, MG, para lojistas de todo o Brasil.",
+    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do fio ao pijama pronto, nas linhas feminina, masculina e infantil.",
 };
 
 const facts = [
@@ -65,8 +65,8 @@ export default function SobrePage() {
 
       <section className="bg-sky">
         <div className="mx-auto flex max-w-[1600px] flex-col gap-8 px-5 py-16 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
-          <h2 className="h-display text-4xl md:text-[3.125rem]">
-            Quer a Corpo Sensual<br />na sua loja?
+          <h2 className="h-display text-3xl md:text-[3.125rem]">
+            Corpo Sensual<br />na sua loja?
           </h2>
           <div className="md:shrink-0">
             <div className="flex flex-col gap-3 sm:flex-row">

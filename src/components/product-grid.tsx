@@ -97,7 +97,7 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
 
       {disponiveis.length > 1 && (
         <div
-          className="sticky top-16 z-20 -mx-5 mt-6 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:static md:mx-0 md:flex-wrap md:overflow-visible md:px-0 md:py-0"
+          className="sticky top-16 z-20 -mx-5 mt-6 flex flex-wrap gap-2 bg-paper px-5 py-3 md:static md:mx-0 md:px-0 md:py-0"
           role="group"
           aria-label="Filtrar por categoria"
         >

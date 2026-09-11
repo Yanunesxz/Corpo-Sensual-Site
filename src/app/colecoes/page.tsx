@@ -37,7 +37,7 @@ export default async function ColecoesPage() {
             <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
               Receber catálogo e tabela
             </Link>
-            <Link href="/fabrica-de-pijamas#perguntas" className="link self-start whitespace-nowrap text-base sm:self-auto">
+            <Link href="/fabrica-de-pijamas" className="link self-start whitespace-nowrap text-base sm:self-auto">
               Como comprar
             </Link>
           </div>

@@ -36,7 +36,7 @@ Em Tailwind: `bg-sky`, `bg-sky-soft`, `text-ink`, `text-body`, `border-line`.
 | --- | --- | --- |
 | Título de hero | 38px, entrelinha 45.6px, `ls 3.8px` | `.h-hero text-[2rem] md:text-[2.375rem]` |
 | Título de seção | 40px, entrelinha 40px | `.h-display text-3xl md:text-[2.5rem]` |
-| Título grande | 50px | `.h-display text-4xl md:text-[3.125rem]` |
+| Título grande | 50px | `.h-display text-3xl md:text-[3.125rem]` |
 | Texto de apoio | 20px, entrelinha 26px | `text-lg leading-[1.3]` |
 | Texto corrido | 18px, entrelinha 28.8px | `text-[1.125rem] leading-[1.6]` |
 | Nota, legal | 14px, entrelinha 19.6px | `text-sm` |
