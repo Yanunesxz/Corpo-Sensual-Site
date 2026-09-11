@@ -13,7 +13,21 @@ import type { LeadInsert, LeadSource } from "@/lib/types";
  * central/integracao-site.md.
  */
 
-const URL_PADRAO = "https://brwyvxrueogayjsqfkbo.supabase.co/functions/v1/lead-site";
+/**
+ * Endereço da função no Supabase do CRM.
+ *
+ * ATENÇÃO ao nome: a função foi publicada como `dynamic-endpoint`, que é o nome
+ * que o editor do Supabase sugere sozinho, e não como `lead-site`, que é o nome
+ * do código e da documentação. O site apontava para `lead-site` e levava 404 em
+ * produção, então o lead não chegava ao CRM. Confirmado em 11/09/2026:
+ * `lead-site` responde 404 e `dynamic-endpoint` responde 401 com a chave errada,
+ * ou seja, só a segunda existe.
+ *
+ * Para arrumar de vez: republicar a função no Supabase com o nome `lead-site` e
+ * trocar esta linha de volta. Enquanto isso, `LEAD_SITE_URL` continua podendo
+ * sobrescrever o endereço sem mexer no código.
+ */
+const URL_PADRAO = "https://brwyvxrueogayjsqfkbo.supabase.co/functions/v1/dynamic-endpoint";
 const TEMPO_LIMITE_MS = 8000;
 
 /** Marca deste site no CRM. O site da Plumene usa "plumene". */
