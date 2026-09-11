@@ -81,8 +81,8 @@ body {
   /* Link sublinhado, com área de toque ampliada sem mudar o desenho */
   .link {
     display: inline-block;
-    padding: 0.6rem 0;
-    margin: -0.6rem 0;
+    padding: 0.8rem 0;
+    margin: -0.8rem 0;
     color: var(--color-ink);
     text-decoration: underline;
     text-underline-offset: 5px;
@@ -235,6 +235,19 @@ body {
   @media (max-width: 1023px) {
     .shade::after {
       background: linear-gradient(to top, rgba(27, 25, 25, 0.72), rgba(27, 25, 25, 0.28) 42%, rgba(27, 25, 25, 0) 72%);
+    }
+    /* Hero de página: o texto sobe até 60% da foto (estação, título, botão e nota).
+       A sombra dos cards para cedo demais e o título branco some no céu ou na areia
+       clara, então o hero tem a sua própria, que segura só a faixa do título. */
+    .shade-hero::after {
+      background: linear-gradient(
+        to top,
+        rgba(27, 25, 25, 0.72) 0%,
+        rgba(27, 25, 25, 0.52) 38%,
+        rgba(27, 25, 25, 0.48) 66%,
+        rgba(27, 25, 25, 0.12) 84%,
+        rgba(27, 25, 25, 0) 96%
+      );
     }
   }
 

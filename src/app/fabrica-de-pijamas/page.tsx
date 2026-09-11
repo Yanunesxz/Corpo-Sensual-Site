@@ -11,7 +11,7 @@ import { ProducaoSection } from "@/components/producao-section";
 export const metadata: Metadata = {
   title: "Fábrica de pijamas para lojistas",
   description:
-    "Compre pijamas, camisolas e robes direto da fábrica. Grade completa, reposição rápida e atendimento por representante em todo o Brasil. Perguntas frequentes de lojistas.",
+    "Pijamas, camisolas e robes direto da fábrica em Muriaé, MG, para lojistas. Sem pedido mínimo e 5% de desconto no Pix.",
 };
 
 /** Como a compra funciona. Fica só aqui: /sobre manda o lojista para esta página. */
@@ -33,7 +33,7 @@ const benefits = [
 export default function FabricaPage() {
   return (
     <>
-      <section className="shade relative h-[60svh] min-h-[420px] max-h-[720px] bg-sky-soft">
+      <section className="shade shade-hero relative h-[60svh] min-h-[420px] max-h-[720px] bg-sky-soft">
         <HeroImage
           desktop="/images/colecoes/fabrica-campanha.jpg"
           mobile="/images/colecoes/fabrica-campanha-celular.jpg"

@@ -62,7 +62,7 @@ export default async function ColecaoPage({ params }: Props) {
     <div className="relative">
       {/* Hero: foto de campanha em bloco cheio, sem cantos arredondados. A altura
           fica sempre dentro da tela — um bloco preso mais alto que a janela esconderia o botão. */}
-      <section className="shade sticky top-0 h-[70svh] bg-sky-soft md:h-screen">
+      <section className="shade shade-hero sticky top-0 h-[70svh] bg-sky-soft md:h-screen">
         {collection.hero_image_url && (
           <HeroImage desktop={collection.hero_image_url} mobile={collection.hero_mobile_url} priority desktopPosition="center 35%" mobilePosition="center 25%" />
         )}

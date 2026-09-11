@@ -20,14 +20,14 @@ export const politicas: Politica[] = [
     slug: "privacidade",
     title: "Política de Privacidade",
     shortTitle: "Privacidade",
-    updatedAt: "2026-09-08",
+    updatedAt: "2026-09-11",
     intro:
       `A ${empresa} respeita a sua privacidade. Esta política explica quais dados coletamos neste site, como usamos e quais são os seus direitos, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).`,
     sections: [
       {
         heading: "Quais dados coletamos",
         paragraphs: [
-          "Dados que você informa nos formulários: nome, e-mail, WhatsApp, se possui CNPJ, nome da loja, cidade e estado.",
+          "Dados que você informa nos formulários: nome, e-mail, WhatsApp, se possui CNPJ, o número do CNPJ ou do CPF, nome da loja, cidade, estado e a mensagem que você escrever.",
           "Dados de navegação: página de origem, parâmetros de campanha (UTM) e informações técnicas básicas, como tipo de dispositivo e navegador.",
         ],
       },
@@ -64,7 +64,7 @@ export const politicas: Politica[] = [
     slug: "cookies",
     title: "Política de Cookies",
     shortTitle: "Cookies",
-    updatedAt: "2026-09-08",
+    updatedAt: "2026-09-11",
     intro:
       "Cookies são pequenos arquivos gravados no seu navegador. Usamos apenas o essencial para o funcionamento do site e para medir resultados de campanhas.",
     sections: [
@@ -87,7 +87,7 @@ export const politicas: Politica[] = [
     slug: "trocas-e-devolucoes",
     title: "Política de Trocas e Devoluções",
     shortTitle: "Trocas e devoluções",
-    updatedAt: "2026-09-08",
+    updatedAt: "2026-09-11",
     intro:
       "Vendemos para lojistas (atacado). As condições abaixo valem para pedidos feitos por meio dos nossos representantes ou da plataforma B2B.",
     sections: [
@@ -100,7 +100,7 @@ export const politicas: Politica[] = [
       {
         heading: "Divergência no pedido",
         paragraphs: [
-          "Se você receber itens diferentes do pedido (referência, tamanho ou quantidade), avise em até 7 dias após o recebimento para providenciarmos a correção.",
+          "Se você receber itens diferentes do pedido (referência, tamanho ou quantidade), avise em até 15 dias após o recebimento para providenciarmos a correção.",
         ],
       },
       {
@@ -115,7 +115,7 @@ export const politicas: Politica[] = [
     slug: "envio",
     title: "Política de Envio",
     shortTitle: "Envio",
-    updatedAt: "2026-09-08",
+    updatedAt: "2026-09-11",
     intro: "Os pedidos são despachados da nossa fábrica em Muriaé, MG, para todo o Brasil.",
     sections: [
       {
@@ -136,7 +136,7 @@ export const politicas: Politica[] = [
     slug: "termos",
     title: "Termos e Condições",
     shortTitle: "Termos e condições",
-    updatedAt: "2026-09-08",
+    updatedAt: "2026-09-11",
     intro: `Ao utilizar este site você concorda com os termos abaixo. O site é mantido pela ${empresa}.`,
     sections: [
       {

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const messages: Record<string, { title: string; text: string }> = {
   catalogo: {
     title: "Cadastro recebido",
-    text: "Nossa equipe confirma os dados da sua loja e libera o acesso ao catálogo digital com a tabela de atacado.",
+    text: "Nossa equipe confirma os dados da sua loja e envia o catálogo digital com a tabela de atacado.",
   },
   "fabrica-de-pijamas": {
     title: "Recebemos o seu interesse",
@@ -57,7 +57,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
             informados.
           </p>
 
-          <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
+          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-center">
             {wa ? (
               <a href={wa} target="_blank" rel="noreferrer" className="btn btn-dark w-full sm:w-auto">
                 Falar agora no WhatsApp

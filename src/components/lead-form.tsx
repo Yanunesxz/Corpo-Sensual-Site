@@ -61,7 +61,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       </Field>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Seu E-mail*" name="email" error={err.email}>
+        <Field label="Seu E-mail" name="email" error={err.email}>
           <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} aria-describedby={err.email ? "email-error" : undefined} defaultValue={v.email} placeholder="Ex: compras@empresa.com" />
         </Field>
         <Field label="WhatsApp" name="whatsapp" error={err.whatsapp}>
@@ -70,7 +70,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={isContact ? "Você é" : "Possui CNPJ?"} name="has_cnpj" error={err.has_cnpj}>
+        <Field label="Possui CNPJ?" name="has_cnpj" error={err.has_cnpj}>
           <select
             id="has_cnpj"
             key={v.has_cnpj ?? ""}
@@ -89,8 +89,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             <option value="" disabled>
               Selecionar
             </option>
-            <option value="sim">{isContact ? "Lojista, tenho CNPJ" : "Sim"}</option>
-            <option value="nao">{isContact ? "Consumidor ou outro contato" : "Não"}</option>
+            <option value="sim">Sim</option>
+            <option value="nao">Não</option>
           </select>
         </Field>
         {/* Lojista informa o CNPJ; quem não tem loja informa o CPF. */}
