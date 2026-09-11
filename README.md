@@ -18,14 +18,14 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 
 | Rota | Página | Conteúdo |
 | --- | --- | --- |
-| `/` | Home | Hero da coleção atual, faixa de diferenciais, "Chegou agora", "Em destaque", categorias, estrutura da empresa, formulário de catálogo e "Sobre nós" |
-| `/sobre` | Sobre | História, números e compromissos da marca |
+| `/` | Home | Hero da coleção atual, foto de campanha, quem somos, categorias, mais vendidas, coleções, vídeo da produção e bloco de conversão |
+| `/sobre` | Sobre | A empresa em resumo, numa tabela de fatos, e o fecho de conversão |
 | `/colecoes` | Coleções | Lista de coleções ativas |
-| `/colecoes/[slug]` | Coleção | Peças da coleção com filtro por categoria (`?categoria=gestante`) |
-| `/catalogo` | Receber catálogo | Passo a passo + formulário de lead (`source = catalogo`) |
+| `/colecoes/[slug]` | Coleção | Peças da coleção com filtro por linha (`?categoria=infantil`) |
+| `/catalogo` | Receber catálogo | Foto, condições comerciais e formulário de lead (`source = catalogo`) |
 | `/fabrica-de-pijamas` | Para lojistas | Landing B2B com benefícios + formulário (`source = fabrica-de-pijamas`) |
 | `/programa-cashback` | Programa Cashback | Explicação do programa + formulário (`source = programa-cashback`) |
-| `/contato` | Contato | Endereço com mapa, canais, horário, formulário (`source = contato`) e perguntas frequentes |
+| `/contato` | Contato | Formulário (`source = contato`) e, abaixo, endereço com mapa, canais e horário |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
 | `/sitemap.xml`, `/robots.txt` | SEO | Gerados automaticamente |
@@ -136,9 +136,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 
 | Tabela | Uso |
 | --- | --- |
-| `categories` | Gestante, Masculino, Juvenil, Robes... |
+| `categories` | As três linhas: Feminino, Masculino e Infantil |
 | `collections` | Coleções por temporada. A primeira ativa (menor `sort_order`) vira o hero da home. `gallery_urls` guarda as fotos de campanha |
-| `products` | Peças. `is_new` aparece em "Chegou agora", `is_featured` em "Em destaque" |
+| `products` | Peças. `genero` (`menino`/`menina`) só na linha infantil, para a vitrine mostrar as duas. `sort_order` é a posição no ranking de vendas do ERP: a vitrine sempre pega as primeiras. `is_new` e `is_featured` existem no schema mas nenhuma página usa hoje |
 | `product_images` | Fotos de cada peça (URL do Storage ou caminho em `/public/images`) |
 | `leads` | Cadastros dos formulários, com UTM e status de atendimento |
 
@@ -152,9 +152,11 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 
 | Conteúdo | Origem |
 | --- | --- |
-| Campanhas Frescor (verão 2026) e Entrelaços (inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
+| Campanha Delícias de Verão (Primavera/Verão 2027) | `\192.168.0.2\Comercial\MARKETER CORPO SENSUAL\CA_VERAO_2027`; convertidas por `scripts/midia-campanha.mjs` conforme `scripts/midia-campanha.json` |
+| Campanha Entrelaços (Outono/Inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
+| Vídeo da produção (`public/videos/producao/`) | Gravado na fábrica; original em `05_CONTEUDOS/PRODUCAO_DA COSTURA A CAIXA.mp4`. Chegou pelo WhatsApp e veio comprimido (576x1024): se aparecer o arquivo original, vale regerar |
 | Referências do ranking (`public/images/produtos/<ref>.jpg`) | Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026). Fotos de estúdio nomeadas pela referência em `\\192.168.0.2\Comercial\FOTOS COM REFENCIA CS` (158 fotos, fonte principal). Fontes secundárias: `#Corpo Sensual\CATALOGO\FOTOS`, `FUNDO TRANSPARENTE (PNG)1` e páginas do catálogo Verão 2027 em PDF |
-| Mosaico de categorias da home | Fotos de produto: 0126 (Feminino), 0716 (Masculino), 0810 (Infantil), 0325 (Gestante) |
+| Mosaico de categorias da home | Fotos de campanha em `public/images/categorias/`: feminino, masculino e infantil |
 | Logo (monograma CS) | `\\192.168.0.2\SetorX\Yan\IMG SYS\corpo-sensual-logo.png`, usado como ícone do site em `src/app/icon.png` |
 | Fotos por referência, Inverno 2026 (`0981.jpeg`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS INVERNO 2026` |
 | Fotos por referência, Verão 2027 (`1035.pdf`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS VERÃO 2027` (PDF, converter para JPG) |
@@ -174,7 +176,8 @@ Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--re
 ### Gerenciando o conteúdo no dia a dia
 
 - **Nova foto:** Storage > bucket `produtos` > Upload. Copie a URL pública e cadastre em `product_images`.
-- **Nova peça:** Table Editor > `products` > Insert row. Marque `is_new` para aparecer em "Chegou agora".
+- **Nova peça:** Table Editor > `products` > Insert row. Preencha `category_id`, `collection_id` e, na linha
+  infantil, `genero`. O `sort_order` define a posição: quanto menor, mais cedo a peça entra na vitrine.
 - **Nova coleção:** insira em `collections` com `sort_order` menor que as demais e `active = true`.
 - **Ver leads:** Table Editor > `leads`. Use a coluna `status` para o funil (novo, em_contato, convertido, descartado).
 
@@ -194,7 +197,8 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 
 ## Checklist antes de trocar o domínio
 
-- [ ] Supabase configurado e `seed.sql` executado (já traz as 10 referências mais vendidas)
+- [ ] Supabase configurado e `seed.sql` executado (traz as 148 peças publicadas)
+- [ ] `LEAD_SITE_CHAVE` cadastrada no Vercel, senão o lead não chega ao CRM
 - [ ] Fotos das peças enviadas para o Storage
 - [ ] `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_INSTAGRAM` e `NEXT_PUBLIC_EMAIL` preenchidos no Vercel
 - [ ] Textos de `src/lib/content/politicas.ts` revisados pelo responsável jurídico
