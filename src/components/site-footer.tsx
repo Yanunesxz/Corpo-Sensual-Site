@@ -7,8 +7,10 @@ const lojistas = [
   { href: "/catalogo", label: "Receber catálogo" },
   { href: "/fabrica-de-pijamas", label: "Como comprar da fábrica" },
   { href: "/fabrica-de-pijamas#perguntas", label: "Perguntas frequentes" },
-  { href: "/programa-cashback", label: "Programa Cashback" },
 ];
+
+/** Fica no rodapé, fora da coluna de lojistas: é outro público. */
+const representante = { href: "/seja-representante", label: "Quero ser representante" };
 
 const linkClass = "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[6px] transition-opacity hover:opacity-55";
 
@@ -66,7 +68,7 @@ export function SiteFooter() {
           </address>
         </div>
 
-        <Column title="Navegação" links={[...site.nav]} />
+        <Column title="Navegação" links={[...site.nav, representante]} />
         <Column title="Lojistas" links={lojistas} />
         <Column title="Institucional" links={politicas.map((p) => ({ href: `/politicas/${p.slug}`, label: p.shortTitle }))} />
       </div>

@@ -18,7 +18,8 @@ type Props = {
 };
 
 /**
- * Formulário de captação usado nas páginas de catálogo, fábrica, cashback e contato.
+ * Formulário de captação usado nas páginas de catálogo, fábrica, coleção, contato
+ * e representação comercial.
  * Captura UTMs, URL e referrer da página automaticamente e mantém o que a pessoa
  * digitou quando a validação falha.
  */
@@ -42,6 +43,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   const err = state.errors ?? {};
   const v = state.values ?? {};
   const isContact = source === "contato";
+  // Representante não tem loja: os rótulos de empresa e mensagem mudam de sentido.
+  const ehRepresentante = source === "representante";
   const c = site.contact;
 
   return (
@@ -112,10 +115,17 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </Field>
       </div>
 
-      <Field label="Nome da loja (opcional)" name="company" error={err.company}>
-        <input id="company" className="field" name="company" autoComplete="organization" defaultValue={v.company} placeholder="Ex: Loja Bem Dormir" />
+      <Field label={ehRepresentante ? "Representação ou escritório (opcional)" : "Nome da loja (opcional)"} name="company" error={err.company}>
+        <input
+          id="company"
+          className="field"
+          name="company"
+          autoComplete="organization"
+          defaultValue={v.company}
+          placeholder={ehRepresentante ? "Ex: Silva Representações" : "Ex: Loja Bem Dormir"}
+        />
       </Field>
-      {(hasCnpj || v.has_cnpj) === "nao" && !isContact && (
+      {(hasCnpj || v.has_cnpj) === "nao" && !isContact && !ehRepresentante && (
         /* Fundo branco para o aviso ler bem também quando o formulário está no bloco azul. */
         <p className="rounded-field border border-line bg-white px-4 py-3 text-sm leading-relaxed text-body">
           Sem CNPJ dá para conversar também. Vendemos no atacado e por grade, sem pedido mínimo: envie os seus dados que
@@ -133,8 +143,24 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       </div>
 
       {withMessage && (
-        <Field label={isContact ? "Mensagem" : "Mensagem (opcional)"} name="message" error={err.message}>
-          <textarea id="message" className="field min-h-28 resize-y" name="message" defaultValue={v.message} placeholder={isContact ? "Como podemos ajudar?" : "Conte um pouco sobre a sua loja ou o que você procura."} />
+        <Field
+          label={ehRepresentante ? "Região e experiência" : isContact ? "Mensagem" : "Mensagem (opcional)"}
+          name="message"
+          error={err.message}
+        >
+          <textarea
+            id="message"
+            className="field min-h-28 resize-y"
+            name="message"
+            defaultValue={v.message}
+            placeholder={
+              ehRepresentante
+                ? "As cidades que você atende, há quanto tempo representa e quais marcas leva hoje."
+                : isContact
+                  ? "Como podemos ajudar?"
+                  : "Conte um pouco sobre a sua loja ou o que você procura."
+            }
+          />
         </Field>
       )}
 

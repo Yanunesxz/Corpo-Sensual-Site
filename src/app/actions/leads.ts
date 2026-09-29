@@ -22,7 +22,7 @@ const leadSchema = z.object({
   city: optionalText(120),
   state: optionalText(2),
   message: optionalText(1000),
-  source: z.enum(["catalogo", "fabrica-de-pijamas", "programa-cashback", "colecao", "contato"]),
+  source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante"]),
   page_url: optionalText(600),
   referrer: optionalText(600),
   utm_source: optionalText(200),

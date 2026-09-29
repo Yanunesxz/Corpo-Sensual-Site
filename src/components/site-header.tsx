@@ -106,8 +106,8 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-            <Link href="/programa-cashback" className="h-display flex min-h-14 items-center border-b border-line text-2xl">
-              Programa Cashback
+            <Link href="/seja-representante" className="h-display flex min-h-14 items-center border-b border-line text-2xl">
+              Quero ser representante
             </Link>
             <Link href="/catalogo" className="btn btn-dark mt-6 w-full">
               Receber catálogo
