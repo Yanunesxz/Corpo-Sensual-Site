@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { HeroImage } from "@/components/hero-image";
 import Link from "next/link";
 import { getCollections, getProducts } from "@/lib/data";
 import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
@@ -55,16 +55,13 @@ export default async function ColecoesPage() {
                   href={`/colecoes/${c.slug}`}
                   className="shade zoom-img relative block aspect-[4/5] overflow-hidden rounded-media bg-sky-soft md:aspect-[3/2] lg:aspect-[21/9]"
                 >
-                  {c.hero_mobile_url && (
-                    <Image src={c.hero_mobile_url} alt="" fill sizes="100vw" className="object-cover object-[center_25%] md:hidden" />
-                  )}
                   {c.hero_image_url && (
-                    <Image
-                      src={c.hero_image_url}
-                      alt=""
-                      fill
-                      sizes="100vw"
-                      className={`object-cover object-[center_35%] ${c.hero_mobile_url ? "hidden md:block" : ""}`}
+                    <HeroImage
+                      desktop={c.hero_image_url}
+                      mobile={c.hero_mobile_url}
+                      quality={85}
+                      desktopPosition="center 35%"
+                      mobilePosition="center 25%"
                     />
                   )}
                   {/* Sobre a foto a cor precisa vir na própria classe: .label, .h-display e .link já definem cor. */}

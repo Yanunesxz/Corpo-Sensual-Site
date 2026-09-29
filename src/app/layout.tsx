@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 // grotesca leve no texto corrido (o Wix usa Helvetica Light; aqui Inter 300).
 const fahkwang = Fahkwang({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: ["400"],
   variable: "--font-fahkwang",
   display: "swap",
 });
@@ -23,7 +23,7 @@ const inter = Inter({
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   variable: "--font-montserrat",
   display: "swap",
 });

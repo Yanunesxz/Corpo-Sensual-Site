@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   images: {
     // O Next 16 só entrega as qualidades listadas aqui; sem isso tudo sai em 75,
     // o que deixa a foto de campanha visivelmente mole em tela grande.
-    qualities: [75, 85, 92],
+    qualities: [75, 80, 85, 92],
     // Os tamanhos padrão do Next pulam de 1920 para 3840: um notebook de 1440
     // em 2x precisa de 2880 e acabava baixando 3840 (mais de 1 MB). Com 2560 e
     // 2880 na lista ele pede o tamanho certo, sem perder nitidez.
