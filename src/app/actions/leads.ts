@@ -9,6 +9,12 @@ import type { LeadInsert, LeadRow, LeadSource } from "@/lib/types";
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
 
+/** As 27 UFs. A cidade e a UF decidem o representante da região no CRM. */
+const UFS = [
+  "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA",
+  "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO",
+];
+
 const leadSchema = z.object({
   name: z.string().trim().min(2, "Informe seu nome.").max(120, "Nome muito longo."),
   email: z.email("Informe um e-mail válido.").max(160),
@@ -16,11 +22,17 @@ const leadSchema = z.object({
     .string()
     .transform((v) => v.replace(/\D/g, ""))
     .refine((v) => v.length >= 10 && v.length <= 13, "Informe o WhatsApp com DDD."),
-  has_cnpj: z.enum(["sim", "nao"], { message: "Escolha uma opção." }),
+  // Texto, não enum: um enum sem escolha interromperia a validação e esconderia os
+  // erros de documento e mensagem até o segundo envio. A regra está no superRefine.
+  has_cnpj: optionalText(3),
   document: optionalText(20),
   company: optionalText(120),
-  city: optionalText(120),
-  state: optionalText(2),
+  city: z.string().trim().min(2, "Informe a cidade.").max(120),
+  state: z
+    .string()
+    .trim()
+    .transform((v) => v.toUpperCase())
+    .refine((v) => UFS.includes(v), "Informe a UF."),
   message: optionalText(1000),
   source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante"]),
   page_url: optionalText(600),
@@ -31,15 +43,26 @@ const leadSchema = z.object({
   utm_term: optionalText(200),
   utm_content: optionalText(200),
 }).superRefine((d, ctx) => {
-  // Lojista informa CNPJ; consumidor informa CPF. Na página de contato o
-  // documento é opcional: quem só quer saber onde comprar não precisa dele.
-  const tipo = d.has_cnpj === "sim" ? "cnpj" : "cpf";
-  const preenchido = somenteDigitos(d.document).length > 0;
-  const obrigatorio = d.source !== "contato";
-  if (!preenchido) {
-    if (obrigatorio) {
-      ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? "Informe o CNPJ da loja." : "Informe o seu CPF." });
-    }
+  if (d.has_cnpj !== "sim" && d.has_cnpj !== "nao") {
+    ctx.addIssue({ code: "custom", path: ["has_cnpj"], message: "Escolha uma opção." });
+  }
+
+  // Mensagem: obrigatória onde o formulário não diz "(opcional)". No contato é o
+  // assunto; no cadastro de representante é a região, que o comercial precisa.
+  if ((d.source === "contato" || d.source === "representante") && d.message.length < 3) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["message"],
+      message: d.source === "representante" ? "Conte a sua região e experiência." : "Escreva a sua mensagem.",
+    });
+  }
+
+  // Documento obrigatório em todos os formulários, inclusive no de contato: o CRM
+  // procura o cliente pelo CNPJ. Quem tem CNPJ informa o CNPJ; quem não tem, o CPF.
+  // Sem escolha no select, a tela mostra o campo como CNPJ, então vale CNPJ aqui.
+  const tipo = d.has_cnpj === "nao" ? "cpf" : "cnpj";
+  if (somenteDigitos(d.document).length === 0) {
+    ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? "Informe o CNPJ da loja." : "Informe o seu CPF." });
     return;
   }
   if (!documentoValido(d.document, tipo)) {
@@ -108,7 +131,7 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     document: nullIfEmpty(somenteDigitos(d.document)),
     company: nullIfEmpty(d.company),
     city: nullIfEmpty(d.city),
-    state: nullIfEmpty(d.state.toUpperCase()),
+    state: nullIfEmpty(d.state),
     message: nullIfEmpty(d.message),
     source,
     page_url: nullIfEmpty(d.page_url),

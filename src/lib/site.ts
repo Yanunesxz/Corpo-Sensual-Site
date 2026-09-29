@@ -7,18 +7,10 @@
 const env = (name: string): string => (process.env[name] ?? "").trim();
 
 const whatsappDigits = env("NEXT_PUBLIC_WHATSAPP").replace(/\D/g, "");
-// O comercial atende os candidatos a representante num número próprio.
-// Número do gerente comercial passado pelo Yan em 29/09/2026 como (32) 8511-9260.
-// Celular de MG ganhou o 9 na frente em 2016, então o número discável é
-// (32) 98511-9260. Número público, não é segredo: fica no código para funcionar sem
-// configurar nada. NEXT_PUBLIC_WHATSAPP_COMERCIAL, se preenchida, tem prioridade.
-const WHATSAPP_GERENTE_COMERCIAL = "5532985119260";
-const whatsappComercialDigits =
-  env("NEXT_PUBLIC_WHATSAPP_COMERCIAL").replace(/\D/g, "") || WHATSAPP_GERENTE_COMERCIAL;
 const phoneDigits = env("NEXT_PUBLIC_TELEFONE").replace(/\D/g, "");
 
 /** (32) 3721-0000 ou (32) 99999-9999 a partir só dos dígitos. */
-function formatPhone(digits: string): string {
+export function formatPhone(digits: string): string {
   const d = digits.replace(/^55/, "");
   if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
   if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
@@ -65,9 +57,6 @@ export const site = {
     phone: phoneDigits,
     phoneUrl: phoneDigits ? `tel:+${phoneDigits.startsWith("55") ? phoneDigits : `55${phoneDigits}`}` : "",
     phoneLabel: phoneDigits ? formatPhone(phoneDigits) : "",
-    /** Gerente comercial: quem fala com candidato a representante. */
-    whatsappComercial: whatsappComercialDigits,
-    whatsappComercialUrl: whatsappComercialDigits ? `https://wa.me/${whatsappComercialDigits}` : "",
     instagram: env("NEXT_PUBLIC_INSTAGRAM").replace(/^@/, ""),
     email: env("NEXT_PUBLIC_EMAIL"),
     /** Ex.: "Segunda a sexta, das 8h às 17h" */
@@ -78,6 +67,7 @@ export const site = {
     { href: "/sobre", label: "Sobre" },
     { href: "/colecoes", label: "Coleções" },
     { href: "/fabrica-de-pijamas", label: "Para lojistas" },
+    { href: "/ajuda", label: "Ajuda" },
     { href: "/contato", label: "Contato" },
   ],
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
@@ -126,10 +116,46 @@ export function whatsappLink(message: string): string {
   return `${site.contact.whatsappUrl}?text=${encodeURIComponent(message)}`;
 }
 
-/** Link do gerente comercial, usado depois do cadastro de representante. */
-export function whatsappComercialLink(message: string): string {
-  if (!site.contact.whatsappComercialUrl) return "";
-  return `${site.contact.whatsappComercialUrl}?text=${encodeURIComponent(message)}`;
+/**
+ * WhatsApp da equipe, cada número para um tipo de conversa.
+ *
+ * Os números estão exatamente como o Yan passou em 29/09/2026, que é como o
+ * próprio WhatsApp mostra os contatos de MG: DDD 32 e oito dígitos, sem o 9 na
+ * frente. O CRM segue a mesma regra e não põe nem tira o 9. Se algum link abrir a
+ * pessoa errada, o ajuste é aqui: acrescentar o 9 logo depois do 32.
+ *
+ * São números públicos, feitos para aparecer no site. Não são segredo.
+ */
+export const equipe = {
+  /** Fabian, gerente comercial. Só para quem vai começar como representante: aparece depois desse cadastro. */
+  gerenteComercial: { nome: "Fabian", numero: "553285119260" },
+  /** Pedido, entrega, troca e peça com defeito. */
+  sac: { nome: "SAC", numero: "553299430394" },
+  /** Boleto, pagamento e nota fiscal. */
+  financeiro: { nome: "Financeiro", numero: "553288397936" },
+  /** Quem vende: aparecem para escolher depois do cadastro de compra, que já foi ao CRM. */
+  vendedoras: [
+    { nome: "Nicoli", numero: "553298541737" },
+    { nome: "Simone", numero: "553288546656" },
+  ],
+} as const;
+
+export type Vendedora = (typeof equipe.vendedoras)[number];
+
+/**
+ * Número de celular para mostrar na tela, com o 9 que o discador precisa:
+ * "553299430394" vira "(32) 99943-0394". O link do WhatsApp não usa isto.
+ */
+export function celularParaExibir(numero: string): string {
+  const d = numero.replace(/\D/g, "").replace(/^55/, "");
+  // DDD + 8 dígitos começando em 6 a 9 é celular no formato antigo, sem o 9.
+  if (d.length === 10 && /^[6-9]$/.test(d[2])) return formatPhone(`${d.slice(0, 2)}9${d.slice(2)}`);
+  return formatPhone(d);
+}
+
+/** Link de WhatsApp com a mensagem já escrita. */
+export function linkWhatsApp(numero: string, mensagem: string): string {
+  return `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
 }
 
 /** "Coleção Frescor" -> "Frescor", para títulos grandes. */

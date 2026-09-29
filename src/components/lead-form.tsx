@@ -5,6 +5,7 @@ import { useActionState, useState } from "react";
 import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
 import { formatarDocumento } from "@/lib/documento";
+import { guardarLeadLocal } from "@/lib/lead-local";
 import type { LeadSource } from "@/lib/types";
 import { site } from "@/lib/site";
 
@@ -30,6 +31,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       for (const key of UTM_KEYS) formData.set(key, t[key]);
       formData.set("page_url", t.page_url);
       formData.set("referrer", t.referrer);
+      // Para a mensagem do WhatsApp na página de obrigado já dizer quem é a pessoa.
+      const campo = (k: string) => String(formData.get(k) ?? "").trim();
+      guardarLeadLocal({ nome: campo("name"), loja: campo("company"), cidade: campo("city"), uf: campo("state").toUpperCase() });
       return submitLead(prev, formData);
     },
     initialLeadState,
@@ -104,7 +108,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             name="document"
             inputMode="numeric"
             autoComplete="off"
-            required={!isContact}
+            required
             aria-invalid={Boolean(err.document)}
             aria-describedby={err.document ? "document-error" : undefined}
             value={documento}
@@ -135,10 +139,32 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 
       <div className="grid grid-cols-[1fr_5.5rem] gap-4">
         <Field label="Cidade" name="city" error={err.city}>
-          <input id="city" className="field" name="city" autoComplete="address-level2" defaultValue={v.city} placeholder="Ex: Muriaé" />
+          <input
+            id="city"
+            className="field"
+            name="city"
+            autoComplete="address-level2"
+            required
+            aria-invalid={Boolean(err.city)}
+            aria-describedby={err.city ? "city-error" : undefined}
+            defaultValue={v.city}
+            placeholder="Ex: Muriaé"
+          />
         </Field>
         <Field label="UF" name="state" error={err.state}>
-          <input id="state" className="field uppercase" name="state" autoComplete="address-level1" maxLength={2} autoCapitalize="characters" defaultValue={v.state} placeholder="MG" />
+          <input
+            id="state"
+            className="field uppercase"
+            name="state"
+            autoComplete="address-level1"
+            maxLength={2}
+            autoCapitalize="characters"
+            required
+            aria-invalid={Boolean(err.state)}
+            aria-describedby={err.state ? "state-error" : undefined}
+            defaultValue={v.state}
+            placeholder="MG"
+          />
         </Field>
       </div>
 
@@ -152,6 +178,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             id="message"
             className="field min-h-28 resize-y"
             name="message"
+            required={isContact || ehRepresentante}
+            aria-invalid={Boolean(err.message)}
+            aria-describedby={err.message ? "message-error" : undefined}
             defaultValue={v.message}
             placeholder={
               ehRepresentante
