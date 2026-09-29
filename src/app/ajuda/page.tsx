@@ -4,9 +4,10 @@ import { WhatsApp } from "@/components/icons";
 import { celularParaExibir, equipe, linkWhatsApp, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Preciso de ajuda",
+  title: "Ajuda: SAC e financeiro pelo WhatsApp",
   description:
     "Atendimento da Corpo Sensual pelo WhatsApp: SAC para pedido, entrega e troca, e financeiro para boleto, pagamento e nota fiscal.",
+  alternates: { canonical: "/ajuda" },
 };
 
 /**

@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    // "production", "preview" ou "local". O Google Analytics só mede a produção:
+    // as prévias de cada branch não entram nos números.
+    AMBIENTE_VERCEL: process.env.VERCEL_ENV ?? "local",
+  },
   images: {
     // O Next 16 só entrega as qualidades listadas aqui; sem isso tudo sai em 75,
     // o que deixa a foto de campanha visivelmente mole em tela grande.
@@ -20,9 +25,31 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "static.wixstatic.com" },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Tudo o que não for o domínio oficial (sitecs.vercel.app, prévias, localhost)
+        // sai com noindex, para o Google não indexar uma cópia do site da marca.
+        // Quando www.corposensual.com.br apontar para cá, ele fica indexável sozinho.
+        // NÃO ponha Disallow no robots.txt: o Google precisa abrir a página para ler o noindex.
+        source: "/:path*",
+        missing: [{ type: "host", value: "(www\\.)?corposensual\\.com\\.br" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      },
+    ];
+  },
   async redirects() {
     // URLs antigas do site no Wix -> URLs novas
     return [
+      // Domínio e loja antigos da marca. A lista "10 melhores fábricas de pijamas de
+      // Muriaé" ainda aponta para loja.pijamascorposensual.com.br. Só funciona depois
+      // que esse domínio for adicionado ao projeto na Vercel.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "(www\\.|loja\\.)?pijamascorposensual\\.com\\.br" }],
+        destination: "https://www.corposensual.com.br/",
+        permanent: true,
+      },
       { source: "/catalogo-verao", destination: "/catalogo", permanent: true },
       // A coleção de verão passou a se chamar Delícias de Verão (catálogo Verão 2026/2027).
       { source: "/colecoes/frescor", destination: "/colecoes/delicias-de-verao", permanent: true },
@@ -39,6 +66,15 @@ const nextConfig: NextConfig = {
       { source: "/refund-policy", destination: "/politicas/trocas-e-devolucoes", permanent: true },
       { source: "/shipping-policy", destination: "/politicas/envio", permanent: true },
       { source: "/terms-conditions", destination: "/politicas/termos", permanent: true },
+      // Endereços que o Wix usa hoje (conferidos em 29/09/2026). /fabrica-pijamas é a
+      // landing de lojista e a página dos anúncios: o 308 repassa ?gclid= e ?utm_*.
+      { source: "/fabrica-pijamas", destination: "/fabrica-de-pijamas", permanent: true },
+      { source: "/fabrica-pijamas-obrigado", destination: "/obrigado?origem=fabrica-de-pijamas", permanent: true },
+      { source: "/cashback", destination: "/fabrica-de-pijamas", permanent: true },
+      { source: "/home", destination: "/", permanent: true },
+      // As 5 páginas da Plumene (/colecao-verao-plumene, /colecao-inverno-plumene,
+      // /surpreenda-plumene e as duas de obrigado) ainda não têm destino: é decisão
+      // do dono, antes de apontar o domínio para cá.
     ];
   },
 };

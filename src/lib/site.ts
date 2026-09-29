@@ -18,15 +18,33 @@ export function formatPhone(digits: string): string {
 }
 
 /**
- * URL pública do site, nesta ordem: NEXT_PUBLIC_SITE_URL definida, domínio de
- * produção do Vercel, URL do deploy atual do Vercel, domínio oficial.
+ * Endereço oficial da marca. Canonical, sitemap, robots.txt e dados estruturados
+ * usam SEMPRE este endereço, em qualquer deploy: o site pode estar sendo servido por
+ * sitecs.vercel.app, mas quem aparece no Google é o domínio oficial.
+ * É fixo de propósito. Quando o domínio for ligado à Vercel, a variável de produção
+ * dela pode virar "corposensual.com.br" (sem www), que redireciona.
  */
-function resolveSiteUrl(): string {
-  const explicit = env("NEXT_PUBLIC_SITE_URL");
-  if (explicit) return explicit.replace(/\/+$/, "");
-  const vercel = env("VERCEL_PROJECT_PRODUCTION_URL") || env("VERCEL_URL");
-  if (vercel) return `https://${vercel}`;
-  return "https://www.corposensual.com.br";
+export const SITE_ORIGIN = "https://www.corposensual.com.br";
+
+/** Endereço absoluto e oficial de uma página: urlOficial("/sobre"). */
+export function urlOficial(caminho: string): string {
+  return new URL(caminho, SITE_ORIGIN).href;
+}
+
+/**
+ * Origem das imagens de pré-visualização (og:image) e do logo do schema. Enquanto o
+ * domínio oficial ainda abre o Wix, os arquivos só existem no endereço da Vercel.
+ * Quando o domínio for adicionado ao projeto, o deploy seguinte passa a usar o
+ * oficial sozinho. Não muda nada na indexação.
+ */
+const ORIGEM_DAS_IMAGENS = (() => {
+  const prod = env("VERCEL_PROJECT_PRODUCTION_URL");
+  return !prod || /(^|\.)corposensual\.com\.br$/.test(prod) ? SITE_ORIGIN : `https://${prod}`;
+})();
+
+/** Endereço absoluto de um arquivo de public/: urlImagem("/images/logo-cs.png"). */
+export function urlImagem(caminho: string): string {
+  return new URL(caminho, ORIGEM_DAS_IMAGENS).href;
 }
 
 const legal = {
@@ -43,12 +61,13 @@ export const site = {
   tagline: "Fábrica de pijamas e moda íntima em Muriaé, MG. Venda no atacado para lojas de todo o Brasil.",
   description:
     "Fábrica própria de pijamas, camisolas, robes e moda íntima em Muriaé, MG, há mais de 25 anos. Atacado para lojistas de todo o Brasil, sem pedido mínimo.",
-  url: resolveSiteUrl(),
+  url: SITE_ORIGIN,
   legal,
   /** Endereço em uma linha e link para o mapa. */
   address: {
     line: `${legal.endereco}, ${legal.cidade} - ${legal.uf}, CEP ${legal.cep}`,
-    mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${legal.endereco}, ${legal.cidade} - ${legal.uf}, ${legal.cep}`)}`,
+    /** Abre o Perfil da Empresa no Google (nota e avaliações), não só o ponto no mapa. */
+    mapsUrl: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`Corpo Sensual, ${legal.endereco}, ${legal.cidade} - ${legal.uf}`)}&query_place_id=ChIJTysc9h7GvAARF9yfn08Zr4M`,
   },
   contact: {
     whatsapp: whatsappDigits,
@@ -57,7 +76,8 @@ export const site = {
     phone: phoneDigits,
     phoneUrl: phoneDigits ? `tel:+${phoneDigits.startsWith("55") ? phoneDigits : `55${phoneDigits}`}` : "",
     phoneLabel: phoneDigits ? formatPhone(phoneDigits) : "",
-    instagram: env("NEXT_PUBLIC_INSTAGRAM").replace(/^@/, ""),
+    /** Perfil oficial (23 mil seguidores). A variável só serve para trocar sem commit. */
+    instagram: (env("NEXT_PUBLIC_INSTAGRAM") || "pijamascorposensual").replace(/^@/, ""),
     email: env("NEXT_PUBLIC_EMAIL"),
     /** Ex.: "Segunda a sexta, das 8h às 17h" */
     hours: env("NEXT_PUBLIC_HORARIO"),

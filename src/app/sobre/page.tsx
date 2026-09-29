@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { altFoto } from "@/lib/content/alt-fotos";
 
 export const metadata: Metadata = {
-  title: "Sobre",
+  title: "Sobre a fábrica de pijamas em Muriaé, MG",
   description:
-    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do fio ao pijama pronto, nas linhas feminina, masculina e infantil.",
+    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do corte ao pijama pronto, nas linhas feminina, masculina e infantil.",
+  alternates: { canonical: "/sobre" },
 };
 
 const facts = [
@@ -15,7 +17,7 @@ const facts = [
   { label: "O que fabricamos", value: "Pijamas, short dolls, camisolas e robes" },
   { label: "Linhas", value: "Feminina, masculina e infantil" },
   { label: "Coleções", value: "Duas por ano: primavera/verão e outono/inverno" },
-  { label: "Fábrica própria", value: "Produção verticalizada, do fio ao produto final" },
+  { label: "Fábrica própria", value: "Produção verticalizada, do corte ao produto final" },
   { label: "Qualidade", value: "Tecidos selecionados, tecnologia anti-pilling e acabamento cuidado" },
   { label: "Como vendemos", value: "No atacado, por grade, por representantes em todo o Brasil" },
   { label: "Condições", value: `${site.commercial.noMinOrder}, ${site.commercial.installments.toLowerCase()} e ${site.commercial.pixDiscount.toLowerCase()}` },
@@ -27,12 +29,12 @@ export default function SobrePage() {
       {/* Abertura da página: único título com .h-hero (letter-spacing do site atual) */}
       <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-14 md:px-8 md:pt-20 md:pb-20">
         <h1 className="h-hero max-w-3xl text-[2rem] md:text-[2.375rem]">
-          Do fio ao pijama pronto, na nossa fábrica
+          Do corte ao pijama pronto, na nossa fábrica
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-[1.3] text-body">
           Fábrica própria de pijamas, camisolas, robes e moda íntima em {site.legal.cidade}, {site.legal.uf}, polo
-          nacional do setor. Há mais de 25 anos produzimos do fio ao produto final e vendemos no atacado para lojistas
-          de todo o Brasil, por representantes e pela plataforma B2B.
+          nacional do setor. Há mais de 25 anos produzimos do corte ao produto final e vendemos no atacado para lojistas
+          de todo o Brasil, por representantes.
         </p>
       </section>
 
@@ -40,7 +42,7 @@ export default function SobrePage() {
         <div className="relative aspect-[3/2] overflow-hidden rounded-media bg-sky-soft md:aspect-[16/9]">
           <Image
             src="/images/colecoes/entrelacos-1.jpg"
-            alt="Coleção Entrelaços"
+            alt={altFoto("/images/colecoes/entrelacos-1.jpg", "Coleção Entrelaços")}
             fill
             sizes="100vw"
             className="object-cover object-[center_25%] md:object-[center_30%]"

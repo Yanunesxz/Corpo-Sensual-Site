@@ -9,9 +9,10 @@ import { site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { ProducaoSection } from "@/components/producao-section";
 
 export const metadata: Metadata = {
-  title: "Fábrica de pijamas para lojistas",
+  title: "Fábrica de pijamas no atacado para lojistas",
   description:
-    "Pijamas, camisolas e robes direto da fábrica em Muriaé, MG, para lojistas. Sem pedido mínimo e 5% de desconto no Pix.",
+    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Sem pedido mínimo, 5% no Pix e frete grátis desde R$ 1.200 no Sudeste.",
+  alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
 /** Como a compra funciona. Fica só aqui: /sobre manda o lojista para esta página. */
@@ -37,6 +38,7 @@ export default function FabricaPage() {
         <HeroImage
           desktop="/images/colecoes/fabrica-campanha.jpg"
           mobile="/images/colecoes/fabrica-campanha-celular.jpg"
+          alt="Modelo de short doll rosa à beira da piscina, foto de campanha da Corpo Sensual"
           priority
           desktopPosition="center 35%"
           mobilePosition="center 30%"
@@ -61,8 +63,8 @@ export default function FabricaPage() {
       <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
         <div>
           <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
-            Fábrica própria em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do fio ao produto final: corte,
-            costura e embalagem aqui dentro. São {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site
+            Fábrica própria em Muriaé, MG, há mais de 25 anos. Corte, costura e embalagem
+            aqui dentro. São {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site
             publica só uma parte:{" "}
             <Link href="/colecoes" className="underline">
               veja as coleções
@@ -82,7 +84,7 @@ export default function FabricaPage() {
           <ol className="mt-4 space-y-3">
             {passos.map((p, i) => (
               <li key={p.title} className="flex gap-3 text-[15px] leading-[1.6]">
-                <span className="label shrink-0 tabular-nums opacity-70">{String(i + 1).padStart(2, "0")}</span>
+                <span className="label shrink-0 tabular-nums opacity-85">{String(i + 1).padStart(2, "0")}</span>
                 <span>
                   <strong className="font-medium text-ink">{p.title}.</strong> {p.description}
                 </span>

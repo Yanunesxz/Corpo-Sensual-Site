@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { politicas } from "@/lib/content/politicas";
+import { GA_ID } from "@/lib/analytics";
+import { PreferenciasCookies } from "./preferencias-cookies";
 
 const lojistas = [
   { href: "/catalogo", label: "Receber catálogo" },
@@ -56,7 +58,7 @@ export function SiteFooter() {
                 </a>
               )}
               {c.instagram && (
-                <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className={linkClass}>
+                <a href={`https://www.instagram.com/${c.instagram}/`} target="_blank" rel="noreferrer" className={linkClass}>
                   Instagram @{c.instagram}
                 </a>
               )}
@@ -78,6 +80,8 @@ export function SiteFooter() {
           <p>
             {site.legal.razaoSocial} · <span className="whitespace-nowrap">CNPJ {site.legal.cnpj}</span>
           </p>
+          {/* Sem GA não há aviso de cookies, então não há o que mudar. */}
+          {GA_ID ? <PreferenciasCookies /> : null}
           <p className="whitespace-nowrap">© {year} {site.name}</p>
         </div>
       </div>

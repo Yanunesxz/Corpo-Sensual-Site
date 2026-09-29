@@ -4,7 +4,11 @@ import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { site } from "@/lib/site";
+import { Analytics } from "@/components/analytics";
+import { JsonLd } from "@/components/json-ld";
+import { GA_ID } from "@/lib/analytics";
+import { organizacaoJsonLd, siteJsonLd } from "@/lib/schema";
+import { SITE_ORIGIN, site, urlImagem } from "@/lib/site";
 
 // Fontes do site atual: Fahkwang nos títulos, Montserrat nos botões e uma
 // grotesca leve no texto corrido (o Wix usa Helvetica Light; aqui Inter 300).
@@ -29,9 +33,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  // Canonical e demais endereços relativos saem sempre no domínio oficial.
+  metadataBase: new URL(SITE_ORIGIN),
   title: {
-    default: `${site.name} | Pijamas e moda íntima para lojistas`,
+    default: `${site.name} | Pijamas e moda íntima no atacado`,
     template: `%s | ${site.name}`,
   },
   description: site.description,
@@ -39,13 +44,18 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: site.name,
-    title: `${site.name} | Pijamas e moda íntima para lojistas`,
-    description: site.description,
+    // Sem title/description aqui: o Next copia o título e a description de cada página
+    // para og:title, og:description e as tags do Twitter. Link mandado no WhatsApp
+    // mostra a página certa, não a home.
     // Cartão de 1200x630 e 84 KB, recortado da foto de campanha. O arquivo original
     // tem 1,7 MB e o robô de pré-visualização do WhatsApp descarta imagem desse peso.
-    images: [{ url: "/images/og-corpo-sensual.jpg", width: 1200, height: 630, alt: site.name }],
+    images: [{ url: urlImagem("/images/og-corpo-sensual.jpg"), width: 1200, height: 630, alt: site.name }],
   },
-  robots: { index: true, follow: true },
+  // Search Console. O primeiro token é o que o site do Wix publica hoje em todas as páginas:
+  // mantido aqui, a propriedade atual continua verificada quando o domínio vier para a Vercel.
+  verification: {
+    google: ["WxjBulcUXD4Rnp4dMh1ZxJWenkFR2cxfTpJvsyAHVlI", (process.env.GOOGLE_SITE_VERIFICATION ?? "").trim()].filter(Boolean),
+  },
 };
 
 export const viewport: Viewport = {
@@ -54,39 +64,18 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-// Dados estruturados da empresa (Google: painel com endereço, telefone e redes).
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.name,
-  legalName: site.legal.razaoSocial,
-  url: site.url,
-  logo: `${site.url}/images/logo-cs.png`,
-  description: site.description,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: site.legal.endereco,
-    addressLocality: site.legal.cidade,
-    addressRegion: site.legal.uf,
-    postalCode: site.legal.cep,
-    addressCountry: "BR",
-  },
-  ...(site.contact.phone || site.contact.whatsapp
-    ? { telephone: `+${site.contact.phone || site.contact.whatsapp}` }
-    : {}),
-  ...(site.contact.email ? { email: site.contact.email } : {}),
-  ...(site.contact.instagram ? { sameAs: [`https://instagram.com/${site.contact.instagram}`] } : {}),
-};
-
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="pt-BR" className={`${fahkwang.variable} ${inter.variable} ${montserrat.variable} h-full`}>
       <body className="flex min-h-full flex-col">
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+        {/* Empresa e site para o Google e os assistentes de IA (src/lib/schema.ts). */}
+        <JsonLd data={[organizacaoJsonLd(), siteJsonLd()]} />
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <SiteFooter />
         <WhatsAppButton />
+        {/* Sem ID do GA o componente nem entra na página: nenhum script do Google. */}
+        {GA_ID ? <Analytics /> : null}
       </body>
     </html>
   );

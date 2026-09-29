@@ -29,9 +29,18 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 | `/contato` | Contato | Formulário (`source = contato`) e, abaixo, endereço com mapa, canais e horário |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
-| `/sitemap.xml`, `/robots.txt` | SEO | Gerados automaticamente |
+| `/sitemap.xml`, `/robots.txt` | SEO | Gerados automaticamente, sempre no domínio oficial |
 
-As URLs do site antigo (`/catalogo-verao`, `/privacy-policy` etc.) redirecionam para as novas. Veja `next.config.ts`.
+As URLs do site antigo (`/catalogo-verao`, `/fabrica-pijamas`, `/privacy-policy` etc.) redirecionam para as novas. Veja `next.config.ts`.
+
+### SEO e Google Analytics
+
+- Canonical, sitemap, robots.txt e dados estruturados usam sempre `https://www.corposensual.com.br` (`SITE_ORIGIN`, em `src/lib/site.ts`). Qualquer outro endereço (`sitecs.vercel.app`, prévias) sai com `X-Robots-Tag: noindex` (`next.config.ts`), então o Google só indexa o domínio oficial.
+- Dados estruturados (empresa, site e trilha das coleções) ficam em `src/lib/schema.ts`.
+- Título, description e prévia de cada coleção: `SEO_COLECAO`, em `src/app/colecoes/[slug]/page.tsx`. Texto alternativo das fotos: `src/lib/content/alt-fotos.ts`.
+- Datas do sitemap: `src/app/sitemap.ts`. Troque a data da página quando mudar o conteúdo dela.
+- Google Analytics 4 com aviso de cookies (LGPD, Consent Mode v2 básico): `src/lib/analytics.ts` e `src/components/analytics.tsx`. Eventos: `generate_lead` (origem do cadastro), `clique_whatsapp` (destino) e `clique_catalogo`. Nenhum dado digitado vai para o Google.
+- Passo a passo do painel do GA4, do Search Console e do dia da troca de domínio: [`docs/seo-e-analytics.md`](docs/seo-e-analytics.md).
 
 ### Formulários e leads
 
@@ -190,9 +199,9 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 
 1. Acesse https://vercel.com/new e importe o repositório `Yanunesxz/Corpo-Sensual-Site`.
 2. Framework detectado: Next.js. Não precisa alterar build ou output.
-3. Em **Environment Variables**, cadastre as variáveis do `.env.example` (pelo menos `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `NEXT_PUBLIC_SITE_URL`). Para os leads chegarem ao CRM, cadastre também `LEAD_SITE_CHAVE` (sem o prefixo `NEXT_PUBLIC`).
+3. Em **Environment Variables**, cadastre as variáveis do `.env.example` (pelo menos `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`). Para os leads chegarem ao CRM, cadastre também `LEAD_SITE_CHAVE` (sem o prefixo `NEXT_PUBLIC`).
 4. Deploy. A cada push na `main` o Vercel publica uma nova versão; pull requests ganham URL de preview.
-5. Em **Settings > Domains**, adicione `corposensual.com.br` e `www.corposensual.com.br` e siga as instruções de DNS. Só aponte o domínio quando o conteúdo estiver revisado; até lá o site do Wix continua no ar.
+5. Em **Settings > Domains**, adicione `www.corposensual.com.br` (principal) e `corposensual.com.br` (redirecionando para o www) e siga as instruções de DNS. Só aponte o domínio quando o conteúdo estiver revisado; até lá o site do Wix continua no ar. O roteiro completo do dia da troca está em [`docs/seo-e-analytics.md`](docs/seo-e-analytics.md).
 
 ---
 
@@ -201,10 +210,11 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 - [ ] Supabase configurado e `seed.sql` executado (traz as 148 peças publicadas)
 - [ ] `LEAD_SITE_CHAVE` cadastrada no Vercel, senão o lead não chega ao CRM
 - [ ] Fotos das peças enviadas para o Storage
-- [ ] `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_INSTAGRAM` e `NEXT_PUBLIC_EMAIL` preenchidos no Vercel
+- [ ] `NEXT_PUBLIC_TELEFONE`, `NEXT_PUBLIC_HORARIO` e `NEXT_PUBLIC_EMAIL` preenchidos no Vercel
 - [ ] Textos de `src/lib/content/politicas.ts` revisados pelo responsável jurídico
 - [ ] Teste de envio dos formulários e conferência dos leads na tabela
-- [ ] Google Analytics ou pixel de campanha, se usados, adicionados em `src/app/layout.tsx`
+- [ ] Google Analytics com o ID de medição e o painel configurado ([`docs/seo-e-analytics.md`](docs/seo-e-analytics.md))
+- [ ] Destino das 5 páginas da Plumene decidido (hoje elas viram 404 na troca)
 
 ## Repositório anterior
 

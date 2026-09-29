@@ -6,6 +6,7 @@ import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
 import { formatarDocumento } from "@/lib/documento";
 import { guardarLeadLocal } from "@/lib/lead-local";
+import { marcarLeadEnviado } from "@/lib/analytics";
 import type { LeadSource } from "@/lib/types";
 import { site } from "@/lib/site";
 
@@ -34,6 +35,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       // Para a mensagem do WhatsApp na página de obrigado já dizer quem é a pessoa.
       const campo = (k: string) => String(formData.get(k) ?? "").trim();
       guardarLeadLocal({ nome: campo("name"), loja: campo("company"), cidade: campo("city"), uf: campo("state").toUpperCase() });
+      // O GA conta o lead uma vez só, no obrigado que vem logo depois. Vai só a origem,
+      // nenhum dado digitado. Campo-isca preenchido é robô e não marca.
+      if (!formData.get("website")) marcarLeadEnviado(source);
       return submitLead(prev, formData);
     },
     initialLeadState,
