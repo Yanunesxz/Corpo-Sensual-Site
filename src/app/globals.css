@@ -277,14 +277,6 @@ body {
     transform: scale(1.03);
   }
 
-  /* Botão flutuante do WhatsApp some quando o teclado abre no celular */
-  @media (max-width: 767px) {
-    body:has(.field:focus) .wa-fab {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s;
-    }
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

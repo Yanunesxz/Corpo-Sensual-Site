@@ -97,7 +97,7 @@ export default async function HomePage() {
                 <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="group block">
                   <span className={`zoom-img relative block overflow-hidden rounded-media bg-sky-soft ${sozinha ? "aspect-[16/10] lg:aspect-[4/5]" : "aspect-[4/5]"}`}>
                     {c.image_url && (
-                      <Image src={c.image_url} alt={c.name} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover object-[center_30%]" />
+                      <Image src={c.image_url} alt={c.name} fill sizes={sozinha ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 33vw, 50vw"} className="object-cover object-[center_30%]" />
                     )}
                   </span>
                   <span className="h-display mt-3 block text-2xl transition-opacity group-hover:opacity-60 md:text-[1.75rem]">
