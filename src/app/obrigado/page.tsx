@@ -148,7 +148,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
             <h2 className="h-display max-w-md text-3xl md:text-[2.5rem]">Siga o nosso perfil do Instagram</h2>
             <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
               Enquanto isso, acompanhe as novidades no Instagram{" "}
-              <a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer" className="link">
+              <a href={`https://www.instagram.com/${c.instagram}/`} target="_blank" rel="noreferrer" className="link">
                 @{c.instagram}
               </a>
               .

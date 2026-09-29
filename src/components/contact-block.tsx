@@ -25,7 +25,7 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
     c.whatsappUrl && { href: c.whatsappUrl, label: `WhatsApp ${c.whatsappLabel}`, external: true },
     c.phoneUrl && { href: c.phoneUrl, label: `Telefone ${c.phoneLabel}`, external: false },
     c.email && { href: `mailto:${c.email}`, label: c.email, external: false },
-    c.instagram && { href: `https://instagram.com/${c.instagram}`, label: `Instagram @${c.instagram}`, external: true },
+    c.instagram && { href: `https://www.instagram.com/${c.instagram}/`, label: `Instagram @${c.instagram}`, external: true },
   ].filter(Boolean) as { href: string; label: string; external: boolean }[];
 
   return (

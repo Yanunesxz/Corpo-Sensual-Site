@@ -3,7 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCategories, getCollectionBySlug, getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site } from "@/lib/site";
+import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, urlImagem } from "@/lib/site";
+import { altCapa, altFoto } from "@/lib/content/alt-fotos";
+import { trilhaJsonLd } from "@/lib/schema";
+import { JsonLd } from "@/components/json-ld";
 import { CommercialTerms } from "@/components/commercial-terms";
 import { HeroImage } from "@/components/hero-image";
 import { ProductGrid } from "@/components/product-grid";
@@ -19,14 +22,53 @@ export async function generateStaticParams() {
   return collections.map((c) => ({ slug: c.slug }));
 }
 
+/**
+ * Título, description e imagem de prévia de cada coleção para o Google e o WhatsApp.
+ * A prévia é um recorte de 1200x630 com menos de 150 KB: a foto de campanha original
+ * pesa demais e o WhatsApp mostra o link sem foto.
+ * Coleção nova: acrescente a entrada aqui e gere a imagem em public/images/og
+ * (conferindo se os rostos ficam no quadro). Sem entrada, vale o título calculado.
+ */
+const SEO_COLECAO: Record<string, { title: string; description: string; og: string }> = {
+  "delicias-de-verao": {
+    title: "Pijamas Delícias de Verão 2027 no atacado",
+    description: `Primavera/Verão 2027: ${REFERENCIAS_POR_COLECAO["delicias-de-verao"]} referências de pijamas, short dolls, camisolas e robes feitos em Muriaé, MG. Atacado para lojistas, sem pedido mínimo.`,
+    og: "/images/og/delicias-de-verao.jpg",
+  },
+  entrelacos: {
+    title: "Pijamas Entrelaços Inverno 2026 no atacado",
+    description: `Outono/Inverno 2026: ${REFERENCIAS_POR_COLECAO.entrelacos} referências de pijamas, camisolas e robes nas linhas feminina, masculina e infantil. Atacado para lojistas, sem pedido mínimo.`,
+    og: "/images/og/entrelacos.jpg",
+  },
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const collection = await getCollectionBySlug(slug);
   if (!collection) return { title: "Coleção não encontrada" };
+  const seo = Object.hasOwn(SEO_COLECAO, slug) ? SEO_COLECAO[slug] : null;
+  const nome = collectionShortName(collection.name);
+  const estacao = collection.season === "verao" ? "verão" : collection.season === "inverno" ? "inverno" : null;
+  const titulo =
+    estacao && !nome.toLowerCase().includes(estacao) ? `${nome}: pijamas de ${estacao} no atacado` : `${nome}: pijamas no atacado`;
+  const imagem = seo
+    ? { url: urlImagem(seo.og), width: 1200, height: 630, alt: collection.name }
+    : collection.hero_image_url
+      ? { url: urlImagem(collection.hero_image_url), alt: collection.name }
+      : null;
   return {
-    title: collection.name,
-    description: collection.headline ?? collection.description ?? undefined,
-    openGraph: collection.hero_image_url ? { images: [{ url: collection.hero_image_url }] } : undefined,
+    title: seo?.title ?? titulo,
+    // A descrição longa vem antes da chamada: é ela que cita pijamas, camisolas e robes.
+    description: seo?.description ?? collection.description ?? collection.headline ?? undefined,
+    // ?categoria= é só um filtro da mesma página: o canonical fica sem ele.
+    alternates: { canonical: `/colecoes/${collection.slug}` },
+    // O openGraph da página substitui o do layout inteiro, então repete type, locale e siteName.
+    openGraph: {
+      type: "website",
+      locale: "pt_BR",
+      siteName: site.name,
+      ...(imagem ? { images: [imagem] } : {}),
+    },
   };
 }
 
@@ -60,11 +102,12 @@ export default async function ColecaoPage({ params }: Props) {
   return (
     // Efeito do site atual: a foto de campanha fica presa e o conteúdo sobe por cima dela.
     <div className="relative">
+      <JsonLd data={trilhaJsonLd([["Coleções", "/colecoes"], [collectionShortName(collection.name), `/colecoes/${collection.slug}`]])} />
       {/* Hero: foto de campanha em bloco cheio, sem cantos arredondados. A altura
           fica sempre dentro da tela — um bloco preso mais alto que a janela esconderia o botão. */}
       <section className="shade shade-hero sticky top-0 h-[70svh] bg-sky-soft md:h-screen">
         {collection.hero_image_url && (
-          <HeroImage desktop={collection.hero_image_url} mobile={collection.hero_mobile_url} priority desktopPosition="center 35%" mobilePosition="center 25%" />
+          <HeroImage desktop={collection.hero_image_url} mobile={collection.hero_mobile_url} alt={altCapa(collection.slug, collection.name)} priority desktopPosition="center 35%" mobilePosition="center 25%" />
         )}
         {/* .label, .h-hero e .link já trazem cor própria: sobre a foto a cor branca vai em cada elemento. */}
         <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-10 md:px-8 md:pb-16">
@@ -99,7 +142,7 @@ export default async function ColecaoPage({ params }: Props) {
             <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
               {gallery.map((url, i) => (
                 <li key={url} className="zoom-img relative aspect-[4/5] overflow-hidden rounded-media bg-sky-soft">
-                  <Image src={url} alt={`${collection.name}, campanha ${i + 1}`} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
+                  <Image src={url} alt={altFoto(url, `${collection.name}, campanha ${i + 1}`)} fill sizes="(min-width: 1024px) 25vw, 50vw" className="object-cover" />
                 </li>
               ))}
             </ul>

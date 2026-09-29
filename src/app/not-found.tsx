@@ -1,10 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/lib/site";
+
+export const metadata: Metadata = { title: "Página não encontrada" };
 
 export default function NotFound() {
   return (
     <>
-      <section className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
+      {/* data-ga-404: o Google Analytics registra a visita como "Página não encontrada (404)". */}
+      <section data-ga-404 className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
         <div className="max-w-2xl">
           <p className="label">Erro 404</p>
           <h1 className="h-hero mt-3 text-[2rem] md:text-[2.375rem]">Página não encontrada</h1>

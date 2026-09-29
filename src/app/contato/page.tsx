@@ -5,8 +5,9 @@ import { LeadForm } from "@/components/lead-form";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contato",
+  title: "Contato e endereço da fábrica em Muriaé, MG",
   description: `Fale com a Corpo Sensual: endereço da fábrica em Muriaé, MG, canais de atendimento e formulário de contato para lojistas, consumidores e representantes.`,
+  alternates: { canonical: "/contato" },
 };
 
 export default function ContatoPage() {

@@ -3,11 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { LeadForm } from "@/components/lead-form";
 import { site } from "@/lib/site";
+import { altFoto } from "@/lib/content/alt-fotos";
 
 export const metadata: Metadata = {
-  title: "Receber catálogo",
+  title: "Receba o catálogo de pijamas no atacado",
   description:
     "Cadastre sua loja e receba o catálogo digital da Corpo Sensual com a nova coleção de pijamas, camisolas e moda íntima e a tabela de preços de atacado.",
+  alternates: { canonical: "/catalogo" },
 };
 
 export default function CatalogoPage() {
@@ -16,7 +18,7 @@ export default function CatalogoPage() {
       <section className="grid lg:grid-cols-2">
         {/* Foto de campanha em bloco cheio: sem cantos arredondados, como no site atual */}
         <div className="relative aspect-[16/10] bg-sky-soft sm:aspect-[16/9] lg:aspect-auto lg:min-h-[85svh]">
-          <Image src="/images/colecoes/delicias-3.jpg" alt="Peça da coleção Delícias de Verão" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover object-[center_20%]" />
+          <Image src="/images/colecoes/delicias-3.jpg" alt={altFoto("/images/colecoes/delicias-3.jpg", "Peça da coleção Delícias de Verão")} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover object-[center_20%]" />
         </div>
         {/* Formulário dentro do bloco azul-claro */}
         <div className="bg-sky px-5 py-14 md:px-12 md:py-20 lg:px-16">

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
@@ -6,9 +7,13 @@ import { SectionHeading } from "@/components/section-heading";
 import { ProductCard } from "@/components/product-card";
 import { HeroImage } from "@/components/hero-image";
 import { ProducaoSection } from "@/components/producao-section";
+import { altCapa, altFoto } from "@/lib/content/alt-fotos";
 
 // Revalida o catálogo a cada hora sem precisar de novo deploy.
 export const revalidate = 3600;
+
+// Título e description vêm do layout (title.default).
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default async function HomePage() {
   const [collections, categories, products] = await Promise.all([
@@ -53,6 +58,7 @@ export default async function HomePage() {
         <HeroImage
           desktop={current?.hero_image_url ?? "/images/colecoes/delicias-campanha.jpg"}
           mobile={current?.hero_mobile_url}
+          alt={current ? altCapa(current.slug, current.name) : ""}
           priority
           desktopPosition="center 35%"
           mobilePosition="center 25%"
@@ -64,7 +70,7 @@ export default async function HomePage() {
         <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-5 py-14 md:flex-row md:items-center md:justify-between md:gap-10 md:px-8 md:py-20">
           <p className="max-w-2xl text-[1.125rem] leading-[1.6]">
             <strong className="font-medium">Fábrica própria de pijamas e moda íntima</strong> em Muriaé, MG, há mais de 25 anos. Produção
-            verticalizada, do fio ao produto final. Vendemos no atacado para lojas de todo o Brasil.
+            verticalizada, do corte ao produto final. Vendemos no atacado para lojas de todo o Brasil.
           </p>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
             <Link href="/fabrica-de-pijamas" className="link text-[15px]">
@@ -97,7 +103,7 @@ export default async function HomePage() {
                 <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="group block">
                   <span className={`zoom-img relative block overflow-hidden rounded-media bg-sky-soft ${sozinha ? "aspect-[16/10] lg:aspect-[4/5]" : "aspect-[4/5]"}`}>
                     {c.image_url && (
-                      <Image src={c.image_url} alt={c.name} fill sizes={sozinha ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 33vw, 50vw"} className="object-cover object-[center_30%]" />
+                      <Image src={c.image_url} alt={altFoto(c.image_url, c.name)} fill sizes={sozinha ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 33vw, 50vw"} className="object-cover object-[center_30%]" />
                     )}
                   </span>
                   <span className="h-display mt-3 block text-2xl transition-opacity group-hover:opacity-60 md:text-[1.75rem]">

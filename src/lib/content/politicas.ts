@@ -20,7 +20,7 @@ export const politicas: Politica[] = [
     slug: "privacidade",
     title: "Política de Privacidade",
     shortTitle: "Privacidade",
-    updatedAt: "2026-09-11",
+    updatedAt: "2026-09-29",
     intro:
       `A ${empresa} respeita a sua privacidade. Esta política explica quais dados coletamos neste site, como usamos e quais são os seus direitos, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).`,
     sections: [
@@ -44,6 +44,7 @@ export const politicas: Politica[] = [
         paragraphs: [
           "Fornecedores que operam nossa infraestrutura (hospedagem do site e banco de dados) e ferramentas de comunicação, sempre limitados ao necessário para prestar o serviço.",
           "Nossos representantes comerciais da sua região, para dar continuidade ao atendimento.",
+          "Google, pelo Google Analytics, com dados de navegação (páginas vistas, origem da visita, tipo de aparelho e cliques), somente se você aceitar os cookies de estatística. Esses dados podem ser tratados fora do Brasil. O Google não recebe o que você preenche nos formulários.",
         ],
       },
       {
@@ -64,21 +65,34 @@ export const politicas: Politica[] = [
     slug: "cookies",
     title: "Política de Cookies",
     shortTitle: "Cookies",
-    updatedAt: "2026-09-11",
+    updatedAt: "2026-09-29",
     intro:
-      "Cookies são pequenos arquivos gravados no seu navegador. Usamos apenas o essencial para o funcionamento do site e para medir resultados de campanhas.",
+      "Cookies são pequenos arquivos gravados no seu navegador. Este site só grava cookies de estatística se você clicar em Aceitar no aviso que aparece na primeira visita.",
     sections: [
       {
-        heading: "Cookies que utilizamos",
+        heading: "O que o site guarda sem pedir aceite",
         paragraphs: [
-          "Essenciais: necessários para o site funcionar corretamente, como preferências de navegação.",
-          "Estatísticos e de campanha: ajudam a entender de onde vêm as visitas (por exemplo, parâmetros UTM de anúncios) para melhorar nossa comunicação.",
+          "A sua resposta ao aviso de cookies, por 12 meses, para ele não aparecer de novo em toda página.",
+          "Só nesta aba, até você fechar: a campanha pela qual você chegou (parâmetros UTM de anúncios e links), que segue junto com o cadastro que você enviar.",
+          "Depois que você envia um formulário, e só nesta aba: o nome, a loja, a cidade e o estado que você digitou, para montar a mensagem do WhatsApp na página seguinte. Esses dados não vão para o Google e somem quando a aba fecha.",
         ],
       },
       {
-        heading: "Como gerenciar",
+        heading: "Estatística (Google Analytics), só com o seu aceite",
         paragraphs: [
-          "Você pode bloquear ou apagar cookies nas configurações do seu navegador. Algumas funcionalidades podem deixar de funcionar corretamente.",
+          "Conta as visitas, as páginas vistas, de onde a visita veio (busca, anúncio, Instagram), o tipo de aparelho, a cidade aproximada e os cliques nos botões de catálogo e de WhatsApp. Os cookies _ga e _ga_* ficam no navegador por até 2 anos.",
+          ...(process.env.NEXT_PUBLIC_GOOGLE_ADS_CONVERSAO
+            ? ["Quando você chega por um anúncio do Google, o mesmo aceite permite registrar se o cadastro foi enviado, para sabermos quais anúncios trazem lojistas. Não usamos esses dados para anúncios personalizados."]
+            : []),
+          "Nunca enviamos ao Google o seu nome, e-mail, telefone, CNPJ, CPF ou o que você escrever nos formulários.",
+          "O Google Analytics é um serviço do Google, que pode tratar esses dados fora do Brasil. Saiba mais em policies.google.com/privacy.",
+        ],
+      },
+      {
+        heading: "Como mudar a sua escolha",
+        paragraphs: [
+          "Use o link Preferências de cookies, no rodapé de qualquer página, para aceitar ou recusar quando quiser. Ao recusar, paramos a medição e apagamos os cookies do Google Analytics deste site.",
+          "Você também pode apagar os cookies nas configurações do seu navegador.",
         ],
       },
     ],
@@ -87,9 +101,9 @@ export const politicas: Politica[] = [
     slug: "trocas-e-devolucoes",
     title: "Política de Trocas e Devoluções",
     shortTitle: "Trocas e devoluções",
-    updatedAt: "2026-09-11",
+    updatedAt: "2026-09-29",
     intro:
-      "Vendemos para lojistas (atacado). As condições abaixo valem para pedidos feitos por meio dos nossos representantes ou da plataforma B2B.",
+      "Vendemos para lojistas (atacado). As condições abaixo valem para pedidos feitos por meio dos nossos representantes.",
     sections: [
       {
         heading: "Defeitos de fabricação",
@@ -136,7 +150,7 @@ export const politicas: Politica[] = [
     slug: "termos",
     title: "Termos e Condições",
     shortTitle: "Termos e condições",
-    updatedAt: "2026-09-11",
+    updatedAt: "2026-09-29",
     intro: `Ao utilizar este site você concorda com os termos abaixo. O site é mantido pela ${empresa}.`,
     sections: [
       {
@@ -149,7 +163,7 @@ export const politicas: Politica[] = [
       {
         heading: "Relação comercial",
         paragraphs: [
-          "As vendas são realizadas no atacado, por meio de representantes comerciais e da plataforma B2B. Aceitamos Pix, boleto e cartão; no Pix há 5% de desconto e no cartão o parcelamento é sem juros. Não há valor mínimo de pedido. Preços e demais condições são informados pelo representante.",
+          "As vendas são realizadas no atacado, por meio de representantes comerciais. Aceitamos Pix, boleto e cartão; no Pix há 5% de desconto e no cartão o parcelamento é sem juros. Não há valor mínimo de pedido. Preços e demais condições são informados pelo representante.",
         ],
       },
       {

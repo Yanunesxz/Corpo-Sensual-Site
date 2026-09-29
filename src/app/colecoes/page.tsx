@@ -7,8 +7,9 @@ import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Coleções",
+  title: "Coleções de pijamas de verão e inverno",
   description: "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual. Duas coleções por ano, venda no atacado para lojistas.",
+  alternates: { canonical: "/colecoes" },
 };
 
 export default async function ColecoesPage() {
@@ -29,7 +30,7 @@ export default async function ColecoesPage() {
         <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Duas coleções por ano</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
-            Produzimos as duas do fio ao produto final, em Muriaé: Delícias de Verão (Primavera/Verão 2027) e
+            Produzimos as duas do corte ao produto final, em Muriaé: Delícias de Verão (Primavera/Verão 2027) e
             Entrelaços (Outono/Inverno 2026). Juntas somam {TOTAL_REFERENCIAS} referências. Aqui você vê uma seleção;
             o catálogo digital traz todas, com grade e preços. {site.commercial.salesNote}
           </p>

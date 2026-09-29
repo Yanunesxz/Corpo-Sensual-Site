@@ -138,7 +138,7 @@ export function SiteHeader() {
                 </a>
               )}
               {c.instagram && (
-                <a className={menuLink} href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noreferrer">
+                <a className={menuLink} href={`https://www.instagram.com/${c.instagram}/`} target="_blank" rel="noreferrer">
                   @{c.instagram}
                 </a>
               )}

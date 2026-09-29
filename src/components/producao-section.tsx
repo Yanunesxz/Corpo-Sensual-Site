@@ -34,7 +34,7 @@ export function ProducaoSection({ fundo = "bg-sky-soft", comLink = true }: Props
               grid recoloca o vídeo na coluna da esquerda, ao lado dos dois textos. */}
           <div className="lg:col-start-2 lg:row-start-1">
             <p className="label">Dentro da fábrica</p>
-            <h2 className="h-display mt-3 text-3xl md:text-[2.5rem]">Do fio à caixa lacrada</h2>
+            <h2 className="h-display mt-3 text-3xl md:text-[2.5rem]">Da costura à caixa lacrada</h2>
             <p className="mt-4 max-w-2xl text-[1.125rem] leading-[1.6]">
               Veja a peça sair da máquina, passar pelo acabamento e entrar na caixa lacrada. Tudo dentro da nossa
               fábrica, em Muriaé. Entre a costura e a sua loja não existe intermediário.
@@ -50,7 +50,7 @@ export function ProducaoSection({ fundo = "bg-sky-soft", comLink = true }: Props
             <ol className="grid gap-x-8 gap-y-6 sm:grid-cols-2">
               {ETAPAS.map((e, i) => (
                 <li key={e.title} className="border-t border-line pt-4">
-                  <span className="label block text-[13px] tabular-nums opacity-70">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="label block text-[13px] tabular-nums opacity-85">{String(i + 1).padStart(2, "0")}</span>
                   <h3 className="h-display mt-1 text-xl md:text-[1.375rem]">{e.title}</h3>
                   <p className="mt-1.5 leading-[1.6]">{e.description}</p>
                 </li>
