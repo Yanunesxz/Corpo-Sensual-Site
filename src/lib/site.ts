@@ -7,9 +7,14 @@
 const env = (name: string): string => (process.env[name] ?? "").trim();
 
 const whatsappDigits = env("NEXT_PUBLIC_WHATSAPP").replace(/\D/g, "");
-// O comercial atende os candidatos a representante num número próprio. Sem ele,
-// cai no WhatsApp geral da empresa.
-const whatsappComercialDigits = env("NEXT_PUBLIC_WHATSAPP_COMERCIAL").replace(/\D/g, "") || whatsappDigits;
+// O comercial atende os candidatos a representante num número próprio.
+// Número do gerente comercial passado pelo Yan em 29/09/2026 como (32) 8511-9260.
+// Celular de MG ganhou o 9 na frente em 2016, então o número discável é
+// (32) 98511-9260. Número público, não é segredo: fica no código para funcionar sem
+// configurar nada. NEXT_PUBLIC_WHATSAPP_COMERCIAL, se preenchida, tem prioridade.
+const WHATSAPP_GERENTE_COMERCIAL = "5532985119260";
+const whatsappComercialDigits =
+  env("NEXT_PUBLIC_WHATSAPP_COMERCIAL").replace(/\D/g, "") || WHATSAPP_GERENTE_COMERCIAL;
 const phoneDigits = env("NEXT_PUBLIC_TELEFONE").replace(/\D/g, "");
 
 /** (32) 3721-0000 ou (32) 99999-9999 a partir só dos dígitos. */
