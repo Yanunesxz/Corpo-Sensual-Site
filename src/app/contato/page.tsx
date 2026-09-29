@@ -18,6 +18,14 @@ export default function ContatoPage() {
             <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Fale com a Corpo Sensual</h1>
             <ul className="mt-6 space-y-3 text-[1.0625rem] leading-[1.6] text-body">
               <li>
+                <strong className="font-medium text-ink">Já é cliente:</strong> pedido, entrega, troca e boleto são resolvidos
+                mais rápido em{" "}
+                <Link href="/ajuda" className="underline">
+                  preciso de ajuda
+                </Link>
+                , direto com o SAC e o financeiro.
+              </li>
+              <li>
                 <strong className="font-medium text-ink">Lojista:</strong> diga a cidade da loja e, se tiver, o CNPJ.
                 Encaminhamos ao representante da sua região.
               </li>

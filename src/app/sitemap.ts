@@ -5,7 +5,7 @@ import { politicas } from "@/lib/content/politicas";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
-  const staticRoutes = ["", "/sobre", "/colecoes", "/catalogo", "/fabrica-de-pijamas", "/contato", "/seja-representante"];
+  const staticRoutes = ["", "/sobre", "/colecoes", "/catalogo", "/fabrica-de-pijamas", "/contato", "/ajuda", "/seja-representante"];
   const collections = await getCollections();
 
   return [

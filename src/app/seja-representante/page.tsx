@@ -104,7 +104,7 @@ export default function RepresentantePage() {
           <div className="max-w-2xl">
             <h2 className="h-display text-3xl md:text-[2.5rem]">Como funciona a conversa</h2>
             <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">
-              Depois do cadastro você fala direto com o gerente comercial pelo WhatsApp. Ele apresenta as coleções, a
+              Depois do cadastro você fala direto com o Fabian, nosso gerente comercial, pelo WhatsApp. Ele apresenta as coleções, a
               tabela de preços e as condições de representação, e confere se a sua região está aberta.
             </p>
             <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">

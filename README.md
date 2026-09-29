@@ -24,7 +24,8 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 | `/colecoes/[slug]` | Coleção | Peças da coleção com filtro por linha (`?categoria=infantil`) |
 | `/catalogo` | Receber catálogo | Foto, condições comerciais e formulário de lead (`source = catalogo`) |
 | `/fabrica-de-pijamas` | Para lojistas | Landing B2B com benefícios + formulário (`source = fabrica-de-pijamas`) |
-| `/seja-representante` | Quero ser representante | Por que representar + formulário (`source = representante`). Depois do envio, a página de obrigado leva ao WhatsApp do gerente comercial (`NEXT_PUBLIC_WHATSAPP_COMERCIAL`) |
+| `/seja-representante` | Quero ser representante | Por que representar + formulário (`source = representante`). Depois do envio, a página de obrigado leva ao WhatsApp do gerente comercial |
+| `/ajuda` | Preciso de ajuda | WhatsApp do SAC (pedido, entrega, troca) e do financeiro (boleto, pagamento, nota). Os números ficam em `equipe`, em `src/lib/site.ts` |
 | `/contato` | Contato | Formulário (`source = contato`) e, abaixo, endereço com mapa, canais e horário |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
