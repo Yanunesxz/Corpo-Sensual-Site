@@ -7,6 +7,9 @@
 const env = (name: string): string => (process.env[name] ?? "").trim();
 
 const whatsappDigits = env("NEXT_PUBLIC_WHATSAPP").replace(/\D/g, "");
+// O comercial atende os candidatos a representante num número próprio. Sem ele,
+// cai no WhatsApp geral da empresa.
+const whatsappComercialDigits = env("NEXT_PUBLIC_WHATSAPP_COMERCIAL").replace(/\D/g, "") || whatsappDigits;
 const phoneDigits = env("NEXT_PUBLIC_TELEFONE").replace(/\D/g, "");
 
 /** (32) 3721-0000 ou (32) 99999-9999 a partir só dos dígitos. */
@@ -57,6 +60,9 @@ export const site = {
     phone: phoneDigits,
     phoneUrl: phoneDigits ? `tel:+${phoneDigits.startsWith("55") ? phoneDigits : `55${phoneDigits}`}` : "",
     phoneLabel: phoneDigits ? formatPhone(phoneDigits) : "",
+    /** Gerente comercial: quem fala com candidato a representante. */
+    whatsappComercial: whatsappComercialDigits,
+    whatsappComercialUrl: whatsappComercialDigits ? `https://wa.me/${whatsappComercialDigits}` : "",
     instagram: env("NEXT_PUBLIC_INSTAGRAM").replace(/^@/, ""),
     email: env("NEXT_PUBLIC_EMAIL"),
     /** Ex.: "Segunda a sexta, das 8h às 17h" */
@@ -113,6 +119,12 @@ export function hasDirectContact(): boolean {
 export function whatsappLink(message: string): string {
   if (!site.contact.whatsappUrl) return "";
   return `${site.contact.whatsappUrl}?text=${encodeURIComponent(message)}`;
+}
+
+/** Link do gerente comercial, usado depois do cadastro de representante. */
+export function whatsappComercialLink(message: string): string {
+  if (!site.contact.whatsappComercialUrl) return "";
+  return `${site.contact.whatsappComercialUrl}?text=${encodeURIComponent(message)}`;
 }
 
 /** "Coleção Frescor" -> "Frescor", para títulos grandes. */

@@ -59,9 +59,9 @@ export type Product = {
 export type LeadSource =
   | "catalogo"
   | "fabrica-de-pijamas"
-  | "programa-cashback"
   | "colecao"
-  | "contato";
+  | "contato"
+  | "representante";
 
 export type LeadInsert = {
   name: string;

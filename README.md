@@ -24,7 +24,7 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 | `/colecoes/[slug]` | Coleção | Peças da coleção com filtro por linha (`?categoria=infantil`) |
 | `/catalogo` | Receber catálogo | Foto, condições comerciais e formulário de lead (`source = catalogo`) |
 | `/fabrica-de-pijamas` | Para lojistas | Landing B2B com benefícios + formulário (`source = fabrica-de-pijamas`) |
-| `/programa-cashback` | Programa Cashback | Explicação do programa + formulário (`source = programa-cashback`) |
+| `/seja-representante` | Quero ser representante | Por que representar + formulário (`source = representante`). Depois do envio, a página de obrigado leva ao WhatsApp do gerente comercial (`NEXT_PUBLIC_WHATSAPP_COMERCIAL`) |
 | `/contato` | Contato | Formulário (`source = contato`) e, abaixo, endereço com mapa, canais e horário |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
@@ -202,7 +202,6 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 - [ ] Fotos das peças enviadas para o Storage
 - [ ] `NEXT_PUBLIC_WHATSAPP`, `NEXT_PUBLIC_INSTAGRAM` e `NEXT_PUBLIC_EMAIL` preenchidos no Vercel
 - [ ] Textos de `src/lib/content/politicas.ts` revisados pelo responsável jurídico
-- [ ] Regras do Programa Cashback confirmadas com o comercial (`src/app/programa-cashback/page.tsx`)
 - [ ] Teste de envio dos formulários e conferência dos leads na tabela
 - [ ] Google Analytics ou pixel de campanha, se usados, adicionados em `src/app/layout.tsx`
 

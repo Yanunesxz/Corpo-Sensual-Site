@@ -29,6 +29,8 @@ const nextConfig: NextConfig = {
       { source: "/colecao-verao", destination: "/colecoes/delicias-de-verao", permanent: true },
       { source: "/colecao-inverno", destination: "/colecoes/entrelacos", permanent: true },
       { source: "/lp-fabrica-pijamas", destination: "/fabrica-de-pijamas", permanent: true },
+      // O Programa Cashback saiu do site em 29/09/2026. Quem tiver o link cai na página de lojistas.
+      { source: "/programa-cashback", destination: "/fabrica-de-pijamas", permanent: true },
       { source: "/colecao-verao-obrigado", destination: "/obrigado?origem=catalogo", permanent: true },
       { source: "/colecao-inverno-obrigado", destination: "/obrigado?origem=catalogo", permanent: true },
       { source: "/obrigado-fabrica-pijamas", destination: "/obrigado?origem=fabrica-de-pijamas", permanent: true },

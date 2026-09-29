@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { site, whatsappLink } from "@/lib/site";
+import { site, whatsappComercialLink, whatsappLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Cadastro recebido",
@@ -17,9 +17,9 @@ const messages: Record<string, { title: string; text: string }> = {
     title: "Recebemos o seu interesse",
     text: "O representante da sua região vai falar com você para apresentar o catálogo, os preços e as condições.",
   },
-  "programa-cashback": {
-    title: "Você está quase lá",
-    text: "Vamos entrar em contato para confirmar a sua participação e explicar as regras do programa.",
+  representante: {
+    title: "Cadastro de representante recebido",
+    text: "O gerente comercial vai avaliar a sua região e falar com você.",
   },
   contato: {
     title: "Mensagem recebida",
@@ -43,7 +43,10 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
   const { origem } = await searchParams;
   const key = typeof origem === "string" && origem in messages ? origem : "default";
   const m = messages[key];
-  const wa = whatsappLink("Olá! Acabei de me cadastrar no site da Corpo Sensual.");
+  const ehRepresentante = key === "representante";
+  const wa = ehRepresentante
+    ? whatsappComercialLink("Olá! Acabei de me cadastrar para ser representante da Corpo Sensual pelo site.")
+    : whatsappLink("Olá! Acabei de me cadastrar no site da Corpo Sensual.");
   const c = site.contact;
 
   return (
@@ -51,7 +54,11 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
       <section className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
         <div className="max-w-2xl">
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">{m.title}</h1>
-          <p className="mt-6 text-lg leading-[1.3] text-body">{m.text}</p>
+          <p className="mt-6 text-lg leading-[1.3] text-body">
+            {m.text}
+            {/* Só convida para o WhatsApp quando existe número configurado para receber. */}
+            {ehRepresentante && wa ? " Para adiantar a conversa, chame agora no WhatsApp." : ""}
+          </p>
           <p className="mt-3 text-lg leading-[1.3] text-body">
             Retornamos em horário comercial{c.hours ? `, ${c.hours.toLowerCase()}` : ""}. Fique de olho no telefone e no e-mail
             informados.
@@ -60,7 +67,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
           <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:flex-wrap sm:items-center">
             {wa ? (
               <a href={wa} target="_blank" rel="noreferrer" className="btn btn-dark w-full sm:w-auto">
-                Falar agora no WhatsApp
+                {ehRepresentante ? "Falar com o gerente comercial" : "Falar agora no WhatsApp"}
               </a>
             ) : (
               <Link href="/colecoes" className="btn btn-dark w-full sm:w-auto">

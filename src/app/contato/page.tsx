@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ContactBlock } from "@/components/contact-block";
 import { LeadForm } from "@/components/lead-form";
 import { site } from "@/lib/site";
@@ -29,8 +30,11 @@ export default function ContatoPage() {
                 perto de você.
               </li>
               <li>
-                <strong className="font-medium text-ink">Representante comercial:</strong> conte a sua região e experiência no
-                campo de mensagem.
+                <strong className="font-medium text-ink">Representante comercial:</strong> o cadastro é em{" "}
+                <Link href="/seja-representante" className="underline">
+                  quero ser representante
+                </Link>
+                .
               </li>
             </ul>
             <p className="mt-5 text-sm text-body">

@@ -37,9 +37,9 @@ const MARCA = "cs";
 const PAGINAS: Record<LeadSource, string> = {
   catalogo: "Receber catálogo",
   "fabrica-de-pijamas": "LP Fábrica de Pijamas",
-  "programa-cashback": "Programa Cashback",
   colecao: "Coleção",
   contato: "Contato",
+  representante: "Quero ser representante",
 };
 
 export type ResultadoCrm =
