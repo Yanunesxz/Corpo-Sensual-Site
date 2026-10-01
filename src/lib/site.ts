@@ -4,10 +4,18 @@
  */
 
 /** Lê uma variável de ambiente tratando vazio como ausente (o Vercel importa o .env.example com valores vazios). */
-const env = (name: string): string => (process.env[name] ?? "").trim();
+const env = (valor: string | undefined): string => (valor ?? "").trim();
 
-const whatsappDigits = env("NEXT_PUBLIC_WHATSAPP").replace(/\D/g, "");
-const phoneDigits = env("NEXT_PUBLIC_TELEFONE").replace(/\D/g, "");
+/*
+ * As NEXT_PUBLIC_* precisam ser lidas pelo nome escrito por extenso
+ * (process.env.NEXT_PUBLIC_WHATSAPP): só assim o Next copia o valor para o código do
+ * navegador. Lidas por nome dinâmico (process.env[nome]) elas chegam vazias no
+ * navegador, e o cabeçalho, a barra fixa, o WhatsApp flutuante e o formulário
+ * renderizavam diferente no servidor e no navegador (erro de hidratação #418) assim
+ * que a variável fosse preenchida na Vercel.
+ */
+const whatsappDigits = env(process.env.NEXT_PUBLIC_WHATSAPP).replace(/\D/g, "");
+const phoneDigits = env(process.env.NEXT_PUBLIC_TELEFONE).replace(/\D/g, "");
 
 /** (32) 3721-0000 ou (32) 99999-9999 a partir só dos dígitos. */
 export function formatPhone(digits: string): string {
@@ -38,7 +46,7 @@ export function urlOficial(caminho: string): string {
  * oficial sozinho. Não muda nada na indexação.
  */
 const ORIGEM_DAS_IMAGENS = (() => {
-  const prod = env("VERCEL_PROJECT_PRODUCTION_URL");
+  const prod = env(process.env.VERCEL_PROJECT_PRODUCTION_URL);
   return !prod || /(^|\.)corposensual\.com\.br$/.test(prod) ? SITE_ORIGIN : `https://${prod}`;
 })();
 
@@ -77,10 +85,10 @@ export const site = {
     phoneUrl: phoneDigits ? `tel:+${phoneDigits.startsWith("55") ? phoneDigits : `55${phoneDigits}`}` : "",
     phoneLabel: phoneDigits ? formatPhone(phoneDigits) : "",
     /** Perfil oficial (23 mil seguidores). A variável só serve para trocar sem commit. */
-    instagram: (env("NEXT_PUBLIC_INSTAGRAM") || "pijamascorposensual").replace(/^@/, ""),
-    email: env("NEXT_PUBLIC_EMAIL"),
+    instagram: (env(process.env.NEXT_PUBLIC_INSTAGRAM) || "pijamascorposensual").replace(/^@/, ""),
+    email: env(process.env.NEXT_PUBLIC_EMAIL),
     /** Ex.: "Segunda a sexta, das 8h às 17h" */
-    hours: env("NEXT_PUBLIC_HORARIO"),
+    hours: env(process.env.NEXT_PUBLIC_HORARIO),
   },
   nav: [
     { href: "/", label: "Home" },
@@ -109,6 +117,13 @@ export const site = {
     leadTime: "O pedido sai da fábrica em até 15 dias úteis. Temos referências a pronta entrega e, conforme o pedido, o envio pode sair no mesmo dia.",
     /** Prazo para pedir troca de peça com defeito, em dias corridos após o recebimento. */
     exchangeDays: 15,
+    /* Frases curtas do redesenho (out/2026). Condições, FAQ e faixa do topo leem daqui. */
+    freeShippingSudeste: "Frete grátis a partir de R$ 1.200 no Sudeste",
+    freeShippingOutras: "Nas demais regiões, a partir de R$ 2.000",
+    prazo: "O pedido sai da fábrica em até 15 dias úteis.",
+    /** Pronta entrega sempre com "conforme o pedido, podem": não é promessa. */
+    prontaEntrega: "Há referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",
+    troca: "Troca em até 15 dias por defeito de fabricação.",
   },
 } as const;
 

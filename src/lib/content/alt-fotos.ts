@@ -15,6 +15,11 @@ const ALT_FOTO: Record<string, string> = {
   "/images/categorias/feminino.jpg": "Regata estampada e short listrado da linha feminina",
   "/images/categorias/masculino.jpg": "Pijama masculino de camiseta e short marrom",
   "/images/categorias/infantil.jpg": "Crianças com pijama curto azul brincando com bolhas de sabão",
+  "/images/home/hero-familia.jpg":
+    "Mãe, filha e filho com pijamas curtos azuis e shorts listrados, brincando com bolhas de sabão no gramado, coleção Delícias de Verão",
+  "/images/lojista/capa.jpg": "Modelo de short doll rosa numa espreguiçadeira listrada à beira da piscina, coleção Delícias de Verão",
+  "/images/editorial/riacho.jpg": "Modelo de regata branca e short azul-marinho sentada num deque de bambu sobre o riacho, coleção Delícias de Verão",
+  "/images/editorial/orquidea.jpg": "Orquídeas cor-de-rosa no jardim onde a campanha Delícias de Verão foi fotografada",
 };
 
 /** Foto do topo de cada coleção. Vale para a versão larga e para a do celular. */

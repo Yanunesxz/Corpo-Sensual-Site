@@ -27,7 +27,7 @@ export default function SobrePage() {
   return (
     <>
       {/* Abertura da página: único título com .h-hero (letter-spacing do site atual) */}
-      <section className="mx-auto max-w-[1600px] px-5 pt-12 pb-14 md:px-8 md:pt-20 md:pb-20">
+      <section className="wrap pt-12 pb-14 md:pt-20 md:pb-20" data-barra-depois>
         <h1 className="h-hero max-w-3xl text-[2rem] md:text-[2.375rem]">
           Do corte ao pijama pronto, na nossa fábrica
         </h1>
@@ -38,7 +38,7 @@ export default function SobrePage() {
         </p>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-5 pb-14 md:px-8 md:pb-20">
+      <section className="wrap pb-14 md:pb-20">
         <div className="relative aspect-[3/2] overflow-hidden rounded-media bg-sky-soft md:aspect-[16/9]">
           <Image
             src="/images/colecoes/entrelacos-1.jpg"
@@ -50,7 +50,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+      <section className="wrap py-14 md:py-20">
         <h2 className="h-display text-3xl md:text-[2.5rem]">A empresa em resumo</h2>
         <dl className="mt-8 grid border-t border-line sm:grid-cols-2 sm:gap-x-10 md:grid-cols-3">
           {facts.map((f) => (
@@ -66,11 +66,11 @@ export default function SobrePage() {
       </section>
 
       <section className="bg-sky">
-        <div className="mx-auto flex max-w-[1600px] flex-col gap-8 px-5 py-16 md:flex-row md:items-end md:justify-between md:px-8 md:py-24">
+        <div className="wrap flex flex-col gap-8 py-16 md:flex-row md:items-end md:justify-between md:py-24">
           <h2 className="h-display text-3xl md:text-[3.125rem]">
             Corpo Sensual<br />na sua loja?
           </h2>
-          <div className="md:shrink-0">
+          <div className="md:max-w-md md:shrink-0">
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
                 Receber catálogo

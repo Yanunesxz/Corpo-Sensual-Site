@@ -99,7 +99,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
 
   return (
     <>
-      <section className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
+      <section className="wrap py-16 md:py-24">
         <div className="max-w-2xl">
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">{m.title}</h1>
           <p className="mt-6 text-lg leading-[1.3] text-body">{m.text}</p>
@@ -144,7 +144,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
       {/* Faixa azul-clara do Instagram, como na página de obrigado do site atual */}
       {c.instagram && (
         <section className="bg-sky">
-          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+          <div className="wrap py-14 md:py-20">
             <h2 className="h-display max-w-md text-3xl md:text-[2.5rem]">Siga o nosso perfil do Instagram</h2>
             <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
               Enquanto isso, acompanhe as novidades no Instagram{" "}

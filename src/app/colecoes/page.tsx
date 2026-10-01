@@ -26,8 +26,8 @@ export default async function ColecoesPage() {
   return (
     <>
       {/* Abertura no desenho do site atual: fundo azul-claro, título, apoio e botão */}
-      <section className="bg-sky">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
+      <section className="bg-sky" data-barra-depois>
+        <div className="wrap py-16 md:py-24">
           <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Duas coleções por ano</h1>
           <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
             Produzimos as duas do corte ao produto final, em Muriaé: Delícias de Verão (Primavera/Verão 2027) e
@@ -45,7 +45,7 @@ export default async function ColecoesPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+      <section className="wrap py-14 md:py-20">
         {collections.length === 0 ? (
           <p className="text-base text-body">Nenhuma coleção publicada no momento.</p>
         ) : (

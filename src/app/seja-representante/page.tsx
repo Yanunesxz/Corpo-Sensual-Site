@@ -109,7 +109,7 @@ export default function RepresentantePage() {
     <>
       {/* Abertura: proposta e botão à esquerda, foto de campanha à direita. No celular
           o texto vem antes da foto, para o botão aparecer sem rolar. */}
-      <section className="grid bg-sky lg:grid-cols-2">
+      <section className="grid bg-sky lg:grid-cols-2" data-barra-depois>
         <div className="px-5 py-14 md:px-12 md:py-20 lg:flex lg:flex-col lg:justify-center lg:px-16">
           <p className="label">Seja representante</p>
           <h1 className="h-hero mt-3 max-w-xl text-[2rem] md:text-[2.375rem]">Leve a Corpo Sensual para as lojas da sua região</h1>
@@ -141,7 +141,7 @@ export default function RepresentantePage() {
 
       {/* A estrutura da empresa, em uma faixa */}
       <section className="border-b border-line">
-        <ul className="mx-auto grid max-w-[1600px] grid-cols-2 gap-x-6 gap-y-8 px-5 py-10 md:px-8 md:py-12 lg:grid-cols-4">
+        <ul className="wrap grid grid-cols-2 gap-x-6 gap-y-8 py-10 md:py-12 lg:grid-cols-4">
           {pilares.map((p) => (
             <li key={p.title}>
               <p className="h-display text-lg md:text-xl">{p.title}</p>
@@ -151,7 +151,7 @@ export default function RepresentantePage() {
         </ul>
       </section>
 
-      <section id="motivos" className="mx-auto max-w-[1600px] scroll-mt-20 px-5 py-14 md:px-8 md:py-20">
+      <section id="motivos" className="wrap scroll-mt-20 py-14 md:py-20">
         <div className="max-w-2xl">
           <h2 className="h-display text-3xl md:text-[2.5rem]">Por que representar a Corpo Sensual</h2>
           <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">
@@ -173,7 +173,7 @@ export default function RepresentantePage() {
 
       {/* A marca que ele vai apresentar: campanha profissional a cada coleção */}
       <section className="bg-sky-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+        <div className="wrap py-14 md:py-20">
           <div className="max-w-2xl">
             <p className="label">A marca na sua pasta</p>
             <h2 className="h-display mt-3 text-3xl md:text-[2.5rem]">Uma marca que se apresenta sozinha</h2>
@@ -199,7 +199,7 @@ export default function RepresentantePage() {
       <ProducaoSection fundo="bg-paper" comLink={false} />
 
       <section className="bg-sky-soft">
-        <div className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
+        <div className="wrap grid gap-12 py-14 md:py-20 lg:grid-cols-2 lg:gap-16">
           <div>
             <h2 className="h-display text-3xl md:text-[2.5rem]">Como funciona</h2>
             <ol className="mt-8 flex flex-col gap-6">
@@ -223,7 +223,7 @@ export default function RepresentantePage() {
 
       {/* Cadastro: o mesmo formulário das outras páginas, que cria o lead no CRM */}
       <section id="formulario" className="scroll-mt-16 bg-sky">
-        <div className="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
+        <div className="wrap grid gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-16">
           <div>
             <h2 className="h-display text-3xl md:text-[2.5rem]">Cadastre a sua região</h2>
             <p className="mt-4 max-w-xl text-[1.0625rem] leading-[1.6] text-body">

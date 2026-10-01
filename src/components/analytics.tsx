@@ -60,13 +60,20 @@ function AvisoCookies() {
   useEffect(() => {
     const el = caixa.current;
     if (!el) return;
+    // Também publica a altura e a presença do aviso: o WhatsApp flutuante sobe acima
+    // dele e a barra fixa do celular espera ele sair (uma coisa na base da tela por vez).
+    const html = document.documentElement;
     const observador = new ResizeObserver(() => {
       document.body.style.paddingBottom = `${el.offsetHeight}px`;
+      html.style.setProperty("--aviso-cookies-h", `${el.offsetHeight}px`);
+      html.dataset.avisoCookies = "1";
     });
     observador.observe(el);
     return () => {
       observador.disconnect();
       document.body.style.paddingBottom = "";
+      html.style.removeProperty("--aviso-cookies-h");
+      delete html.dataset.avisoCookies;
     };
   }, []);
 
@@ -93,9 +100,9 @@ function AvisoCookies() {
       ref={caixa}
       role="region"
       aria-label="Aviso de cookies"
-      className={`fixed inset-x-0 bottom-0 z-[45] border-t border-line bg-paper shadow-[0_-6px_20px_rgba(27,25,25,0.08)] ${digitando ? "invisible" : ""}`}
+      className={`fixed inset-x-0 bottom-0 z-[45] border-t border-line bg-paper shadow-[var(--shadow-bar)] ${digitando ? "invisible" : ""}`}
     >
-      <div className="mx-auto flex max-w-[1600px] flex-col gap-3 px-5 py-3 md:flex-row md:items-center md:justify-between md:gap-8 md:px-8 md:py-4">
+      <div className="wrap flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:gap-8 md:py-4">
         <p className="text-sm leading-[1.5] text-body">
           {ADS_CONVERSAO
             ? "Usamos cookies do Google para contar as visitas e medir os nossos anúncios."
@@ -105,10 +112,10 @@ function AvisoCookies() {
           </Link>
         </p>
         <div className="grid shrink-0 grid-cols-2 gap-3">
-          <button type="button" className="btn btn-outline min-h-11 px-6 text-[15px]" onClick={() => salvarEscolha("recusado")}>
+          <button type="button" className="btn btn-outline btn-sm px-6" onClick={() => salvarEscolha("recusado")}>
             Recusar
           </button>
-          <button type="button" className="btn btn-dark min-h-11 px-6 text-[15px]" onClick={() => salvarEscolha("aceito")}>
+          <button type="button" className="btn btn-primary btn-sm px-6" onClick={() => salvarEscolha("aceito")}>
             Aceitar
           </button>
         </div>

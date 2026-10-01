@@ -44,7 +44,7 @@ export default function AjudaPage() {
   return (
     <>
       <section className="bg-sky">
-        <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+        <div className="wrap py-14 md:py-20">
           <p className="label">Atendimento</p>
           <h1 className="h-hero mt-3 text-[2rem] md:text-[2.375rem]">Preciso de ajuda</h1>
           <p className="mt-5 max-w-2xl text-[1.0625rem] leading-[1.6] text-body">
@@ -84,7 +84,7 @@ export default function AjudaPage() {
       </section>
 
       {/* Quem não é cliente ainda passa pelo cadastro, que é o que alimenta o CRM. */}
-      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+      <section className="wrap py-14 md:py-20">
         <h2 className="h-display text-3xl md:text-[2.5rem]">Ainda não é cliente?</h2>
         <ul className="mt-8 grid gap-x-8 gap-y-6 md:grid-cols-2">
           <li className="border-t border-line pt-4">

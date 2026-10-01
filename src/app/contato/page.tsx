@@ -14,7 +14,7 @@ export default function ContatoPage() {
   return (
     <>
       <section className="bg-sky">
-        <div className="mx-auto grid max-w-[1600px] gap-10 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
+        <div className="wrap grid gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-16">
           <div>
             <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Fale com a Corpo Sensual</h1>
             <ul className="mt-6 space-y-3 text-[1.0625rem] leading-[1.6] text-body">
@@ -56,7 +56,7 @@ export default function ContatoPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
+      <section className="wrap py-14 md:py-20">
         <ContactBlock formHref="#formulario" />
       </section>
     </>

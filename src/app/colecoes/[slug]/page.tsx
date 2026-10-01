@@ -110,7 +110,7 @@ export default async function ColecaoPage({ params }: Props) {
           <HeroImage desktop={collection.hero_image_url} mobile={collection.hero_mobile_url} alt={altCapa(collection.slug, collection.name)} priority desktopPosition="center 35%" mobilePosition="center 25%" />
         )}
         {/* .label, .h-hero e .link já trazem cor própria: sobre a foto a cor branca vai em cada elemento. */}
-        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-10 md:px-8 md:pb-16">
+        <div className="wrap absolute inset-x-0 bottom-0 z-10 pb-10 md:pb-16">
           <p className="label text-white/90">{seasonLabel(collection.season, collection.year)}</p>
           <h1 className="h-hero mt-2 text-4xl text-white md:text-5xl">{collectionShortName(collection.name)}</h1>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
@@ -129,7 +129,7 @@ export default async function ColecaoPage({ params }: Props) {
       <div className="relative bg-paper">
         {/* Conceito */}
         {collection.headline && (
-          <section className="bg-sky">
+          <section className="bg-sky" data-barra-depois>
             <div className="mx-auto max-w-3xl px-5 py-16 text-center md:px-8 md:py-24">
               <p className="h-display text-3xl md:text-[2.5rem]">{collection.headline}</p>
             </div>
@@ -138,7 +138,7 @@ export default async function ColecaoPage({ params }: Props) {
 
         {/* Campanha */}
         {gallery.length > 0 && (
-          <section className="mx-auto max-w-[1600px] px-5 pt-14 md:px-8 md:pt-20">
+          <section className="wrap pt-14 md:pt-20">
             <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
               {gallery.map((url, i) => (
                 <li key={url} className="zoom-img relative aspect-[4/5] overflow-hidden rounded-media bg-sky-soft">
@@ -151,7 +151,7 @@ export default async function ColecaoPage({ params }: Props) {
 
         {/* Vídeos da campanha */}
         {videos.length > 0 && (
-          <section className="mx-auto max-w-[1600px] px-5 pt-8 md:px-8 md:pt-10">
+          <section className="wrap pt-8 md:pt-10">
             <ul className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-4">
               {videos.map((v) => (
                 <li key={v.src} className="overflow-hidden rounded-media bg-sky-soft">
@@ -162,18 +162,18 @@ export default async function ColecaoPage({ params }: Props) {
           </section>
         )}
 
-        <section className="mx-auto max-w-[1600px] px-5 pt-14 md:px-8 md:pt-20">
+        <section className="wrap pt-14 md:pt-20">
           <CommercialTerms />
         </section>
 
         {/* Peças */}
-        <section id="pecas" className="mx-auto max-w-[1600px] scroll-mt-20 px-5 py-14 md:px-8 md:py-20">
+        <section id="pecas" className="wrap scroll-mt-20 py-14 md:py-20">
           <ProductGrid products={products} categories={categories} title={showingBestSellers ? "Mais vendidas" : "Peças da coleção"} />
         </section>
 
         {/* Fechamento: como comprar */}
         <section className="bg-sky">
-          <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
+          <div className="wrap py-16 md:py-24">
             <h2 className="h-display text-3xl md:text-[2.5rem]">Quer essas peças na sua loja?</h2>
             <p className="mt-5 max-w-xl text-[1.125rem] leading-[1.6] text-body">
               Cadastre-se e receba o catálogo completo com a tabela de preços.

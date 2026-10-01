@@ -1,22 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
+import { useSyncExternalStore, type ReactNode } from "react";
 import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
+import { COTAS, daCota, intercalar } from "@/lib/vitrine";
 import { ProductCard } from "./product-card";
+import { Trilho } from "./trilho";
+import { ArrowRight } from "./icons";
 
-/**
- * Quantas peças de cada grupo a grade mostra. A linha infantil entra dividida
- * em menino e menina para as duas aparecerem, em vez de uma sumir por ter
- * referência mais bem ranqueada que a outra.
- */
-const COTAS = [
-  { categoria: "masculino", genero: null, quantas: 6 },
-  { categoria: "feminino", genero: null, quantas: 6 },
-  { categoria: "infantil", genero: "menino", quantas: 3 },
-  { categoria: "infantil", genero: "menina", quantas: 3 },
-] as const;
 const EVENT = "cs:categoria";
 
 // A categoria ativa vive na URL (?categoria=...). Ler pela store externa mantém
@@ -36,44 +28,38 @@ type Props = {
   products: Product[];
   categories: Category[];
   title?: string;
+  /**
+   * vitrine: trilho em todas as larguras (home e landing), terminando num cartão
+   * "210" que leva ao catálogo. grade: a página da coleção, em 2, 3 e 6 colunas.
+   */
+  variant?: "grade" | "vitrine";
+  /** Rótulo acima do título, com o fio do fólio. */
+  eyebrow?: string;
+  /** Texto abaixo do título. Na grade, o padrão explica que é uma amostra. */
+  description?: ReactNode;
+  /** Cartão final da vitrine. Padrão: "/catalogo" e "Receber o catálogo". Na landing: "#formulario". */
+  fim?: { href: string; rotulo: string };
 };
 
+const SIZES_VITRINE = "(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw";
+
 /**
- * Grade de peças da coleção, com filtro por categoria no navegador.
+ * Peças mais vendidas, com filtro por linha no navegador.
  *
  * Mostra uma cota fixa de cada grupo, as mais vendidas primeiro: seis masculinas,
- * seis femininas, três infantis de menino e três de menina. Com filtro, mostra as
- * cotas daquela linha. Assim a vitrine tem sempre a mesma cara, e nenhuma linha
- * some só porque outra tem referência melhor ranqueada.
- * O restante do mix fica no catálogo digital, que o lojista recebe após o cadastro.
+ * seis femininas, três infantis de menino e três de menina (lib/vitrine.ts). Com
+ * filtro, só as cotas daquela linha. O restante do mix fica no catálogo digital,
+ * que a lojista recebe depois do cadastro.
  */
-/** As peças de uma cota, as mais vendidas primeiro (a lista já vem por sort_order). */
-function daCota(products: Product[], cota: (typeof COTAS)[number]): Product[] {
-  return products
-    .filter((p) => p.category?.slug === cota.categoria && (!cota.genero || p.genero === cota.genero))
-    .slice(0, cota.quantas);
-}
-
-/** Intercala as filas para a grade não sair em blocos de uma linha só. */
-function intercalar(filas: Product[][]): Product[] {
-  const maior = Math.max(0, ...filas.map((f) => f.length));
-  const saida: Product[] = [];
-  for (let i = 0; i < maior; i++) {
-    for (const fila of filas) if (fila[i]) saida.push(fila[i]);
-  }
-  return saida;
-}
-
-export function ProductGrid({ products, categories, title = "Peças" }: Props) {
+export function ProductGrid({ products, categories, title = "Peças", variant = "grade", eyebrow, description, fim }: Props) {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const activeName = categories.find((c) => c.slug === active)?.name;
-  // Só oferece as categorias que existem nesta coleção.
+  // Só oferece as categorias que existem nesta lista.
   const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
-  // Com filtro, só as cotas daquela linha; sem filtro, todas. Em qualquer caso as
-  // peças vêm das mais vendidas para as menos, que é a ordem em que a lista chega.
   const cotas = COTAS.filter((c) => !active || c.categoria === active);
   const shown = intercalar(cotas.map((c) => daCota(products, c)));
+  const vitrine = variant === "vitrine";
 
   function select(slug: string) {
     const url = new URL(window.location.href);
@@ -84,57 +70,133 @@ export function ProductGrid({ products, categories, title = "Peças" }: Props) {
     window.dispatchEvent(new Event(EVENT));
   }
 
+  const chips =
+    disponiveis.length > 1 ? (
+      <div
+        role="group"
+        aria-label="Filtrar por linha"
+        className={
+          vitrine
+            ? "-mx-5 mt-6 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:mt-8 md:px-0"
+            : "sticky top-16 z-20 -mx-5 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:-mx-8 md:px-8 lg:static lg:mx-0 lg:flex-wrap lg:p-0"
+        }
+      >
+        <button type="button" className={`chip shrink-0 whitespace-nowrap ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
+          Todas
+        </button>
+        {disponiveis.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            className={`chip shrink-0 whitespace-nowrap ${active === c.slug ? "chip-active" : ""}`}
+            aria-pressed={active === c.slug}
+            onClick={() => select(c.slug)}
+          >
+            {c.name}
+          </button>
+        ))}
+      </div>
+    ) : null;
+
+  if (vitrine) {
+    const destino = fim ?? { href: "/catalogo", rotulo: "Receber o catálogo" };
+    const conteudoFim = (
+      <>
+        <span className="eyebrow">Catálogo completo</span>
+        <span>
+          <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
+          <span className="mt-3 block max-w-[16rem] text-[15px] leading-snug text-noite-texto">
+            referências no catálogo, com grade de tamanhos e tabela de preços
+          </span>
+        </span>
+        <span className="inline-flex items-center gap-2 font-[family-name:var(--font-button)] text-[15px] text-white">
+          {destino.rotulo}
+          <ArrowRight width={18} height={18} className="transition-transform duration-300 group-hover:translate-x-[3px]" />
+        </span>
+      </>
+    );
+    const classeFim = "on-dark group flex aspect-[4/5] flex-col justify-between bg-noite p-5 transition-colors hover:bg-noite-hover md:p-6";
+
+    return (
+      <Trilho
+        rotulo={activeName ? `Peças da linha ${activeName}` : "Peças mais pedidas"}
+        reinicio={active}
+        cabecalho={
+          <div className="max-w-2xl" data-reveal>
+            {eyebrow && <p className="eyebrow eyebrow-fio">{eyebrow}</p>}
+            <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{activeName ? `${activeName}: as mais pedidas` : title}</h2>
+            {description && <p className="lead mt-4">{description}</p>}
+          </div>
+        }
+        filtros={chips}
+        className="mt-6 md:mt-8"
+      >
+        {shown.length === 0 ? (
+          <li className="col-span-full flex aspect-[4/5] items-center justify-center bg-paper p-6 text-center text-[15px] text-muted">
+            Nenhuma peça publicada nesta linha ainda.
+          </li>
+        ) : (
+          shown.map((p) => (
+            <li key={p.id}>
+              <ProductCard product={p} sizes={SIZES_VITRINE} />
+            </li>
+          ))
+        )}
+        <li>
+          {destino.href.startsWith("#") ? (
+            <a href={destino.href} data-ga-local="vitrine" className={classeFim}>
+              {conteudoFim}
+            </a>
+          ) : (
+            <Link href={destino.href} data-ga-local="vitrine" className={classeFim}>
+              {conteudoFim}
+            </Link>
+          )}
+        </li>
+      </Trilho>
+    );
+  }
+
   return (
     <div>
-      <h2 className="h-display text-3xl md:text-[2.5rem]">{activeName ?? title}</h2>
-      <p className="mt-4 max-w-xl text-[1.125rem] leading-[1.6] text-body">
-        Uma amostra das coleções. São {TOTAL_REFERENCIAS} referências no ano, e o{" "}
-        <Link href="/catalogo" className="underline">
-          catálogo digital
-        </Link>{" "}
-        traz todas.
-      </p>
+      <div className="max-w-2xl">
+        {eyebrow && <p className="eyebrow eyebrow-fio">{eyebrow}</p>}
+        <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{activeName ?? title}</h2>
+        <p className="lead mt-4">
+          {description ?? (
+            <>
+              Uma amostra das coleções. São {TOTAL_REFERENCIAS} referências no ano, e o{" "}
+              <Link href="/catalogo" className="link">
+                catálogo digital
+              </Link>{" "}
+              traz todas.
+            </>
+          )}
+        </p>
+      </div>
 
-      {disponiveis.length > 1 && (
-        <div
-          className="sticky top-16 z-20 -mx-5 mt-6 flex flex-wrap gap-2 bg-paper px-5 py-3 md:static md:mx-0 md:px-0 md:py-0"
-          role="group"
-          aria-label="Filtrar por categoria"
-        >
-          <button type="button" className={`chip shrink-0 whitespace-nowrap ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
-            Todas
-          </button>
-          {disponiveis.map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              className={`chip shrink-0 whitespace-nowrap ${active === c.slug ? "chip-active" : ""}`}
-              aria-pressed={active === c.slug}
-              onClick={() => select(c.slug)}
-            >
-              {c.name}
-            </button>
-          ))}
-        </div>
-      )}
+      {chips && <div className="mt-6 lg:mt-8">{chips}</div>}
 
       {shown.length === 0 ? (
-        <p className="mt-8 rounded-media border border-line bg-sky-soft py-10 text-center text-base text-body">
-          Nenhuma peça publicada nesta categoria ainda.
-        </p>
+        <p className="mt-8 bg-sky-soft py-10 text-center text-muted">Nenhuma peça publicada nesta linha ainda.</p>
       ) : (
-        <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-5 lg:grid-cols-5">
-          {shown.map((p, i) => (
-            <ProductCard key={p.id} product={p} priority={i < 2} />
+        <ul className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-5 lg:mt-10 lg:grid-cols-6">
+          {shown.map((p) => (
+            <li key={p.id}>
+              <ProductCard product={p} />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {/* Saída depois das peças: o catálogo é o próximo passo, não uma paginação. */}
-      <div className="mt-10 flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-base leading-[1.6] text-body">No catálogo você vê grade de tamanhos e preços antes de montar o pedido.</p>
-        <Link href="/catalogo" className="btn btn-dark w-full shrink-0 whitespace-nowrap sm:w-auto">
+      <div className="mt-12 flex flex-col items-start gap-5 bg-sky p-5 sm:flex-row sm:items-center sm:justify-between md:p-8">
+        <p className="max-w-xl text-[15px] leading-[1.6] text-ink md:text-base">
+          No catálogo você vê as {TOTAL_REFERENCIAS} referências, a grade de tamanhos e os preços de atacado.
+        </p>
+        <Link href="/catalogo" className="btn btn-primary w-full shrink-0 whitespace-nowrap sm:w-auto">
           Quero receber o catálogo
+          <ArrowRight width={18} height={18} className="seta" />
         </Link>
       </div>
     </div>

@@ -1,12 +1,22 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { LeadForm } from "@/components/lead-form";
-import { CommercialTerms } from "@/components/commercial-terms";
 import { Faq } from "@/components/faq";
-import { HeroImage } from "@/components/hero-image";
-import { faqLojista } from "@/lib/content/faq";
-import { site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { Beneficios } from "@/components/beneficios";
+import { NumerosFabrica } from "@/components/numeros-fabrica";
+import { ProductGrid } from "@/components/product-grid";
 import { ProducaoSection } from "@/components/producao-section";
+import { SectionHeading } from "@/components/section-heading";
+import { ArrowRight } from "@/components/icons";
+import { faqLojista } from "@/lib/content/faq";
+import { altFoto } from "@/lib/content/alt-fotos";
+import { getCategories, getProducts } from "@/lib/data";
+import { pecasDaVitrine } from "@/lib/vitrine";
+import { site, TOTAL_REFERENCIAS } from "@/lib/site";
+
+// A vitrine usa as mais vendidas do catálogo: renova a cada hora, como a home.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Fábrica de pijamas no atacado para lojistas",
@@ -15,112 +25,179 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
-/** Como a compra funciona. Fica só aqui: /sobre manda o lojista para esta página. */
-const passos = [
-  { title: "Cadastro", description: "Você informa os dados da sua loja no formulário." },
-  { title: "Representante", description: "Quem atende a sua região apresenta o catálogo, os preços e as condições." },
-  { title: "Primeiro pedido", description: "Você monta a grade e acompanha a produção e o envio." },
+/** As três linhas, em fotos de campanha: o que vai para a arara da loja. */
+const LINHAS = [
+  { src: "/images/categorias/feminino.jpg", nome: "Feminino" },
+  { src: "/images/categorias/masculino.jpg", nome: "Masculino" },
+  { src: "/images/categorias/infantil.jpg", nome: "Infantil" },
 ];
 
-const benefits = [
-  "Sem pedido mínimo: compre o valor que quiser",
-  "5% no Pix e parcelamento sem juros no cartão",
-  "Frete grátis: R$ 1.200 no Sudeste, R$ 2.000 nas demais",
-  "Sai em até 15 dias úteis; há peças a pronta entrega",
-  "Troca em até 15 dias por defeito de fabricação",
-  "Grade completa: feminino, masculino e infantil",
+/** Como a compra funciona. Fica só aqui: /sobre e a home mandam o lojista para esta página. */
+const PASSOS = [
+  { titulo: "Cadastro", texto: "Você informa os dados da sua loja no formulário. Leva um minuto e o CNPJ não é obrigatório." },
+  {
+    titulo: "Catálogo e atendimento",
+    texto: "Nossa equipe comercial envia o catálogo digital com a grade e a tabela de preços e apresenta o representante da sua região.",
+  },
+  {
+    titulo: "Primeiro pedido",
+    texto: "Você monta a grade, sem valor mínimo. O pedido sai da fábrica em até 15 dias úteis, e há referências a pronta entrega.",
+  },
 ];
 
-export default function FabricaPage() {
+const FOTO_PASSOS = "/images/lojista/hero-casal.jpg";
+const ALT_PASSOS = "Casal sorrindo num balanço à beira do lago, ele de pijama azul-marinho com gola V e ela de camisola azul com renda";
+
+export default async function FabricaPage() {
+  const [categories, products] = await Promise.all([getCategories(), getProducts({})]);
+  const { commercial } = site;
+
   return (
     <>
-      <section className="shade shade-hero relative h-[60svh] min-h-[420px] max-h-[720px] bg-sky-soft">
-        <HeroImage
-          desktop="/images/colecoes/fabrica-campanha.jpg"
-          mobile="/images/colecoes/fabrica-campanha-celular.jpg"
-          alt="Modelo de short doll rosa à beira da piscina, foto de campanha da Corpo Sensual"
-          priority
-          desktopPosition="center 35%"
-          mobilePosition="center 30%"
-          switchAt="lg"
-        />
-        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
-          {/* .h-hero e .link definem a cor escura do design system: sobre a foto forçamos o branco */}
-          {/* 28px no celular: o título é longo e o espaçamento entre letras do .h-hero alarga a linha */}
-          <h1 className="h-hero max-w-3xl text-[1.75rem] text-white md:text-[2.375rem]">Pijamas direto da fábrica, sem pedido mínimo</h1>
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
-            <a href="#formulario" className="btn btn-light w-full sm:w-auto">
-              Quero ser lojista
-            </a>
-            <a href="#perguntas" className="link self-start text-sm text-white sm:self-auto">
-              Perguntas frequentes
-            </a>
-          </div>
-          <p className="mt-4 text-sm text-white/85">*{site.commercial.wholesaleNote} {site.commercial.noCnpjNote}</p>
-        </div>
-      </section>
+      {/* 1. Abertura com o formulário à vista. Quem chega do anúncio já veio decidido
+          a ver preço: o cadastro está na primeira tela do desktop e logo abaixo das
+          condições no celular. */}
+      <section className="bg-sky" data-barra-depois>
+        <div className="wrap grid gap-8 pb-12 pt-0 md:pt-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,32rem)] lg:gap-14 lg:pb-20 lg:pt-14">
+          <div className="flex flex-col">
+            {/* As três linhas. No celular viram a faixa de fotos do topo. */}
+            <ul className="order-first -mx-5 grid grid-cols-3 gap-0.5 md:mx-0 md:gap-3 lg:order-none lg:mt-10">
+              {LINHAS.map((l, i) => (
+                <li key={l.nome} className="relative aspect-[4/5] overflow-hidden bg-sky-deep md:rounded-media">
+                  <Image
+                    src={l.src}
+                    alt={altFoto(l.src, l.nome)}
+                    fill
+                    priority={i === 0}
+                    sizes="(min-width: 1024px) 240px, 34vw"
+                    className="object-cover object-[center_30%]"
+                  />
+                  <span className="tag absolute bottom-2 left-2 md:bottom-3 md:left-3">{l.nome}</span>
+                </li>
+              ))}
+            </ul>
 
-      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
-            Fábrica própria em Muriaé, MG, há mais de 25 anos. Corte, costura e embalagem
-            aqui dentro. São {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site
-            publica só uma parte:{" "}
-            <Link href="/colecoes" className="underline">
-              veja as coleções
-            </Link>
-            .
-          </p>
-          <ul className="mt-8 divide-y divide-line border-y border-line">
-            {benefits.map((b) => (
-              <li key={b} className="py-3.5 text-[15px]">
-                {b}
-              </li>
-            ))}
-          </ul>
-
-          {/* Único lugar do site que explica o processo de compra. /sobre aponta para cá. */}
-          <h2 className="h-display mt-10 text-2xl">Como funciona</h2>
-          <ol className="mt-4 space-y-3">
-            {passos.map((p, i) => (
-              <li key={p.title} className="flex gap-3 text-[15px] leading-[1.6]">
-                <span className="label shrink-0 tabular-nums opacity-85">{String(i + 1).padStart(2, "0")}</span>
-                <span>
-                  <strong className="font-medium text-ink">{p.title}.</strong> {p.description}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        {/* Formulário dentro do bloco azul-claro: título, condições em linha e botão escuro no fim */}
-        <div id="formulario" className="scroll-mt-20 rounded-media bg-sky p-6 md:p-8">
-          <h2 className="h-display text-3xl md:text-[2.5rem]">Quero as peças que mais vendem</h2>
-          <p className="mt-3 text-[1.0625rem] leading-[1.6] text-body">Cadastre a sua loja. O representante da sua região manda a tabela de preços e a grade para você montar o primeiro pedido.</p>
-          <CommercialTerms className="mt-6" />
-          <div className="mt-7">
-            <LeadForm source="fabrica-de-pijamas" submitLabel="Quero ser lojista" withMessage />
-          </div>
-        </div>
-      </section>
-
-      {/* Vídeo real da produção, logo depois do formulário */}
-      <ProducaoSection fundo="bg-sky" comLink={false} />
-
-      <section id="perguntas" className="scroll-mt-20 bg-sky-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
-          <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
-            <div>
-              <h2 className="h-display text-3xl md:text-[2.5rem]">Perguntas frequentes</h2>
-              <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">
-                O que os lojistas mais perguntam antes do primeiro pedido. Não achou a sua dúvida?{" "}
-                <Link href="/contato" className="underline">
-                  Fale com a gente
-                </Link>
-                .
+            <div className="mt-7 md:mt-0 lg:order-first">
+              <h1>
+                <span className="eyebrow">Atacado para lojistas</span>
+                <span className="t-hero mt-3 block lg:mt-5">Pijamas direto da fábrica, sem pedido mínimo</span>
+              </h1>
+              <p className="lead mt-4 max-w-xl lg:mt-6">
+                Cadastre a sua loja e receba o catálogo digital com grade e tabela de preços. Fábrica própria em Muriaé, MG,
+                há mais de 25 anos.
               </p>
+              <Beneficios variante="lista" className="mt-6 lg:mt-8" />
+              <a href="#formulario" className="btn btn-primary btn-lg mt-7 w-full lg:hidden" data-ga-local="hero">
+                Quero a tabela de preços
+                <ArrowRight width={18} height={18} className="seta" />
+              </a>
+              <p className="mt-3 text-[13px] text-muted lg:mt-5">*{commercial.freeShippingNote}</p>
             </div>
-            <Faq items={faqLojista} />
           </div>
+
+          <div id="formulario" className="scroll-mt-20 lg:self-start">
+            <div className="rounded-card bg-paper p-5 shadow-[var(--shadow-card)] md:p-8">
+              <p className="eyebrow">Cadastro de lojista</p>
+              <h2 className="t-sub mt-2 text-[1.5rem] md:text-[1.75rem]">Receba a tabela de preços</h2>
+              <p className="mt-2 text-[15px] text-body">
+                Preencha os dados da sua loja. Em seguida você escolhe com quem falar no WhatsApp.
+              </p>
+              <div className="mt-6">
+                <LeadForm source="fabrica-de-pijamas" submitLabel="Quero receber a tabela" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Prova de tamanho, em números permitidos (nada de valores). */}
+      <section className="border-b border-line bg-paper" aria-label="A fábrica em números">
+        <div className="wrap py-10 lg:py-14">
+          <NumerosFabrica />
+        </div>
+      </section>
+
+      {/* 3. O que vai para a arara: as mais vendidas, 6/6/3/3, com filtro. */}
+      <section id="pecas" className="sec scroll-mt-20">
+        <div className="wrap">
+          <ProductGrid
+            variant="vitrine"
+            products={pecasDaVitrine(products)}
+            categories={categories}
+            eyebrow="O que você encontra no catálogo"
+            title="As mais pedidas pelos lojistas"
+            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo completo chega depois do cadastro, com grade e preços.`}
+          />
+        </div>
+      </section>
+
+      {/* 4. Como funciona: três passos, do cadastro ao primeiro pedido. */}
+      <section className="bg-sky-soft">
+        <div className="wrap sec grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-20">
+          <div>
+            <SectionHeading eyebrow="Como funciona" title="Do cadastro ao primeiro pedido" />
+            <ol className="mt-8 space-y-6">
+              {PASSOS.map((p, i) => (
+                <li key={p.titulo} className="flex gap-4" data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
+                  <span className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-noite font-[family-name:var(--font-button)] text-[15px] text-white">
+                    {i + 1}
+                  </span>
+                  <span className="pt-1">
+                    <span className="t-sub block">{p.titulo}</span>
+                    <span className="mt-1 block text-[15px] leading-[1.6] text-body md:text-base">{p.texto}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <a href="#formulario" className="btn btn-primary btn-lg mt-9 w-full sm:w-auto">
+              Quero receber a tabela
+              <ArrowRight width={18} height={18} className="seta" />
+            </a>
+          </div>
+          <div className="relative hidden aspect-[4/3] overflow-hidden rounded-card bg-sky lg:block" data-reveal>
+            <Image src={FOTO_PASSOS} alt={ALT_PASSOS} fill sizes="(min-width: 1360px) 600px, 45vw" className="object-cover object-[center_30%]" />
+            <span className="tag absolute bottom-4 left-4">Linhas que combinam: masculino e feminino</span>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Dentro da fábrica: o vídeo real da produção. */}
+      <ProducaoSection escuro comLink={false} cta={{ href: "#formulario", label: "Quero receber a tabela" }} />
+
+      {/* 6. Objeções, com a lista inteira (o rodapé aponta para cá). */}
+      <section id="perguntas" className="scroll-mt-20 bg-areia">
+        <div className="wrap sec grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <SectionHeading
+              eyebrow="Perguntas frequentes"
+              title="Tudo o que você precisa saber antes de comprar"
+              description={
+                <>
+                  Não achou a sua dúvida?{" "}
+                  <Link href="/contato" className="link">
+                    Fale com a gente
+                  </Link>
+                  .
+                </>
+              }
+            />
+          </div>
+          <Faq items={faqLojista} abrirPrimeira />
+        </div>
+      </section>
+
+      {/* 7. Fecho: a última chamada leva de volta ao formulário do topo. */}
+      <section className="bg-sky" data-sem-barra>
+        <div className="wrap sec text-center">
+          <p className="eyebrow">Catálogo com tabela de preços</p>
+          <h2 className="t-titulo mx-auto mt-3 max-w-3xl">Compre direto de quem fabrica, no valor que a sua loja precisa</h2>
+          <p className="lead mx-auto mt-4 max-w-xl">
+            {commercial.noMinOrder}, 5% de desconto no Pix e frete grátis a partir de R$ 1.200 no Sudeste. {commercial.noCnpjNote}
+          </p>
+          <a href="#formulario" className="btn btn-primary btn-lg mt-8 w-full sm:w-auto">
+            Quero receber a tabela
+            <ArrowRight width={18} height={18} className="seta" />
+          </a>
         </div>
       </section>
     </>

@@ -166,3 +166,106 @@ export function WhatsApp(props: IconProps) {
     </svg>
   );
 }
+
+/* Ícones das condições comerciais (barra de benefícios) e do formulário. */
+
+export function Truck(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M2.5 6.5h11v9h-11z" />
+      <path d="M13.5 9.5h4l3 3v3h-7" />
+      <circle cx="6.5" cy="17.5" r="1.8" />
+      <circle cx="16.5" cy="17.5" r="1.8" />
+    </svg>
+  );
+}
+
+export function Tag(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3 12.2V4h8.2l9.3 9.3-8.2 8.2z" />
+      <circle cx="7.5" cy="8.5" r="1.3" />
+    </svg>
+  );
+}
+
+export function Percent(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="m19 5-14 14" />
+      <circle cx="7" cy="7" r="2.3" />
+      <circle cx="17" cy="17" r="2.3" />
+    </svg>
+  );
+}
+
+export function Clock(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 7.5V12l3 2" />
+    </svg>
+  );
+}
+
+export function Lock(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <rect x="5" y="10.5" width="14" height="10" rx="2" />
+      <path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" />
+    </svg>
+  );
+}
+
+export function Box(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z" />
+      <path d="M3.5 7.5 12 12l8.5-4.5" />
+      <path d="M12 12v9" />
+    </svg>
+  );
+}
+
+export function Refresh(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M20 11a8 8 0 0 0-14.5-4.5L4 8" />
+      <path d="M4 4v4h4" />
+      <path d="M4 13a8 8 0 0 0 14.5 4.5L20 16" />
+      <path d="M20 20v-4h-4" />
+    </svg>
+  );
+}
+
+export function Play(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M8 5.5v13l10-6.5z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function Pause(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M7.5 5.5h3v13h-3zM13.5 5.5h3v13h-3z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function ChevronRight(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="m9 6 6 6-6 6" />
+    </svg>
+  );
+}
+
+export function ChevronLeft(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="m15 6-6 6 6 6" />
+    </svg>
+  );
+}

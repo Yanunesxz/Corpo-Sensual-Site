@@ -4,36 +4,53 @@ import { site } from "@/lib/site";
 import { politicas } from "@/lib/content/politicas";
 import { GA_ID } from "@/lib/analytics";
 import { PreferenciasCookies } from "./preferencias-cookies";
+import { CtaRodape } from "./cta-rodape";
 
 const lojistas = [
   { href: "/catalogo", label: "Receber catálogo" },
   { href: "/fabrica-de-pijamas", label: "Como comprar da fábrica" },
   { href: "/fabrica-de-pijamas#perguntas", label: "Perguntas frequentes" },
+  { href: "/colecoes", label: "Coleções" },
 ];
 
-/** Fica no rodapé, fora da coluna de lojistas: é outro público. */
-const representante = { href: "/seja-representante", label: "Quero ser representante" };
+/** Cobre todos os itens de site.nav (Início, Sobre, Coleções, Lojistas, Ajuda, Contato) e o representante. */
+const empresa = [
+  { href: "/", label: "Início" },
+  { href: "/sobre", label: "Sobre a fábrica" },
+  { href: "/contato", label: "Contato" },
+  { href: "/ajuda", label: "Já sou cliente" },
+  { href: "/seja-representante", label: "Seja representante" },
+];
 
-const linkClass = "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[6px] transition-opacity hover:opacity-55";
+const linkClass =
+  "inline-flex min-h-11 items-center self-start text-white/90 underline-offset-[6px] transition-colors hover:text-white hover:underline";
 
+/**
+ * Rodapé em azul-noite, como o colofão de uma revista: a marca e a chamada da página
+ * à esquerda, três colunas de links e o nome da marca em letra grande no fim.
+ * data-sem-barra: a barra fixa do celular some quando o rodapé aparece.
+ */
 export function SiteFooter() {
+  // Componente de servidor: o ano sai no build, sem diferença de hidratação.
   const year = new Date().getFullYear();
   const c = site.contact;
 
   return (
-    <footer className="border-t border-line bg-paper">
-      <div className="mx-auto grid max-w-[1600px] grid-cols-2 gap-x-6 gap-y-10 px-5 py-14 md:gap-x-8 md:px-8 md:py-20 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
-        <div className="col-span-2 lg:col-span-1">
-          {/* Mesma assinatura do cabeçalho: monograma + nome */}
-          <div className="flex items-center gap-2.5 text-ink">
-            <Image src="/images/logo-cs.png" alt="" width={160} height={160} className="h-7 w-7" />
-            <span className="whitespace-nowrap text-[1.25rem] font-light leading-none">{site.name}</span>
+    <footer className="on-dark overflow-hidden bg-noite text-white" data-sem-barra>
+      <div className="wrap grid grid-cols-2 gap-x-6 gap-y-12 pb-12 pt-16 md:gap-x-10 lg:grid-cols-12 lg:pb-16 lg:pt-24">
+        <div className="col-span-2 lg:col-span-5">
+          <div className="flex items-center gap-3">
+            <Image src="/images/logo-cs-claro.png" alt="" width={64} height={64} className="h-8 w-8" />
+            <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[15px] uppercase leading-none tracking-[0.2em]">
+              {site.name}
+            </span>
           </div>
-          <p className="mt-4 max-w-xs text-[15px] leading-[1.6] text-body">{site.tagline}</p>
+          <p className="mt-5 max-w-sm text-[15px] leading-[1.6] text-noite-texto">{site.tagline}</p>
+          <CtaRodape />
 
-          <address className="mt-6 text-[15px] not-italic leading-[1.6]">
-            <p className="label text-ink">Fábrica e atendimento</p>
-            <p className="mt-2">
+          <address className="mt-10 text-[15px] not-italic leading-[1.6]">
+            <p className="eyebrow">Fábrica e atendimento</p>
+            <p className="mt-3 text-white">
               {site.legal.endereco}
               <br />
               {site.legal.cidade}, {site.legal.uf}, CEP <span className="whitespace-nowrap">{site.legal.cep}</span>
@@ -49,7 +66,7 @@ export function SiteFooter() {
               )}
               {c.phoneUrl && (
                 <a href={c.phoneUrl} className={linkClass}>
-                  {c.phoneLabel}
+                  Telefone {c.phoneLabel}
                 </a>
               )}
               {c.email && (
@@ -66,37 +83,61 @@ export function SiteFooter() {
                 Fale conosco
               </Link>
             </div>
-            {c.hours && <p className="mt-2 text-body">{c.hours}</p>}
+            {c.hours && <p className="mt-2 text-noite-texto">{c.hours}</p>}
           </address>
         </div>
 
-        <Column title="Navegação" links={[...site.nav, representante]} />
-        <Column title="Lojistas" links={lojistas} />
-        <Column title="Institucional" links={politicas.map((p) => ({ href: `/politicas/${p.slug}`, label: p.shortTitle }))} />
+        <Column title="Lojistas" links={lojistas} className="lg:col-span-2 lg:col-start-7" />
+        <Column title="A empresa" links={empresa} className="lg:col-span-2" />
+        <Column
+          title="Políticas"
+          links={politicas.map((p) => ({ href: `/politicas/${p.slug}`, label: p.shortTitle }))}
+          className="col-span-2 sm:col-span-1 lg:col-span-2"
+          listaClassName="grid grid-cols-2 gap-x-6 sm:flex"
+        />
       </div>
 
-      <div className="border-t border-line">
-        <div className="mx-auto flex max-w-[1600px] flex-col gap-1.5 px-5 py-6 text-sm leading-[1.6] text-body md:flex-row md:items-start md:justify-between md:gap-8 md:px-8">
+      {/* Assinatura em letra grande: só desenho. */}
+      <div className="wrap pb-4" aria-hidden>
+        <p className="select-none whitespace-nowrap text-center font-[family-name:var(--font-display)] text-[8.6vw] uppercase leading-[0.85] tracking-[0.06em] text-sky/90 lg:text-[min(7.4vw,8.5rem)]">
+          {site.name}
+        </p>
+      </div>
+
+      <div className="border-t border-white/15">
+        <div className="wrap flex flex-col gap-1 py-6 text-[13px] leading-[1.6] text-noite-texto md:flex-row md:items-center md:justify-between md:gap-8">
           <p>
             {site.legal.razaoSocial} · <span className="whitespace-nowrap">CNPJ {site.legal.cnpj}</span>
           </p>
           {/* Sem GA não há aviso de cookies, então não há o que mudar. */}
           {GA_ID ? <PreferenciasCookies /> : null}
-          <p className="whitespace-nowrap">© {year} {site.name}</p>
+          <p className="whitespace-nowrap">
+            © {year} {site.name}
+          </p>
         </div>
       </div>
     </footer>
   );
 }
 
-function Column({ title, links }: { title: string; links: { href: string; label: string }[] }) {
+function Column({
+  title,
+  links,
+  className = "",
+  listaClassName = "flex",
+}: {
+  title: string;
+  links: { href: string; label: string }[];
+  className?: string;
+  listaClassName?: string;
+}) {
   return (
-    <div>
-      <p className="label text-ink">{title}</p>
-      <ul className="mt-3 flex flex-col">
+    <div className={className}>
+      <p className="eyebrow">{title}</p>
+      <ul className={`mt-3 flex-col ${listaClassName}`}>
         {links.map((l) => (
-          <li key={l.href}>
-            <Link href={l.href} className="inline-flex min-h-11 items-center text-[15px] transition-opacity hover:opacity-60">
+          <li key={l.href} className="flex">
+            <Link href={l.href} className={`${linkClass} text-[15px]`}>
               {l.label}
             </Link>
           </li>

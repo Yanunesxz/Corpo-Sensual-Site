@@ -1,47 +1,55 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { site, whatsappLink } from "@/lib/site";
 import { WhatsApp } from "./icons";
 
 /**
- * Botão flutuante. Só aparece se NEXT_PUBLIC_WHATSAPP estiver configurado.
+ * Botão flutuante do WhatsApp. Só existe com NEXT_PUBLIC_WHATSAPP configurado.
  *
- * No celular ele some enquanto a pessoa digita num campo, para não cobrir o
- * formulário quando o teclado abre. Antes isso era feito em CSS com
- * `body:has(.field:focus)`, que obriga o navegador a reavaliar a página inteira a
- * cada mudança de foco. Aqui é um ouvinte só, e só existe quando o botão existe.
+ * Verde acessível (#0E7A3C, ícone branco a 5,43:1). Sobe acima do aviso de cookies
+ * (--aviso-cookies-h, publicado pelo aviso). Abaixo de 1024 px some quando a barra
+ * fixa está à vista, porque ela já traz o WhatsApp (html[data-cta-fixo], ver
+ * globals.css), e some no celular enquanto a pessoa digita, para não cobrir o campo.
+ * Tudo por atributo do DOM: nenhum estado do React.
  */
 export function WhatsAppButton() {
-  const [digitando, setDigitando] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
+  const ativo = Boolean(site.contact.whatsappUrl);
 
   useEffect(() => {
+    const botao = ref.current;
+    if (!botao) return;
     const celular = window.matchMedia("(max-width: 767px)");
-    const ehCampo = (t: EventTarget | null) => t instanceof HTMLElement && t.classList.contains("field");
-    const entrou = (e: FocusEvent) => ehCampo(e.target) && celular.matches && setDigitando(true);
-    const saiu = (e: FocusEvent) => ehCampo(e.target) && setDigitando(false);
+    const ehCampo = (t: EventTarget | null) => t instanceof HTMLElement && t.matches(".field, .seg input");
+    const entrou = (e: FocusEvent) => {
+      if (!ehCampo(e.target) || !celular.matches) return;
+      botao.dataset.digitando = "";
+      botao.tabIndex = -1;
+    };
+    const saiu = (e: FocusEvent) => {
+      if (!ehCampo(e.target)) return;
+      delete botao.dataset.digitando;
+      botao.removeAttribute("tabindex");
+    };
     document.addEventListener("focusin", entrou);
     document.addEventListener("focusout", saiu);
     return () => {
       document.removeEventListener("focusin", entrou);
       document.removeEventListener("focusout", saiu);
     };
-  }, []);
+  }, [ativo]);
 
-  if (!site.contact.whatsappUrl) return null;
-  const href = whatsappLink("Olá! Vim pelo site da Corpo Sensual e quero saber mais sobre o catálogo.");
+  if (!ativo) return null;
   return (
     <a
-      href={href}
+      ref={ref}
+      href={whatsappLink("Olá! Vim pelo site da Corpo Sensual e quero saber mais sobre o catálogo.")}
       target="_blank"
       rel="noreferrer"
       aria-label="Falar no WhatsApp"
       data-ga-local="flutuante"
-      aria-hidden={digitando || undefined}
-      tabIndex={digitando ? -1 : undefined}
-      className={`fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105 md:bottom-5 md:right-5 md:h-14 md:w-14 ${
-        digitando ? "pointer-events-none opacity-0" : ""
-      }`}
+      className="wa-flutuante"
     >
       <WhatsApp width={26} height={26} />
     </a>
