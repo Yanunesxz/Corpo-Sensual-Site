@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { ArrowRight } from "./icons";
 
 type Props = {
   /** Uma coluna só (usado em blocos de fechamento). */
@@ -10,59 +11,63 @@ type Props = {
   formHref?: string;
 };
 
-/* Mesmo desenho do .link do design system, com 44px de altura de toque. */
-const linkClass =
-  "inline-flex min-h-11 items-center self-start underline decoration-1 underline-offset-[5px] transition-opacity hover:opacity-60";
+/*
+ * .link do design system (fio que encolhe no hover) numa caixa de 44 px de altura:
+ * os utilitários zeram o padding/margem negativos do .link e a altura vem do min-h-11.
+ */
+const linkClass = "link my-0 inline-flex min-h-11 items-center py-0 [background-position:0_calc(100%-0.4rem)]";
 
 /**
- * Endereço, canais e horário. Usado na página de contato, no Sobre e no fim das coleções.
+ * Endereço, canais e horário. Usado na página de contato.
  * Só mostra os canais configurados nas variáveis de ambiente; sempre mostra endereço e mapa.
  */
 export function ContactBlock({ compact = false, hideAddress = false, formHref = "/contato#formulario" }: Props) {
   const c = site.contact;
   const onContactPage = formHref.startsWith("#");
   const channels = [
-    c.whatsappUrl && { href: c.whatsappUrl, label: `WhatsApp ${c.whatsappLabel}`, external: true },
-    c.phoneUrl && { href: c.phoneUrl, label: `Telefone ${c.phoneLabel}`, external: false },
-    c.email && { href: `mailto:${c.email}`, label: c.email, external: false },
-    c.instagram && { href: `https://www.instagram.com/${c.instagram}/`, label: `Instagram @${c.instagram}`, external: true },
-  ].filter(Boolean) as { href: string; label: string; external: boolean }[];
+    c.whatsappUrl && { href: c.whatsappUrl, rotulo: "WhatsApp", label: c.whatsappLabel, external: true },
+    c.phoneUrl && { href: c.phoneUrl, rotulo: "Telefone", label: c.phoneLabel, external: false },
+    c.email && { href: `mailto:${c.email}`, rotulo: "E-mail", label: c.email, external: false },
+    c.instagram && { href: `https://www.instagram.com/${c.instagram}/`, rotulo: "Instagram", label: `@${c.instagram}`, external: true },
+  ].filter(Boolean) as { href: string; rotulo: string; label: string; external: boolean }[];
 
   return (
     <div className={`grid gap-10 ${compact || hideAddress ? "" : "md:grid-cols-2 md:gap-12"}`}>
       {!hideAddress && (
-        <address className="text-[1.0625rem] not-italic leading-[1.6]">
-          <p className="label">Fábrica e atendimento</p>
-          <p className="mt-2 text-ink">
+        <address className="not-italic">
+          <p className="eyebrow">Fábrica e atendimento</p>
+          <p className="mt-4 text-[1.0625rem] leading-[1.65] text-ink">
             {site.legal.razaoSocial}
             <br />
             {site.legal.endereco}
             <br />
             {site.legal.cidade}, {site.legal.uf}, CEP <span className="whitespace-nowrap">{site.legal.cep}</span>
           </p>
-          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className={`${linkClass} text-[15px]`}>
+          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className="link-seta mt-3">
             Abrir no Google Maps
+            <span className="sr-only"> (abre em outra aba)</span>
+            <ArrowRight width={18} height={18} />
           </a>
           {c.hours && (
-            <p className="mt-3">
-              <span className="label">Horário</span>
-              <br />
-              <span className="text-ink">{c.hours}</span>
-            </p>
+            <div className="mt-8">
+              <p className="eyebrow">Horário</p>
+              <p className="mt-3 text-[1.0625rem] leading-[1.6] text-ink">{c.hours}</p>
+            </div>
           )}
         </address>
       )}
 
-      <div className="text-[1.0625rem] leading-[1.6]">
+      <div>
         {/* Na própria página de contato, sem canais configurados, o formulário já é o canal. */}
-        {(channels.length > 0 || !onContactPage) && <p className="label">Canais</p>}
+        {(channels.length > 0 || !onContactPage) && <p className="eyebrow">Canais</p>}
         {channels.length > 0 ? (
-          <ul className="mt-1 flex flex-col">
+          <ul className="mt-3 border-t border-line">
             {channels.map((ch) => (
-              <li key={ch.href} className="flex">
+              <li key={ch.href} className="flex flex-wrap items-center justify-between gap-x-4 border-b border-line py-1.5">
+                <span className="text-[13px] text-muted">{ch.rotulo}</span>
                 <a
                   href={ch.href}
-                  className={`${linkClass} text-ink`}
+                  className={`${linkClass} text-[1.0625rem]`}
                   {...(ch.external ? { target: "_blank", rel: "noreferrer" } : {})}
                 >
                   {ch.label}
@@ -72,9 +77,9 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
           </ul>
         ) : (
           !onContactPage && (
-            <p className="mt-2 text-body">
+            <p className="mt-3 text-[1.0625rem] leading-[1.6] text-body">
               Use o{" "}
-              <a href={formHref} className="underline underline-offset-[5px]">
+              <a href={formHref} className="link">
                 formulário da página de contato
               </a>{" "}
               e retornamos em horário comercial.
@@ -82,11 +87,12 @@ export function ContactBlock({ compact = false, hideAddress = false, formHref = 
           )
         )}
         {hideAddress ? (
-          <Link href="/contato" className={`${linkClass} mt-2 text-[15px]`}>
+          <Link href="/contato" className="link-seta mt-4">
             Endereço, mapa e CNPJ
+            <ArrowRight width={18} height={18} />
           </Link>
         ) : (
-          <p className="mt-5 text-sm text-body">
+          <p className="legenda mt-6">
             CNPJ <span className="whitespace-nowrap">{site.legal.cnpj}</span>
           </p>
         )}
