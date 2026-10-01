@@ -98,7 +98,9 @@ export function ProducaoSection({ escuro = false, fundo = "bg-sky-soft", numeros
         {numeros && (
           <NumerosFabrica
             escuro={escuro}
-            className={`border-t pt-8 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:border-t-0 lg:pt-0 ${escuro ? "border-white/15" : "border-line"}`}
+            // Entre 1024 e 1279 px as 6 colunas têm uns 440 px: em 4 colunas os numerais
+            // encostam ("25+2102"). Ali ficam 2x2; em 4 colunas só a partir de 1280.
+            className={`border-t pt-8 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:grid-cols-2 lg:border-t-0 lg:pt-0 xl:grid-cols-4 ${escuro ? "border-white/15" : "border-line"}`}
           />
         )}
 

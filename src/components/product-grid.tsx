@@ -78,7 +78,9 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         className={
           vitrine
             ? "-mx-5 mt-6 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:mt-8 md:px-0"
-            : "sticky top-16 z-20 -mx-5 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:-mx-8 md:px-8 lg:static lg:mx-0 lg:flex-wrap lg:p-0"
+            : // Presos no topo (abaixo da barra do cabeçalho) enquanto a grade passa: ficam
+              // direto no contêiner da grade, sem invólucro, senão o sticky não tem onde andar.
+              "sticky top-16 z-20 -mx-5 mt-3 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:-mx-8 md:px-8 lg:static lg:mx-0 lg:mt-8 lg:flex-wrap lg:p-0"
         }
       >
         <button type="button" className={`chip shrink-0 whitespace-nowrap ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
@@ -175,7 +177,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         </p>
       </div>
 
-      {chips && <div className="mt-6 lg:mt-8">{chips}</div>}
+      {chips}
 
       {shown.length === 0 ? (
         <p className="mt-8 bg-sky-soft py-10 text-center text-muted">Nenhuma peça publicada nesta linha ainda.</p>

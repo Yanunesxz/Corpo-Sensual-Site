@@ -37,8 +37,8 @@ export function SiteFooter() {
 
   return (
     <footer className="on-dark overflow-hidden bg-noite text-white" data-sem-barra>
-      <div className="wrap grid grid-cols-2 gap-x-6 gap-y-12 pb-12 pt-16 md:gap-x-10 lg:grid-cols-12 lg:pb-16 lg:pt-24">
-        <div className="col-span-2 lg:col-span-5">
+      <div className="wrap grid grid-cols-2 gap-x-6 gap-y-10 pb-10 pt-12 md:gap-x-10 md:gap-y-12 md:pb-12 md:pt-16 lg:grid-cols-12 lg:pb-16 lg:pt-24">
+        <div className="col-span-2 lg:col-span-4 xl:col-span-5">
           <div className="flex items-center gap-3">
             <Image src="/images/logo-cs-claro.png" alt="" width={64} height={64} className="h-8 w-8" />
             <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[15px] uppercase leading-none tracking-[0.2em]">
@@ -48,14 +48,15 @@ export function SiteFooter() {
           <p className="mt-5 max-w-sm text-[15px] leading-[1.6] text-noite-texto">{site.tagline}</p>
           <CtaRodape />
 
-          <address className="mt-10 text-[15px] not-italic leading-[1.6]">
+          <address className="mt-8 text-[15px] not-italic leading-[1.6] lg:mt-10">
             <p className="eyebrow">Fábrica e atendimento</p>
             <p className="mt-3 text-white">
               {site.legal.endereco}
               <br />
               {site.legal.cidade}, {site.legal.uf}, CEP <span className="whitespace-nowrap">{site.legal.cep}</span>
             </p>
-            <div className="mt-1 flex flex-col">
+            {/* Canais lado a lado, quebrando linha: em coluna eram 44 px por canal. */}
+            <div className="mt-1 flex flex-wrap gap-x-6">
               <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className={linkClass}>
                 Ver no mapa
               </a>
@@ -87,14 +88,19 @@ export function SiteFooter() {
           </address>
         </div>
 
-        <Column title="Lojistas" links={lojistas} className="lg:col-span-2 lg:col-start-7" />
-        <Column title="A empresa" links={empresa} className="lg:col-span-2" />
-        <Column
-          title="Políticas"
-          links={politicas.map((p) => ({ href: `/politicas/${p.slug}`, label: p.shortTitle }))}
-          className="col-span-2 sm:col-span-1 lg:col-span-2"
-          listaClassName="grid grid-cols-2 gap-x-6 sm:flex"
-        />
+        {/* As três colunas de links numa grade própria: entre 1024 e 1279 px, duas colunas
+            das 12 (121 px) quebravam "Receber catálogo" e "Como comprar da fábrica". */}
+        <div className="col-span-2 grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 md:gap-x-10 lg:col-span-8 lg:col-start-5 lg:gap-x-8 xl:col-span-6 xl:col-start-7 xl:gap-x-10">
+          <Column title="Lojistas" links={lojistas} />
+          <Column title="A empresa" links={empresa} />
+          <Column
+            title="Políticas"
+            links={politicas.map((p) => ({ href: `/politicas/${p.slug}`, label: p.shortTitle }))}
+            className="col-span-2 md:col-span-1"
+            // Lado a lado no celular (cabem em duas linhas); em coluna a partir de 768 px.
+            listaClassName="flex flex-wrap gap-x-6 md:flex-col md:gap-x-0"
+          />
+        </div>
       </div>
 
       {/* Assinatura em letra grande: só desenho. */}
@@ -124,7 +130,7 @@ function Column({
   title,
   links,
   className = "",
-  listaClassName = "flex",
+  listaClassName = "flex flex-col",
 }: {
   title: string;
   links: { href: string; label: string }[];
@@ -134,10 +140,11 @@ function Column({
   return (
     <div className={className}>
       <p className="eyebrow">{title}</p>
-      <ul className={`mt-3 flex-col ${listaClassName}`}>
+      <ul className={`mt-3 ${listaClassName}`}>
         {links.map((l) => (
           <li key={l.href} className="flex">
-            <Link href={l.href} className={`${linkClass} text-[15px]`}>
+            {/* "Início" sem prefetch: o da home traria a foto da capa dela (ver site-header). */}
+            <Link href={l.href} prefetch={l.href === "/" ? false : undefined} className={`${linkClass} text-[15px]`}>
               {l.label}
             </Link>
           </li>

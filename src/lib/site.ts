@@ -117,9 +117,11 @@ export const site = {
     leadTime: "O pedido sai da fábrica em até 15 dias úteis. Temos referências a pronta entrega e, conforme o pedido, o envio pode sair no mesmo dia.",
     /** Prazo para pedir troca de peça com defeito, em dias corridos após o recebimento. */
     exchangeDays: 15,
-    /* Frases curtas do redesenho (out/2026). Condições, FAQ e faixa do topo leem daqui. */
-    freeShippingSudeste: "Frete grátis a partir de R$ 1.200 no Sudeste",
-    freeShippingOutras: "Nas demais regiões, a partir de R$ 2.000",
+    /* Frases curtas do redesenho (out/2026). Condições, FAQ e faixa do topo leem daqui.
+       Depois do "R$" vai um espaço que não quebra (U+00A0): o valor nunca fica sozinho
+       na linha de baixo. Ao reescrever, mantenha (no VS Code ele aparece realçado). */
+    freeShippingSudeste: "Frete grátis a partir de R$ 1.200 no Sudeste",
+    freeShippingOutras: "Nas demais regiões, a partir de R$ 2.000",
     prazo: "O pedido sai da fábrica em até 15 dias úteis.",
     /** Pronta entrega sempre com "conforme o pedido, podem": não é promessa. */
     prontaEntrega: "Há referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",

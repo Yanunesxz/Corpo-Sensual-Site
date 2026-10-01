@@ -23,7 +23,7 @@ export const faqLojista: FaqItem[] = [
   },
   {
     q: "Como funciona o frete?",
-    a: `O frete é grátis a partir de R$ 1.200 no Sudeste e a partir de R$ 2.000 nas demais regiões.`,
+    a: `O frete é grátis a partir de R$ 1.200 no Sudeste e a partir de R$ 2.000 nas demais regiões.`,
   },
   {
     q: "Qual é o prazo de entrega?",

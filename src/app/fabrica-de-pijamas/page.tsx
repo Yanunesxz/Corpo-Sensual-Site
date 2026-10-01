@@ -67,15 +67,14 @@ export default async function FabricaPage() {
           data-barra-depois
           className="on-photo shade-capa relative h-[78svh] max-h-[760px] min-h-[520px] overflow-hidden bg-noite lg:col-span-7 lg:row-start-1 lg:h-[calc(100svh-7rem)] lg:max-h-none lg:min-h-[640px]"
         >
-          {/* A mesma foto em todas as larguras (sem direção de arte), então vai direto pelo
-              next/image: o HeroImage não repassa fetchPriority, e no Next 16 o preload sozinho
-              deixa o LCP com prioridade baixa. Única imagem com preload na página. */}
+          {/* A mesma foto em todas as larguras (sem direção de arte), direto pelo next/image.
+              Única imagem com preload na página. Sem fetchPriority="high": no Lighthouse móvel
+              (três rodadas, 01/10/2026) o LCP simulado ficou melhor sem ele (3,0 s contra 3,2 s). */}
           <Image
             src={FOTO_CAPA}
             alt={altFoto(FOTO_CAPA, "Modelo de short doll rosa à beira da piscina, coleção Delícias de Verão")}
             fill
             preload
-            fetchPriority="high"
             quality={80}
             sizes="(min-width: 1024px) 58vw, 100vw"
             className="object-cover object-[center_30%]"
@@ -115,7 +114,7 @@ export default async function FabricaPage() {
               condicoes
               source="fabrica-de-pijamas"
               submitLabel="Quero receber a tabela de preços"
-              nota="*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."
+              nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
             />
           </FormularioPreso>
         </aside>
@@ -127,9 +126,8 @@ export default async function FabricaPage() {
             title="Por que comprar direto da fábrica"
             description="As condições por escrito, antes do primeiro pedido."
           />
-          {/* Na coluna da esquerda do desktop, três colunas deixariam 100 a 180 px de texto
-              por célula: fica em duas até 1536 px. */}
-          <Condicoes variante="ficha" fundo="branco" className="mt-8 md:mt-10 lg:grid-cols-2! 2xl:grid-cols-3!" />
+          {/* A ficha escolhe as colunas pela própria largura: na coluna de 7/12 fica em duas. */}
+          <Condicoes variante="ficha" fundo="branco" className="mt-8 md:mt-10" />
         </section>
 
         {/* D. Como funciona. */}
@@ -195,7 +193,7 @@ export default async function FabricaPage() {
             dark
             eyebrow="Catálogo com tabela de preços"
             title="Compre direto de quem fabrica, no valor que a sua loja precisa"
-            description={`${commercial.noMinOrder}, 5% de desconto no Pix e frete grátis a partir de R$ 1.200 no Sudeste. ${commercial.noCnpjNote}`}
+            description={`${commercial.noMinOrder}, 5% de desconto no Pix e frete grátis a partir de R$ 1.200 no Sudeste. ${commercial.noCnpjNote}`}
           />
           <div className="mt-8 flex justify-center md:mt-10" data-reveal>
             <a href="#formulario" className="btn btn-light btn-lg w-full sm:w-auto">

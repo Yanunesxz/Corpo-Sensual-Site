@@ -22,7 +22,7 @@ No fluxo da Web (**Administrador > Coleta e modificação de dados > Fluxos de d
 
 1. **Medição otimizada** (engrenagem):
    - DESLIGUE **Cliques de saída**. Os botões de WhatsApp do /obrigado levam o nome, a loja e a cidade do lojista na mensagem, e o GA mandaria isso ao Google. O site já mede esses cliques sozinho, sem o texto (evento `clique_whatsapp`).
-   - DESLIGUE **Interações com formulários**, porque o site já conta o lead (`generate_lead`).
+   - DESLIGUE **Interações com formulários**, porque o site já mede o começo do preenchimento (`form_inicio`) e o lead (`generate_lead`).
    - Em **Visualizações de página > Mostrar configurações avançadas**, DESMARQUE "Alterações de página com base em eventos do histórico de navegação". O site já manda uma visita por página e, com essa opção ligada, cada visita conta duas vezes.
    - Rolagem e Downloads podem ficar ligados. Pesquisa no site e Engajamento com vídeo, desligados.
 2. **Encobrir dados** (fica em "Eventos", no mesmo fluxo): deixe **E-mail** ligado e, em **Parâmetros de consulta**, acrescente `text`. É uma segunda trava, caso alguém religue os cliques de saída.
@@ -40,16 +40,32 @@ No fluxo da Web (**Administrador > Coleta e modificação de dados > Fluxos de d
    | Contato da equipe | `contato` |
    | Local do clique | `local` |
 
-3. **Eventos principais**: marque `generate_lead`. O `clique_whatsapp` também pode ser marcado, mas é opcional.
+3. **Eventos principais**: marque `generate_lead`. O `clique_whatsapp` também pode ser marcado, mas é opcional. O `form_inicio` **não** é evento principal: ele serve para o funil (Explorar > Exploração de funil, com as etapas `page_view` → `form_inicio` → `generate_lead`, separadas por `lead_source`), que mostra quantas lojistas começam o cadastro e desistem.
 4. **Vinculações**: Search Console (item 2 abaixo) e, se houver anúncios, Google Ads (item 4).
 
 ### O que o site manda ao Google
 
 - `page_view`: uma visita por página. Filtrar a grade de peças (`?categoria=`) não conta como visita nova.
 - `generate_lead` com `lead_source` (catalogo, fabrica-de-pijamas, colecao, contato ou representante). Conta uma vez por cadastro enviado. Recarregar o /obrigado ou abrir um link antigo de obrigado do Wix não conta.
-- `clique_whatsapp` com `destino` (vendedora, gerente, sac, financeiro, geral), `contato` (Nicoli, Simone, Fabian) e `local` (pagina, cabecalho, menu, rodape, flutuante).
-- `clique_catalogo` com `local`.
+- `form_inicio` com `lead_source`: a pessoa começou a preencher um formulário (o primeiro toque num campo), uma vez por formulário aberto. Vai só a origem, nada do que foi digitado.
+- `clique_whatsapp` com `destino` (vendedora, gerente, sac, financeiro, geral), `contato` (Nicoli, Simone, Fabian) e `local`.
+- `clique_catalogo` com `local`, em todo link que leva a `/catalogo`.
 - **Nunca**: nome, e-mail, WhatsApp, CNPJ, CPF, loja, cidade ou mensagem.
+
+Valores de `local` (de onde saiu o clique):
+
+| `local` | Onde fica |
+| --- | --- |
+| `hero` | botão principal da capa que leva ao catálogo (home, /colecoes, páginas de coleção, /sobre). Na landing e no representante a capa leva ao formulário da própria página, e o que conta ali é o `form_inicio` |
+| `vitrine` | cartão "210 referências" no fim da vitrine de peças da home |
+| `barra-fixa` | barra presa na base da tela do celular ("Quero receber o catálogo" e o botão do WhatsApp) |
+| `flutuante` | botão redondo do WhatsApp no canto da tela |
+| `cabecalho` | cabeçalho (botão "Catálogo" / "Receber catálogo") |
+| `menu` | menu do celular |
+| `rodape` | rodapé (botão "Receber catálogo" e links) |
+| `pagina` | qualquer outro link do corpo da página (fecho, seção da fábrica, vendedoras do /obrigado, SAC e financeiro do /ajuda) |
+
+Os nomes antigos `faixa` e `barra-celular` não existem mais: se aparecerem num relatório, são de antes de 01/10/2026.
 
 O Google só é carregado depois que a pessoa clica em **Aceitar** no aviso de cookies (LGPD). Quem recusa não é medido, e o link "Preferências de cookies", no rodapé, deixa mudar a escolha. Por isso os números do GA vão ficar abaixo das visitas reais, o que é esperado.
 
@@ -58,8 +74,10 @@ O Google só é carregado depois que a pessoa clica em **Aceitar** no aviso de c
 Abra o **DebugView** (Administrador > DebugView) ou o Tag Assistant e faça no site:
 
 1. Aceite o aviso e navegue por 3 páginas. Devem aparecer 3 `page_view`, não 6.
-2. Envie um cadastro de teste. Deve aparecer 1 `generate_lead` com `lead_source`.
-3. Clique num botão de vendedora. Deve aparecer `clique_whatsapp` com `destino` e `contato`, e **nenhum** evento `click` com link `wa.me`.
+2. Toque no primeiro campo de um formulário. Deve aparecer 1 `form_inicio` com `lead_source` (e nenhum outro ao passar para os campos seguintes).
+3. Envie um cadastro de teste. Deve aparecer 1 `generate_lead` com `lead_source`.
+4. Clique num botão de vendedora. Deve aparecer `clique_whatsapp` com `destino` e `contato`, e **nenhum** evento `click` com link `wa.me`.
+5. No celular, role a home até a barra fixa aparecer e toque em "Quero receber o catálogo". Deve aparecer `clique_catalogo` com `local` = `barra-fixa`.
 
 ### Tráfego interno (opcional)
 

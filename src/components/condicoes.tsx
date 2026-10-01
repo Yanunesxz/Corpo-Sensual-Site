@@ -72,32 +72,40 @@ type Props = {
 export function Condicoes({ variante, fundo, semNota = false, className = "" }: Props) {
   if (variante === "lista") {
     return (
-      <ul className={`grid gap-x-6 gap-y-2.5 sm:grid-cols-2 ${className}`}>
-        {LISTA.map((item) => (
-          <li key={item} className="flex items-start gap-2.5 text-[15px] leading-snug text-ink">
-            <span aria-hidden className="mt-px flex h-5 w-5 flex-none items-center justify-center rounded-full bg-noite text-white">
-              <Check width={12} height={12} strokeWidth={2.4} />
-            </span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+      // Duas colunas pela largura do cartão (container query), não da tela: na coluna
+      // estreita da landing entre 1024 e 1279 px elas ficariam com 130 px cada.
+      <div className={`@container ${className}`}>
+        <ul className="grid gap-x-6 gap-y-2.5 @md:grid-cols-2">
+          {LISTA.map((item) => (
+            <li key={item} className="flex items-start gap-2.5 text-[15px] leading-snug text-ink">
+              <span aria-hidden className="mt-px flex h-5 w-5 flex-none items-center justify-center rounded-full bg-noite text-white">
+                <Check width={12} height={12} strokeWidth={2.4} />
+              </span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 
   if (variante === "ficha") {
     const celula = fundo === "branco" ? "bg-sky-soft" : "bg-paper";
     return (
-      // Uma coluna no celular: em duas, as células ficavam com 130 px de texto.
-      <ul className={`grid gap-px border border-line bg-line min-[520px]:grid-cols-2 lg:grid-cols-3 ${className}`}>
-        {FICHA.map((f) => (
-          <li key={f.rotulo} className={`${celula} flex flex-col px-5 py-4 min-[520px]:p-5 lg:p-8`}>
-            <p className="text-[13px] leading-snug text-muted">{f.rotulo}</p>
-            <p className="t-sub mt-1.5 text-[1.25rem] lg:mt-2 lg:text-[1.375rem]">{f.valor}</p>
-            <p className="mt-2 text-[14px] leading-[1.5] text-body">{f.detalhe}</p>
-          </li>
-        ))}
-      </ul>
+      // Colunas pela largura que a ficha tem (container query), não pela tela: uma coluna
+      // abaixo de ~450 px (em duas, as células ficavam com 130 px de texto), duas até
+      // ~900 px (a coluna de 7/12 da landing) e três na largura toda.
+      <div className={`@container ${className}`}>
+        <ul className="grid gap-px border border-line bg-line @md:grid-cols-2 @4xl:grid-cols-3">
+          {FICHA.map((f) => (
+            <li key={f.rotulo} className={`${celula} flex flex-col px-5 py-4 @md:p-5 lg:p-8`}>
+              <p className="text-[13px] leading-snug text-muted">{f.rotulo}</p>
+              <p className="t-sub mt-1.5 text-[1.25rem] lg:mt-2 lg:text-[1.375rem]">{f.valor}</p>
+              <p className="mt-2 text-[14px] leading-[1.5] text-body">{f.detalhe}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 

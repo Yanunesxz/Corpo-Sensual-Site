@@ -176,7 +176,9 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
         ref={ref}
         className={`h-full w-full object-cover ${className}`}
         style={{ aspectRatio: proporcao }}
-        poster={`/videos/${src}.jpg`}
+        // O pôster também espera o vídeo chegar perto: pedido no início, ele disputava
+        // banda com a foto do topo (LCP) em toda página com a seção da fábrica.
+        poster={perto ? `/videos/${src}.jpg` : undefined}
         src={perto ? `/videos/${src}.mp4` : undefined}
         preload="none"
         muted

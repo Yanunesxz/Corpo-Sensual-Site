@@ -51,7 +51,11 @@ export function BarraCta() {
     const cobrindo = new Set<Element>();
 
     const atualizar = () => {
-      const visivel = passou && cobrindo.size === 0 && !digitando;
+      // Com o aviso de cookies aberto a barra espera (uma coisa na base da tela por vez).
+      // Contar isso aqui, e não só no CSS, mantém o WhatsApp flutuante à vista acima do
+      // aviso: html[data-cta-fixo] só liga quando a barra aparece de verdade.
+      const aviso = html.dataset.avisoCookies !== undefined;
+      const visivel = passou && cobrindo.size === 0 && !digitando && !aviso;
       barra.dataset.visivel = visivel ? "1" : "0";
       // Escondida, a barra sai da ordem do Tab e do leitor de tela.
       barra.inert = !visivel;
@@ -60,10 +64,18 @@ export function BarraCta() {
     };
 
     const gatilho = document.querySelector("[data-barra-depois]");
-    const io1 = new IntersectionObserver(([e]) => {
-      passou = !e.isIntersecting && e.boundingClientRect.top < 0;
-      atualizar();
-    });
+    // A área observada desce muito abaixo da tela: o gatilho só "sai" quando passa por
+    // cima dela. Sem isso, um salto direto do meio da página para o topo (tecla Home,
+    // link para o início) não cruzava nenhum limite, o observador não avisava e a barra
+    // ficava à vista em cima da capa (na página de coleção o gatilho é o manifesto,
+    // abaixo da capa presa).
+    const io1 = new IntersectionObserver(
+      ([e]) => {
+        passou = !e.isIntersecting && e.boundingClientRect.top < 0;
+        atualizar();
+      },
+      { rootMargin: "0px 0px 100000px 0px" },
+    );
     if (gatilho) io1.observe(gatilho);
 
     const io2 = new IntersectionObserver((entradas) => {
@@ -88,11 +100,15 @@ export function BarraCta() {
     };
     document.addEventListener("focusin", entrou);
     document.addEventListener("focusout", saiu);
+    // O aviso de cookies publica html[data-aviso-cookies] enquanto está aberto.
+    const mo = new MutationObserver(atualizar);
+    mo.observe(html, { attributes: true, attributeFilter: ["data-aviso-cookies"] });
     atualizar();
 
     return () => {
       io1.disconnect();
       io2.disconnect();
+      mo.disconnect();
       document.removeEventListener("focusin", entrou);
       document.removeEventListener("focusout", saiu);
       delete html.dataset.ctaFixo;

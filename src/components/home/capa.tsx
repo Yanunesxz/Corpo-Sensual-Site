@@ -68,6 +68,8 @@ export function CapaHome({ atual }: Props) {
               sizes="(min-width: 1024px) 58vw, 100vw"
               desktopPosition="center 45%"
               mobilePosition="center 38%"
+              // A foto vira coluna só a partir de 1024 px; abaixo é a faixa do celular (q80).
+              switchAt="lg"
             />
             <p className="tag absolute left-4 top-4 md:left-6 md:top-6">
               <span className="h-1.5 w-1.5 rounded-full bg-noite" aria-hidden />

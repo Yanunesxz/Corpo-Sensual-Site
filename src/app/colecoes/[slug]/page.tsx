@@ -173,11 +173,8 @@ export default async function ColecaoPage({ params }: Props) {
 
         {/* 4. Peças antes da inspiração. */}
         <section id="pecas" className="sec">
-          {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). No
-              ProductGrid eles estão dentro de um <div> da altura deles, e o sticky não
-              tem para onde andar: aqui esse invólucro vira display: contents e a margem
-              passa para os chips. Sai quando a F1 corrigir o componente (pedidos-f1.md, g3). */}
-          <div className="wrap [&_div:has(>[role=group])]:contents [&_[role=group]]:mt-3 lg:[&_[role=group]]:mt-8">
+          {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). */}
+          <div className="wrap">
             <ProductGrid
               // Só as peças que a grade pode mostrar, com ou sem filtro (6/6/3/3): o resultado
               // na tela é o mesmo e o HTML não leva a coleção inteira ao navegador.

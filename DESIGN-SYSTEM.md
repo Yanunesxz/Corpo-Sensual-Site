@@ -65,10 +65,6 @@ Dentro de `.on-dark` os títulos ficam brancos e `.lead`, `.eyebrow` e `.legenda
 a `noite-texto` sozinhos. Medida de leitura: títulos grandes com `max-w-[14ch]` a
 `[18ch]`; texto com `max-w-xl`/`2xl`.
 
-Apelidos mantidos até a Fase 3 (não use em código novo): `.h-hero` (= face do
-`.t-hero`, tamanho pelo utilitário), `.h-display` (= `.t-titulo`), `.label`, `.btn-dark`
-(= `.btn-primary`), componentes `Beneficios` e `CommercialTerms` (= `Condicoes`).
-
 ## Espaço, grade, cantos e sombra
 
 - `.wrap`: até 1440 px, margem lateral 20 / 32 (≥768) / 48 px (≥1024).

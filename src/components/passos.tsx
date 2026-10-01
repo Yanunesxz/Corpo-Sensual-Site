@@ -6,7 +6,7 @@ type Props = {
   itens: Passo[];
   /** Troca o numeral por um ponto. Obrigatório na página de representante (nenhum número). */
   semNumeros?: boolean;
-  /** coluna: pilha (padrão). linha: três colunas a partir de 1024 px, com fio ligando os marcadores. */
+  /** coluna: pilha (padrão). linha: uma coluna por passo (duas ou três) a partir de 1024 px, com fio ligando os marcadores. */
   layout?: "coluna" | "linha";
   /** Textos claros sobre azul-noite. */
   escuro?: boolean;
@@ -26,7 +26,7 @@ export function Passos({ itens, semNumeros = false, layout = "coluna", escuro = 
   const fio = escuro ? "bg-white/20" : "bg-line";
 
   return (
-    <ol className={`${linha ? "grid gap-y-8 lg:grid-cols-3 lg:gap-x-10" : "grid gap-y-8"} ${className}`}>
+    <ol className={`${linha ? `grid gap-y-8 lg:gap-x-10 ${itens.length === 2 ? "lg:grid-cols-2" : "lg:grid-cols-3"}` : "grid gap-y-8"} ${className}`}>
       {itens.map((p, i) => {
         const ultimo = i === itens.length - 1;
         return (

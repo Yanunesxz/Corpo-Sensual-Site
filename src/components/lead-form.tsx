@@ -242,11 +242,12 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       )}
 
       <div className="pt-1">
-        {/* Rótulos longos ("Quero receber a tabela de preços") cabem numa linha a 360 px:
-            letra de 15 px e sem seta nas telas mais estreitas. */}
-        <button type="submit" className="btn btn-primary btn-lg w-full px-2.5 text-[15px] min-[420px]:px-6 min-[420px]:text-base" disabled={pending}>
+        {/* Rótulos longos ("Quero receber a tabela de preços") cabem numa linha a 360 px e
+            na coluna estreita da landing entre 1024 e 1279 px: letra de 15 px e sem seta
+            quando o formulário é estreito (pela largura do formulário, não da tela). */}
+        <button type="submit" className="btn btn-primary btn-lg w-full px-2.5 text-[15px] @[21rem]:px-6 @[21rem]:text-base" disabled={pending}>
           {pending ? "Enviando..." : submitLabel}
-          {!pending && <ArrowRight width={18} height={18} className="seta hidden min-[460px]:block" />}
+          {!pending && <ArrowRight width={18} height={18} className="seta hidden @[23.5rem]:block" />}
         </button>
       </div>
 
@@ -260,7 +261,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
           . Usamos seus dados apenas para responder ao seu contato.
         </span>
       </p>
-      {!isContact && (
+      {/* Fora do contato (que já é o canal) e do representante: lá o caminho é o cadastro
+          e o Fabian, e o telefone poria dígitos numa página que não pode ter número. */}
+      {!isContact && !ehRepresentante && (
         <p className="text-[13px] text-muted">
           Prefere falar direto?{" "}
           {c.whatsappUrl ? (

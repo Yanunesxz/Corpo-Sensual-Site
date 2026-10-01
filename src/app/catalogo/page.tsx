@@ -72,7 +72,7 @@ export default function CatalogoPage() {
               condicoes
               source="catalogo"
               submitLabel="Quero receber o catálogo"
-              nota="*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."
+              nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
               className="mt-6 lg:mt-10"
             />
           </div>

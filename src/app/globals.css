@@ -164,35 +164,27 @@ body {
   }
 
   /* ---------- Tipografia ----------
-     Os apelidos .h-hero e .h-display (páginas antigas) herdam a face, a entrelinha e o
-     tracking; o tamanho vem do utilitário de cada página (text-3xl etc.). Ficam até a
-     Fase 3. --tw-leading segura a entrelinha mesmo com text-2xl por cima. */
-  .t-hero,
-  .h-hero {
+     --tw-leading segura a entrelinha mesmo com um utilitário de tamanho (text-2xl) por cima. */
+  .t-hero {
     font-family: var(--font-display);
     font-weight: 400;
     color: var(--color-ink);
+    font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4.25rem);
     --tw-leading: 1.04;
     line-height: 1.04;
     letter-spacing: -0.022em;
     text-wrap: balance;
   }
-  .t-hero {
-    font-size: clamp(2.25rem, 1.6rem + 2.6vw, 4.25rem);
-  }
 
-  .t-titulo,
-  .h-display {
+  .t-titulo {
     font-family: var(--font-display);
     font-weight: 400;
     color: var(--color-ink);
+    font-size: clamp(1.75rem, 1.35rem + 1.7vw, 3rem);
     --tw-leading: 1.08;
     line-height: 1.08;
     letter-spacing: -0.015em;
     text-wrap: balance;
-  }
-  .t-titulo {
-    font-size: clamp(1.75rem, 1.35rem + 1.7vw, 3rem);
   }
 
   .t-sub {
@@ -269,14 +261,6 @@ body {
   }
   .on-dark .legenda {
     color: var(--color-noite-texto);
-  }
-
-  /* Legado (páginas antigas). Sai na Fase 3. */
-  .label {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 0.9375rem;
-    color: var(--color-muted);
   }
 
   /* ---------- Links ---------- */
@@ -382,20 +366,17 @@ body {
     font-size: 0.9375rem;
   }
 
-  /* Ação principal: tinta. .btn-dark é o mesmo botão (apelido até a Fase 3). */
-  .btn-primary,
-  .btn-dark {
+  /* Ação principal: tinta. */
+  .btn-primary {
     background: var(--color-ink);
     border-color: var(--color-ink);
     color: #fff;
   }
-  .btn-primary:hover,
-  .btn-dark:hover {
+  .btn-primary:hover {
     background: var(--color-noite);
     border-color: var(--color-noite);
   }
-  .btn-primary:disabled,
-  .btn-dark:disabled {
+  .btn-primary:disabled {
     opacity: 0.65;
     cursor: wait;
   }
@@ -638,19 +619,6 @@ body {
       rgb(14 31 41 / 0) 82%
     );
     pointer-events: none;
-  }
-  /* Legado: capa das páginas antigas no celular. */
-  @media (max-width: 1023px) {
-    .shade-hero::after {
-      background: linear-gradient(
-        to top,
-        rgb(14 31 41 / 0.78) 0%,
-        rgb(14 31 41 / 0.56) 38%,
-        rgb(14 31 41 / 0.48) 66%,
-        rgb(14 31 41 / 0.12) 84%,
-        rgb(14 31 41 / 0) 96%
-      );
-    }
   }
 
   /* Foto de capa com direção de arte (ver components/hero-image.tsx). */

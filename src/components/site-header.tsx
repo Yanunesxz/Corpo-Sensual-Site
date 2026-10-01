@@ -169,11 +169,20 @@ export function SiteHeader() {
             </nav>
           </div>
 
-          {/* Assinatura. Sem aria-label: o nome acessível é o próprio texto visível (WCAG 2.5.3). */}
-          <Link href="/" className="inline-flex h-11 min-w-0 items-center gap-2 justify-self-start text-ink md:justify-self-center lg:gap-3" onClick={fechar}>
+          {/* Assinatura. Sem aria-label: o nome acessível é o próprio texto visível (WCAG 2.5.3).
+              Sem prefetch: o link está sempre à vista, e o prefetch da home trazia a dica de
+              pré-carga da foto da capa dela, baixada à toa em toda página (124 KB no 4G). */}
+          <Link
+            href="/"
+            prefetch={false}
+            className="inline-flex h-11 min-w-0 items-center gap-2 justify-self-start text-ink md:justify-self-center lg:gap-3"
+            onClick={fechar}
+          >
             {/* eager, e não priority, para não disputar o preload com a foto da capa */}
             <Image src="/images/logo-cs-tinta.png" alt="" width={56} height={56} loading="eager" className="h-7 w-7 lg:h-8 lg:w-8" />
-            <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[12.5px] uppercase leading-none tracking-[0.14em] min-[380px]:tracking-[0.2em] lg:text-[15px]">
+            {/* Abaixo de 380 px a assinatura aperta (a 360 ela encostava no "Catálogo"); abaixo
+                de 350 só o monograma fica à vista e o nome segue para o leitor de tela. */}
+            <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-[11.5px] uppercase leading-none tracking-[0.12em] max-[349px]:sr-only min-[380px]:text-[12.5px] min-[380px]:tracking-[0.2em] lg:text-[15px]">
               {site.name}
             </span>
             <span className="sr-only">, página inicial</span>

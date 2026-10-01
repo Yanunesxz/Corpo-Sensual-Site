@@ -26,7 +26,8 @@ type Props = {
 export function BlocoCadastro({ id = "formulario", eyebrow, titulo, texto, condicoes = false, source, submitLabel, withMessage = false, nota, className = "" }: Props) {
   const temTopo = Boolean(eyebrow || titulo || texto || condicoes);
   return (
-    <div id={id} className={`scroll-mt-24 bg-paper p-5 shadow-[var(--shadow-card)] md:p-8 ${className}`} data-sem-barra>
+    // Sem scroll-mt: o scroll-padding-top do <html> já desconta a barra presa do cabeçalho.
+    <div id={id} className={`bg-paper p-5 shadow-[var(--shadow-card)] md:p-8 ${className}`} data-sem-barra>
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       {titulo && <h2 className={`t-sub text-[1.5rem] md:text-[1.75rem] ${eyebrow ? "mt-3" : ""}`}>{titulo}</h2>}
       {texto && <p className={`text-[15px] leading-[1.6] text-body ${eyebrow || titulo ? "mt-2" : ""}`}>{texto}</p>}

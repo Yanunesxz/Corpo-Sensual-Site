@@ -129,7 +129,6 @@ export default function RepresentantePage() {
             alt="Casal com pijama masculino azul-marinho e camisola azul com renda, na varanda à beira do lago, campanha Corpo Sensual"
             fill
             priority
-            fetchPriority="high"
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="object-cover object-[center_22%]"
           />
@@ -159,7 +158,8 @@ export default function RepresentantePage() {
               ))}
             </ul>
             <div className="flex items-end sm:pt-5" data-reveal style={{ ["--atraso" as string]: "160ms" }}>
-              <a href="#formulario" className="btn btn-primary w-full sm:w-auto">
+              {/* Numa linha só: na casa de 290 px da grade a 1024 px ele quebrava em duas. */}
+              <a href="#formulario" className="btn btn-primary w-full whitespace-nowrap sm:w-auto lg:px-6">
                 Quero representar a marca
                 <ArrowRight width={18} height={18} className="seta" />
               </a>

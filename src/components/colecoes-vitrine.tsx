@@ -52,6 +52,8 @@ export function ColecoesVitrine({ collections, variante, prioridade = false, lin
                     alt={altCapa(c.slug, `Campanha da coleção ${nome}`)}
                     priority={prioridade && i === 0}
                     quality={80}
+                    // Dentro do .wrap: a partir de 1440 px o cartão para em 1344 px.
+                    sizes="(min-width: 1440px) 1344px, 100vw"
                   />
                 )}
                 <span className="on-photo absolute inset-x-0 bottom-0 z-10 block p-5 text-white md:p-8 lg:p-12">
