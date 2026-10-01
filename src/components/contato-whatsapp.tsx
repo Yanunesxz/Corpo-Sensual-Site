@@ -38,16 +38,18 @@ export function ContatoWhatsApp({ contatos, chamada, abertura, pedido = "", empr
   const bruto = useSyncExternalStore(semAssinatura, lerLeadBruto, nadaNoServidor);
   const quemSou = apresentacao(interpretarLead(bruto), empresa);
 
+  // Container query e não media query: o mesmo bloco mora num painel estreito (coluna
+  // da direita no desktop) ou largo (tablet). Os botões só ficam lado a lado com folga.
   return (
-    <div>
-      <p className="text-[1.0625rem] font-normal text-ink">{chamada}</p>
-      <ul className={`mt-4 grid gap-3 ${contatos.length > 1 ? "sm:grid-cols-2" : "sm:max-w-sm"}`}>
+    <div className="@container">
+      <p className="max-w-md text-[1.0625rem] leading-[1.5] text-ink text-pretty">{chamada}</p>
+      <ul className={`mt-5 grid gap-3 ${contatos.length > 1 ? "@lg:grid-cols-2" : "@lg:max-w-sm"}`}>
         {contatos.map((c) => {
           const mensagem = [`Olá, ${c.nome}! ${abertura}`, quemSou, pedido].filter(Boolean).join(" ");
           return (
             <li key={c.numero}>
-              <a href={linkWhatsApp(c.numero, mensagem)} target="_blank" rel="noreferrer" className="btn btn-dark w-full">
-                <WhatsApp width={20} height={20} />
+              <a href={linkWhatsApp(c.numero, mensagem)} target="_blank" rel="noreferrer" className="btn btn-primary btn-lg w-full">
+                <WhatsApp width={22} height={22} />
                 Falar com {c.nome}
               </a>
             </li>
