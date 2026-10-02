@@ -42,9 +42,11 @@ export default async function HomePage() {
       </section>
 
       {/* 3. Vitrine: as mais vendidas em cotas 6/6/3/3, com filtro por linha e o cartão "210". */}
-      {/* cv-auto: estilo, layout e pintura só quando a seção chega perto da tela (altura
-          reservada próxima da real, no celular e no desktop). */}
-      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_710px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
+      {/* cv-auto: estilo, layout e pintura só quando a seção chega perto da tela. A altura
+          reservada (a do conteúdo, sem o padding do .sec; ver .cv-auto no globals.css) fica
+          perto da real em cada largura, medida em 390, 768, 1024, 1280, 1440 e 1680 px: com a
+          reserva errada, o Voltar do navegador devolvia a página fora do lugar. */}
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_573px] md:[contain-intrinsic-size:auto_605px] lg:[contain-intrinsic-size:auto_648px] xl:[contain-intrinsic-size:auto_705px] min-[90rem]:[contain-intrinsic-size:auto_751px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"
@@ -59,7 +61,7 @@ export default async function HomePage() {
 
       {/* 4. As duas coleções do ano (spread de revista) e o atalho por linha. */}
       {collections.length > 0 && (
-        <section id="colecoes" className="cv-auto sec [contain-intrinsic-size:auto_1200px] md:[contain-intrinsic-size:auto_1450px] lg:[contain-intrinsic-size:auto_1800px] xl:[contain-intrinsic-size:auto_2150px]">
+        <section id="colecoes" className="cv-auto sec [contain-intrinsic-size:auto_922px] md:[contain-intrinsic-size:auto_1185px] lg:[contain-intrinsic-size:auto_1465px] xl:[contain-intrinsic-size:auto_1805px] min-[90rem]:[contain-intrinsic-size:auto_1895px]">
           <div className="wrap">
             <SectionHeading eyebrow="Coleções" title="Duas coleções por ano, para a família inteira" />
             <div className="mt-8 lg:mt-14">

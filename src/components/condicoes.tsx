@@ -68,7 +68,7 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
       // Duas colunas pela largura do cartão (container query), não da tela: na coluna
       // estreita da landing entre 1024 e 1279 px elas ficariam com 130 px cada.
       <div className={`@container ${className}`}>
-        <ul className="grid gap-x-6 gap-y-2.5 @md:grid-cols-2">
+        <ul className="grid gap-x-6 gap-y-2.5 @[26rem]:grid-cols-2">
           {LISTA.map((item) => (
             <li key={item} className="flex items-start gap-2.5 text-[15px] leading-snug text-ink">
               <span aria-hidden className="mt-px flex h-5 w-5 flex-none items-center justify-center rounded-full bg-noite text-white">
@@ -107,7 +107,7 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
         {FAIXA.map((f, i) => (
           <li key={f.rotulo} className={`flex flex-col gap-2 border-line lg:border-b-0 lg:py-1 ${CELULA_FAIXA[i]}`}>
             <span className="eyebrow">{f.rotulo}</span>
-            <span className="t-sub text-[1.125rem] min-[400px]:text-[1.25rem] lg:text-[clamp(1.25rem,0.6rem+1vw,1.5rem)]">{f.valor}</span>
+            <span className="t-sub text-[1.125rem] min-[400px]:text-[1.25rem] lg:text-[clamp(1.25rem,0.2rem+1.2vw,1.5rem)]">{f.valor}</span>
           </li>
         ))}
       </ul>

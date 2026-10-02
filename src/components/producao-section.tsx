@@ -64,7 +64,7 @@ export function ProducaoSection({ escuro = false, fundo = "bg-sky-soft", numeros
       // Reserva perto da altura real, com e sem a faixa de números: o botão "Quero ser representante"
       // desce até o cadastro passando por esta seção, e com a reserva errada (960 contra 757 px) parava
       // 200 px abaixo do título.
-      className={`cv-auto ${numeros ? "[contain-intrinsic-size:auto_900px] md:[contain-intrinsic-size:auto_1010px] lg:[contain-intrinsic-size:auto_990px]" : "[contain-intrinsic-size:auto_760px] md:[contain-intrinsic-size:auto_850px] lg:[contain-intrinsic-size:auto_880px]"} ${escuro ? "on-dark bg-noite text-noite-texto" : fundo}`}
+      className={`cv-auto ${numeros ? "[contain-intrinsic-size:auto_900px] md:[contain-intrinsic-size:auto_1014px] lg:[contain-intrinsic-size:auto_970px] min-[90rem]:[contain-intrinsic-size:auto_1005px]" : "[contain-intrinsic-size:auto_757px] md:[contain-intrinsic-size:auto_850px] lg:[contain-intrinsic-size:auto_860px] min-[90rem]:[contain-intrinsic-size:auto_898px]"} ${escuro ? "on-dark bg-noite text-noite-texto" : fundo}`}
     >
       <div className="wrap grid gap-y-8 py-12 md:gap-y-10 md:py-[5.5rem] lg:grid-cols-12 lg:items-end lg:gap-x-10 lg:gap-y-14 lg:py-[7.5rem]">
         <div className="lg:col-span-6 lg:row-start-1" data-reveal>

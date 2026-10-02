@@ -76,11 +76,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-/** Ponto de interesse da capa em cada coleção (rosto no quadro, nos dois recortes). */
-const FOCO_CAPA: Record<string, { tela: string; celular: string }> = {
-  "delicias-de-verao": { tela: "30% 35%", celular: "center 25%" },
-  // Entrelaços: a foto larga é em pé (2:3); a 36% os dois rostos (mãe e filha) ficam no quadro.
-  entrelacos: { tela: "center 36%", celular: "center 22%" },
+/**
+ * Ponto de interesse da capa em cada coleção (rosto no quadro, nos dois recortes).
+ * metade: a foto "larga" da coleção é em pé. Esticada na tela inteira do desktop, só um
+ * terço dela aparecia (rosto gigante, a filha cortada na boca). Nesse caso a capa do
+ * desktop se divide: o texto num painel azul-noite à esquerda e a foto na metade direita.
+ */
+const FOCO_CAPA: Record<string, { tela: string; celular: string; metade?: boolean }> = {
+  // A foto 16:9 já tem a cabeça da modelo encostada na borda de cima: ancorada no topo
+  // (0%), o que sobra em tela mais larga que 16:9 sai por baixo, onde está o texto.
+  "delicias-de-verao": { tela: "30% 0%", celular: "center 25%" },
+  // Entrelaços: a 40% mãe e filha ficam inteiras na metade direita, do rosto à calça.
+  entrelacos: { tela: "center 40%", celular: "center 22%", metade: true },
 };
 
 export default async function ColecaoPage({ params }: Props) {
@@ -113,6 +120,7 @@ export default async function ColecaoPage({ params }: Props) {
   const nome = collectionShortName(collection.name);
   const referenciasDaColecao = !showingBestSellers && Object.hasOwn(REFERENCIAS_POR_COLECAO, collection.slug) ? REFERENCIAS_POR_COLECAO[collection.slug] : null;
   const foco = Object.hasOwn(FOCO_CAPA, collection.slug) ? FOCO_CAPA[collection.slug] : { tela: "center 35%", celular: "center 25%" };
+  const metade = foco.metade === true;
 
   return (
     // Efeito do site atual: a foto de campanha fica presa e o conteúdo sobe por cima dela.
@@ -123,17 +131,28 @@ export default async function ColecaoPage({ params }: Props) {
           que a janela esconderia o botão. No tablet e no desktop desconta o cabeçalho
           (faixa de 44 px + barra de 64/72 px), para o botão e a nota caberem na primeira tela. */}
       {/* No desktop o degradê vem da esquerda (.shade-lado), onde fica o texto: o resto da foto
-          fica com a cor da campanha. No celular, o de baixo para cima (.shade-capa). */}
-      <section className="shade-capa shade-lado sticky top-0 h-[70svh] overflow-hidden bg-sky md:h-[calc(100svh-6.75rem)] md:min-h-[34rem] lg:h-[calc(100svh-7.25rem)]">
+          fica com a cor da campanha. No celular e no tablet, o de baixo para cima (.shade-capa).
+          Capa dividida (foto em pé): painel azul-noite à esquerda, foto na metade direita, sem degradê. */}
+      <section
+        className={`shade-capa sticky top-0 h-[70svh] overflow-hidden bg-sky md:h-[calc(100svh-6.75rem)] md:min-h-[34rem] lg:h-[calc(100svh-7.25rem)] ${
+          metade ? "sem-shade-lg lg:bg-noite" : "shade-lado"
+        }`}
+      >
         {collection.hero_image_url && (
-          <HeroImage
-            desktop={collection.hero_image_url}
-            mobile={capaVertical(collection)}
-            alt={altCapa(collection.slug, collection.name)}
-            priority
-            desktopPosition={foco.tela}
-            mobilePosition={foco.celular}
-          />
+          <div className={`absolute inset-0 ${metade ? "lg:left-1/2" : ""}`}>
+            <HeroImage
+              desktop={collection.hero_image_url}
+              mobile={capaVertical(collection)}
+              alt={altCapa(collection.slug, collection.name)}
+              priority
+              desktopPosition={foco.tela}
+              mobilePosition={foco.celular}
+              // A foto larga só entra a partir de 1024 px, junto com o degradê lateral. No
+              // tablet em pé o quadro é vertical: vale a foto do celular, inteira e nítida.
+              switchAt="lg"
+              sizes={metade ? "(min-width: 1024px) 50vw, 100vw" : "100vw"}
+            />
+          </div>
         )}
         {/* Celular baixo (iPhone SE, 360x640): o bloco de texto ocupa quase toda a capa e o
             rótulo de 12 px cai na parte clara do degradê. Reforço só nessas telas. */}
@@ -178,7 +197,9 @@ export default async function ColecaoPage({ params }: Props) {
 
         {/* 4. Peças antes da inspiração. */}
         {/* cv-auto: a grade só é montada quando chega perto da tela (os chips presos continuam presos). */}
-        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1930px] md:[contain-intrinsic-size:auto_2800px] lg:[contain-intrinsic-size:auto_1500px] xl:[contain-intrinsic-size:auto_1700px]">
+        {/* Reserva: a altura do conteúdo, sem o padding do .sec (ver .cv-auto no globals.css); entre
+            as duas coleções a grade difere até 120 px no tablet, e a reserva é a média. */}
+        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1798px] md:[contain-intrinsic-size:auto_2594px] lg:[contain-intrinsic-size:auto_2030px] xl:[contain-intrinsic-size:auto_1760px] min-[90rem]:[contain-intrinsic-size:auto_1915px]">
           {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). */}
           <div className="wrap">
             <ProductGrid
@@ -204,8 +225,8 @@ export default async function ColecaoPage({ params }: Props) {
           <section
             className={`cv-auto sec bg-areia ${
               videos.length > 0
-                ? "[contain-intrinsic-size:auto_1400px] md:[contain-intrinsic-size:auto_2180px] lg:[contain-intrinsic-size:auto_1900px] xl:[contain-intrinsic-size:auto_2300px]"
-                : "[contain-intrinsic-size:auto_880px] md:[contain-intrinsic-size:auto_1610px] lg:[contain-intrinsic-size:auto_1460px] xl:[contain-intrinsic-size:auto_1750px]"
+                ? "[contain-intrinsic-size:auto_1283px] md:[contain-intrinsic-size:auto_2005px] lg:[contain-intrinsic-size:auto_1644px] xl:[contain-intrinsic-size:auto_2061px] min-[90rem]:[contain-intrinsic-size:auto_2322px]"
+                : "[contain-intrinsic-size:auto_761px] md:[contain-intrinsic-size:auto_1435px] lg:[contain-intrinsic-size:auto_1217px] xl:[contain-intrinsic-size:auto_1520px] min-[90rem]:[contain-intrinsic-size:auto_1710px]"
             }`}
           >
             <div className="wrap">

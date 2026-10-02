@@ -83,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {/* Primeiro Tab da página: pula a faixa, a navegação e o cabeçalho. */}
         <a
           href="#conteudo"
-          className="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70]"
+          className="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:px-5 focus:py-2"
         >
           Pular para o conteúdo
         </a>

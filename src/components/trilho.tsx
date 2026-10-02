@@ -39,6 +39,7 @@ function pontas(el: HTMLElement) {
  */
 export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro = false, ordenada = false, className = "" }: Props) {
   const ref = useRef<HTMLUListElement & HTMLOListElement>(null);
+  const marca = useRef<HTMLSpanElement>(null);
   const [inicio, setInicio] = useState(true);
   const [fim, setFim] = useState(false);
 
@@ -48,6 +49,13 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
     const p = pontas(el);
     setInicio(p.inicio);
     setFim(p.fim);
+    // Marca da linha de progresso: largura = quanto do trilho cabe na tela; posição = onde está.
+    // Vai direto no estilo (sem estado): acompanha a rolagem sem redesenhar o componente.
+    const m = marca.current;
+    if (m && el.scrollWidth > 0 && el.clientWidth > 0) {
+      m.style.width = `${Math.min(100, (el.clientWidth / el.scrollWidth) * 100)}%`;
+      m.style.transform = `translateX(${(el.scrollLeft / el.clientWidth) * 100}%)`;
+    }
   }
 
   // O ResizeObserver avisa já na primeira medida: as setas nascem certas.
@@ -60,19 +68,35 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
   }, []);
 
   // Outro filtro: volta ao começo. A medida sai no quadro seguinte, já com o conteúdo novo.
+  // A lista nova entra esmaecendo (a troca era seca, em 0 ms); não na primeira montagem.
+  const montado = useRef(false);
   useEffect(() => {
     const el = ref.current;
     if (!el || reinicio === undefined) return;
     el.scrollTo({ left: 0 });
+    if (montado.current && typeof el.animate === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: "ease-out" });
+    }
+    montado.current = true;
     const id = requestAnimationFrame(() => medir());
     return () => cancelAnimationFrame(id);
   }, [reinicio]);
 
+  /**
+   * Avança uma página: tantos cartões quantos cabem inteiros na tela. Com o scroll-snap,
+   * o próximo cartão ainda não visto para alinhado à esquerda e nenhum é pulado.
+   */
   function mover(direcao: 1 | -1) {
     const el = ref.current;
     if (!el) return;
+    const estilo = getComputedStyle(el);
+    const vao = parseFloat(estilo.columnGap) || 0;
+    const util = el.clientWidth - (parseFloat(estilo.paddingLeft) || 0) - (parseFloat(estilo.paddingRight) || 0);
+    const cartao = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? util;
+    const passo = cartao + vao;
+    const porTela = Math.max(1, Math.floor((util + vao + 1) / passo));
     const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    el.scrollBy({ left: direcao * el.clientWidth * 0.8, behavior: reduzido ? "auto" : "smooth" });
+    el.scrollBy({ left: direcao * porTela * passo, behavior: reduzido ? "auto" : "smooth" });
   }
 
   const seta = escuro
@@ -124,6 +148,11 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
         <Lista ref={ref} onScroll={medir} tabIndex={rola ? 0 : undefined} className={`trilho focus-visible:outline-offset-[-2px] ${className}`}>
           {children}
         </Lista>
+      </div>
+      {/* Fio de progresso, só no desktop e só quando há o que rolar: como ali os cartões
+          aparecem inteiros (nenhum cortado na borda), é ele que mostra que o trilho continua. */}
+      <div aria-hidden className={`mt-6 hidden h-px ${escuro ? "bg-white/25" : "bg-line-strong/40"} ${rola ? "lg:block" : ""} ${setasNoLg}`}>
+        <span ref={marca} className={`block h-[3px] w-0 -translate-y-px ${escuro ? "bg-white" : "bg-ink"}`} />
       </div>
     </div>
   );

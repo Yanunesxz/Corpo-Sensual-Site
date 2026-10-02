@@ -23,7 +23,7 @@ classes abaixo. Nenhuma cor fora dos tokens, nenhum `style` com cor.
 | `noite` | `#0E2F44` | tom profundo, só estrutura: faixa do topo, fábrica, rodapé, cartão 210, chip ativo |
 | `noite-hover` | `#16405C` | hover sobre noite |
 | `noite-texto` | `#BFD0DC` | texto corrido sobre noite |
-| `areia` | `#F4EEE8` | apoio: vitrine e fundo das fotos de peça |
+| `areia` | `#F4EEE8` | apoio: seção da vitrine e passe-partout da foto de peça na seção branca |
 | `body` | `#454B54` | texto corrido |
 | `muted` | `#5F6670` | notas, referência da peça, microtexto |
 | `line` | `#DCE8F0` | fios e divisórias |
@@ -36,7 +36,9 @@ body/areia 7,64 · muted/paper 5,80 · muted/areia 5,04 · paper/noite 13,92 ·
 noite-texto/noite 8,80 · paper/noite-hover 10,93 · erro/paper 6,54 · placeholder
 `#6b7380`/paper 4,78. Texto branco sobre foto: só com `.shade`/`.shade-capa` ou dentro
 de `.tag`, medido no percentil 90 (`scratchpad/redesign/ed-work/contraste-foto.mjs`);
-se falhar, escurecer o degradê, nunca clarear o texto.
+se falhar, escurecer o degradê, nunca clarear o texto. O `.shade-capa` fecha a 72% da
+altura da foto: a força fica na metade de baixo, onde está o texto, e o rosto da
+modelo fica com a cor da foto.
 
 Regras: **um** `.btn-primary` por bloco (o resto é contorno ou link); seções alternam
 fundo, nunca duas iguais seguidas; o azul-noite nunca é botão.
@@ -83,9 +85,16 @@ a `noite-texto` sozinhos. Medida de leitura: títulos grandes com `max-w-[14ch]`
 ## Movimento
 
 Curva única `--ease-saida`. Ao rolar, `data-reveal` sobe 18 px em 700 ms; vizinhos em
-cascata com `style={{ "--atraso": "80ms" }}`; **nunca** na primeira tela. Foto aproxima
-3,5% no hover só com mouse (`.zoom-img`). Seta anda 3 px. Com
-`prefers-reduced-motion`, nada se move e nenhum vídeo toca sozinho.
+cascata com `style={{ "--atraso": "80ms" }}`; **nunca** na primeira tela. Dentro de um
+trilho os cartões revelam todos juntos (os de fora da tela já estão prontos quando o
+dedo chega), e no Voltar do navegador a página volta inteira, sem animar de novo.
+Foto aproxima 3,5% no hover só com mouse (`.zoom-img`). Seta anda 3 px. Trocar o filtro
+de peças esmaece a lista nova em 240 ms. A pergunta do FAQ abre deslizando (onde o
+navegador anima até `auto`). O menu em folha sobe ao abrir e desce ao fechar. Um botão
+que aponta para `#formulario` faz o cartão do cadastro ganhar um anel que some
+(`[data-chamado]`) e, no desktop, põe o foco no primeiro campo. No toque, botão e
+cartão-link escurecem um pouco ao pressionar. Com `prefers-reduced-motion`, nada se
+move e nenhum vídeo toca sozinho.
 
 ## Classes globais
 
@@ -95,7 +104,8 @@ cascata com `style={{ "--atraso": "80ms" }}`; **nunca** na primeira tela. Foto a
 `.btn-outline-light` `.btn-sm` `.btn-lg` · `.tag` `.tag-sky` `.tag-areia` · `.field`
 `.seg` `.chip` `.chip-active` `.faq` · `.shade` (texto curto sobre foto) `.shade-capa`
 (texto grande sobre foto) `.hero-foto*` `.zoom-img` · `.trilho` `.trilho-largo` (84%)
-`.trilho-medio` (72%) `.trilho-lg-grade` (vira grade a partir de 1024 px, colunas em
+`.trilho-medio` (72%; no desktop o trilho mostra cartões inteiros: 4, 5 a partir de 1280 px, 2
+largos ou 3 médios) `.trilho-lg-grade` (vira grade a partir de 1024 px, colunas em
 `[--colunas:N]`) · `.cta-bar` `.wa-flutuante` `.folha` `.folha-fundo`.
 
 Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
@@ -110,19 +120,54 @@ Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
 | `WhatsAppButton` | flutuante verde; sobe acima do aviso de cookies |
 | `SectionHeading` | fólio + título + texto + link |
 | `Condicoes` | condições comerciais: `faixa`, `ficha`, `lista` |
-| `Passos` | passos numerados (ou com ponto, `semNumeros`) |
-| `ProductCard`, `ProductGrid` | peça; vitrine em trilho com cartão "210" ou grade 6/3/2 |
-| `Trilho` | carrossel com scroll-snap e setas a partir de 768 px |
+| `Passos` | passos numerados (ou com ponto, `semNumeros`); em pilha, em linha (`linha`, 1024 px) ou em linha só na tela larga (`linha-xl`, 1280 px) |
+| `ProductCard`, `ProductGrid` | peça (a foto leva ao cadastro, com a etiqueta "Receber o catálogo" no hover); vitrine em trilho com cartão "210" ou grade 2/3/4/5 |
+| `Trilho` | carrossel com scroll-snap; setas a partir de 768 px (avançam uma página); cartões inteiros e fio de progresso a partir de 1024 px |
 | `ProducaoSection`, `NumerosFabrica` | "Da costura à caixa lacrada" e os números da fábrica |
-| `LeadForm`, `BlocoCadastro` | formulário de cadastro e o cartão em volta |
+| `LeadForm`, `BlocoCadastro` | formulário de cadastro (máscara no WhatsApp e no CNPJ/CPF, aviso na saída do campo) e o cartão em volta |
 | `Faq` | perguntas com `<details>` |
 | `Figura` | foto editorial com legenda |
-| `Linhas` | "Compre por linha" |
-| `ColecoesVitrine` | coleções em `spread` (home) ou `grande` (/colecoes) |
+| `Linhas` | "Compre por linha": três fotos lado a lado em todas as larguras |
+| `ColecoesVitrine` | coleções em `spread` (home: trilho no celular, duas colunas no tablet, 6 + 4 colunas no desktop) ou `grande` (/colecoes: cartões em pé, lado a lado a partir de 768 px) |
 | `CampaignVideo` | vídeo que só carrega perto da tela, com pausa e som |
 | `HeroImage` | foto de capa com direção de arte (`<picture>`, baixa só uma) |
 
 A API de cada um está no comentário do próprio arquivo.
+
+### Foto de peça
+
+Todas as fotos de `public/images/produtos` saem de `scripts/foto-produto.mjs` no mesmo
+quadro: 1400x1750 (4:5), fundo branco, topo do cabelo a 5,5% da altura, figura centrada,
+base cortada na canela encostada na borda de baixo (ou corpo inteiro com 3,5% de folga
+sob o pé). A foto entra **sem mistura de cor** (nada de `mix-blend`): a lojista compra
+pela cor. A moldura é sempre branco contra areia: na seção areia o cartão é o próprio
+branco da foto (`<ProductCard sobre="areia">`); na seção branca a foto ganha um
+passe-partout areia de 6/8 px (padrão, `sobre="papel"`).
+
+### Foto de campanha: o recorte acompanha o formato
+
+A reclamação que originou este polimento foi "as fotos estão mal recortadas". Regras:
+
+- Foto em pé nunca vira faixa larga. Capa de coleção cuja foto "larga" é em pé (Entrelaços)
+  se divide no desktop: painel azul-noite com o texto à esquerda, foto na metade direita
+  (`metade: true` em `FOCO_CAPA`, `colecoes/[slug]/page.tsx`).
+- Cartão de coleção é sempre em pé (4:5; 6:7 no desktop). Foto presa ao lado de
+  formulário usa a proporção dela (`lg:aspect-[4/5]`), não a altura da tela.
+- Capa em faixa (home, /sobre, /seja-representante): 36svh no celular, `min(56vw, 58svh)`
+  no tablet, coluna de meia tela no desktop. Cada largura tem o seu ponto de interesse
+  (`object-position`), conferido com as cabeças inteiras em 360, 390, 768, 1024, 1280,
+  1440, 1680 e 1920 px.
+- Nada maior que a tela: a foto grande das coleções da home (652x760) e o cartão de
+  /colecoes cabem inteiros numa janela de 830 px de altura.
+- Capa da home no desktop: a família de corpo inteiro (`colecoes/delicias-1.jpg`,
+  ancorada embaixo). Quem vende pijama mostra o conjunto dos pés à cabeça.
+
+### Formulário na primeira tela (desktop)
+
+Na landing (`/fabrica-de-pijamas`) a grade é 7/5 de 1024 a 1279 px e meio a meio a partir
+de 1280 px: o cartão tem 560 a 640 px, os campos ficam em duas colunas e o botão de envio
+aparece inteiro numa janela de 1680x830. Em `/catalogo` o botão também cabe nessa janela.
+Campos com 48 px de altura a partir de 1024 px (52 px no celular).
 
 ### Marcadores de página
 
@@ -132,6 +177,11 @@ A API de cada um está no comentário do próprio arquivo.
 - `data-sem-barra`: no que a barra não pode cobrir. O `LeadForm`, o `BlocoCadastro` e o
   rodapé já têm; ponha também nos blocos de fecho.
 - `data-reveal`: sobe ao entrar na tela (abaixo da dobra).
+- `cv-auto` + `[contain-intrinsic-size:auto_Npx]`: seção abaixo da dobra que só é montada
+  perto da tela. A reserva é a altura do **conteúdo** (sem o padding da própria seção: numa
+  seção com `.sec`, a altura real menos 128/176/240 px), por largura: celular, `md:`, `lg:`,
+  `xl:` e `min-[90rem]:` (em rem, não em px). Confira com
+  `scratchpad/polir/apl/rev/s12-cv.mjs` depois de mexer no layout de uma seção.
 - `data-ga-local`: onde o clique aconteceu, para o GA (`hero`, `vitrine`, `barra-fixa`,
   `flutuante`; sem marcação vale `cabecalho`, `menu`, `rodape` ou `pagina`).
 
@@ -139,8 +189,12 @@ A API de cada um está no comentário do próprio arquivo.
 
 Uma coisa por vez: o aviso de cookies (quando aberto) esconde a barra fixa e empurra o
 WhatsApp para cima; a barra fixa, quando à vista, esconde o WhatsApp flutuante (ela já
-traz o seu); campo em foco esconde a barra e o WhatsApp; o menu em folha deixa todo o
-resto inerte.
+traz o seu) e a pílula do cabeçalho (`.botao-topo`, a mesma ação); campo em foco
+esconde a barra e o WhatsApp; o menu em folha deixa todo o resto inerte.
+
+Componente de cliente que desenha algo conforme a rota usa `useRota()` (`lib/rota.ts`),
+nunca `usePathname()` direto: quando a Vercel refaz a home, o servidor a monta como
+`/index`, e a diferença derrubava a hidratação da página inteira.
 
 ## Efeito de rolagem da coleção
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
+import { useRota } from "@/lib/rota";
 import { acaoDa } from "./barra-cta";
 import { site, whatsappLink } from "@/lib/site";
 import { WhatsApp } from "./icons";
@@ -21,7 +21,7 @@ import { WhatsApp } from "./icons";
  */
 export function WhatsAppButton() {
   const ref = useRef<HTMLAnchorElement>(null);
-  const pathname = usePathname();
+  const pathname = useRota();
   const semFlutuante = pathname === "/ajuda" || pathname === "/obrigado";
   const ativo = Boolean(site.contact.whatsappUrl) && !semFlutuante;
   // Página com barra fixa: abaixo de 1024 px o WhatsApp mora na barra.

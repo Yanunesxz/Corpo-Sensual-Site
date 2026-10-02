@@ -165,7 +165,7 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 | Campanha Delícias de Verão (Primavera/Verão 2027) | `\192.168.0.2\Comercial\MARKETER CORPO SENSUAL\CA_VERAO_2027`; convertidas por `scripts/midia-campanha.mjs` conforme `scripts/midia-campanha.json` |
 | Campanha Entrelaços (Outono/Inverno 2026) | Site antigo no Wix; cópias otimizadas em `public/images/colecoes/` |
 | Vídeo da produção (`public/videos/producao/`) | Gravado na fábrica; original em `05_CONTEUDOS/PRODUCAO_DA COSTURA A CAIXA.mp4`. Chegou pelo WhatsApp e veio comprimido (576x1024): se aparecer o arquivo original, vale regerar |
-| Referências do ranking (`public/images/produtos/<ref>.jpg`) | Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026). Fotos de estúdio nomeadas pela referência em `\\192.168.0.2\Comercial\FOTOS COM REFENCIA CS` (158 fotos, fonte principal). Fontes secundárias: `#Corpo Sensual\CATALOGO\FOTOS`, `FUNDO TRANSPARENTE (PNG)1` e páginas do catálogo Verão 2027 em PDF |
+| Referências do ranking (`public/images/produtos/<ref>.jpg`) | Arquivo de origem de cada foto em `scripts/foto-produto.json` (Verão 2027: `Comercial\MARKETER CORPO SENSUAL\CA_VERAO_2027\02_FOTOS EDITADAS\FOTOS ESTUDIO\JPG`; Inverno 2026: `Comercial\MARKETING\FOTOS CATALOGO INVERNO 2026_CORPO SENSUAL`). Ranking do ERP (`\\192.168.0.2\SetorX\Yan\RANKING DE VENDAS CORPO SENSUAL.QRP`, jul a set/2026). Fotos de estúdio nomeadas pela referência em `\\192.168.0.2\Comercial\FOTOS COM REFENCIA CS` (158 fotos, fonte principal). Fontes secundárias: `#Corpo Sensual\CATALOGO\FOTOS`, `FUNDO TRANSPARENTE (PNG)1` e páginas do catálogo Verão 2027 em PDF |
 | Mosaico de categorias da home | Fotos de campanha em `public/images/categorias/`: feminino, masculino e infantil |
 | Logo (monograma CS) | `\\192.168.0.2\SetorX\Yan\IMG SYS\corpo-sensual-logo.png`, usado como ícone do site em `src/app/icon.png` |
 | Fotos por referência, Inverno 2026 (`0981.jpeg`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS INVERNO 2026` |
@@ -175,13 +175,13 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 
 Depois de copiar fotos novas para `public/images/`, rode `npm run imagens` para reduzir o tamanho. Fotos com fundo transparente só compensam em PNG se a transparência for usada; caso contrário, salve como JPG.
 
-**Foto de produto nova:** o site usa fotos de estúdio em 4:5 (1200x1500) com fundo branco. Para preparar a foto de uma referência a partir do arquivo do servidor:
+**Foto de produto nova:** o site usa fotos de estúdio em 4:5 (1400x1750) com fundo branco, todas no mesmo quadro (topo do cabelo a 5,5% da altura, figura centrada, base na borda de baixo). Para preparar a foto de uma referência a partir do arquivo do servidor:
 
 ```bash
 node scripts/foto-produto.mjs 0810 "caminho\para\0810.jpg"
 ```
 
-Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--recorte`. Para páginas de catálogo em PDF, converta a página para PNG e use `--cortar-topo=0.27` para remover o cabeçalho com a referência e as cores. O resultado vai para `public/images/produtos/<ref>.jpg`. Depois cadastre a peça em `src/data/catalogo.json` (ref, posição no ranking, nome, descrição, categoria) e rode `npm run seed` para regenerar o `supabase/seed.sql`. O site sem banco lê o mesmo JSON.
+Para recortes com fundo transparente (pasta `FUNDO TRANSPARENTE`) adicione `--recorte`. Para páginas de catálogo em PDF, converta a página para PNG e use `--cortar-topo=0.27` para remover o cabeçalho com a referência e as cores. Foto sem tratamento (fundo com degradê, tripé na borda): `--nivelar` e `--aparar=E,T,D,B`. Acrescente a referência em `scripts/foto-produto.json`; `node scripts/foto-produto-lote.mjs` refaz todas a partir do servidor e `node scripts/foto-produto-folhas.mjs --guias` monta as folhas de contato para conferir (use `--realce` para ver emenda de fundo). O resultado vai para `public/images/produtos/<ref>.jpg`. Depois cadastre a peça em `src/data/catalogo.json` (ref, posição no ranking, nome, descrição, categoria) e rode `npm run seed` para regenerar o `supabase/seed.sql`. O site sem banco lê o mesmo JSON.
 
 ### Gerenciando o conteúdo no dia a dia
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
-import { formatarDocumento } from "@/lib/documento";
+import { documentoValido, formatarDocumento, somenteDigitos } from "@/lib/documento";
 import { guardarLeadLocal } from "@/lib/lead-local";
 import { enviarEvento, marcarLeadEnviado } from "@/lib/analytics";
 import type { LeadSource } from "@/lib/types";
@@ -15,6 +15,48 @@ const initialLeadState: LeadFormState = { ok: false };
 
 /** Ordem dos campos na tela: depois de um erro, o foco vai ao primeiro que falhou. */
 const ORDEM_DOS_CAMPOS = ["name", "whatsapp", "email", "has_cnpj", "document", "company", "city", "state", "message"] as const;
+
+/**
+ * "(32) 99999-8888" enquanto a pessoa digita (o servidor guarda só os dígitos). Quem cola
+ * o número com o código do país (+55) fica com DDD e número. O parêntese só fecha quando
+ * chega o terceiro dígito, senão o Backspace travava em "(32) ".
+ */
+function formatarWhatsApp(valor: string): string {
+  let d = somenteDigitos(valor);
+  if (d.length > 11 && d.startsWith("55")) d = d.slice(2);
+  d = d.slice(0, 11);
+  if (d.length === 0) return "";
+  if (d.length <= 2) return `(${d}`;
+  const ddd = d.slice(0, 2);
+  const numero = d.slice(2);
+  if (numero.length <= 4) return `(${ddd}) ${numero}`;
+  const corte = numero.length - 4;
+  return `(${ddd}) ${numero.slice(0, corte)}-${numero.slice(corte)}`;
+}
+
+/**
+ * Aplica a máscara num campo controlado sem jogar o cursor para o fim quando a pessoa
+ * corrige um dígito no meio: o cursor volta para depois do mesmo número de dígitos.
+ */
+function aplicarMascara(el: HTMLInputElement, formatar: (v: string) => string, guardar: (v: string) => void) {
+  const bruto = el.value;
+  const cursor = el.selectionStart ?? bruto.length;
+  const novo = formatar(bruto);
+  guardar(novo);
+  if (cursor >= bruto.length) return;
+  const digitosAntes = somenteDigitos(bruto.slice(0, cursor)).length;
+  requestAnimationFrame(() => {
+    let i = 0;
+    for (let n = 0; i < novo.length && n < digitosAntes; i++) if (/\d/.test(novo[i])) n++;
+    try {
+      el.setSelectionRange(i, i);
+    } catch {
+      // Campo sem seleção de texto: fica como está.
+    }
+  });
+}
+
+const EMAIL_SIMPLES = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 type Props = {
   source: LeadSource;
@@ -32,7 +74,16 @@ type Props = {
  * Desenho pensado para o celular: um campo por linha, rótulo sempre visível,
  * WhatsApp antes do e-mail (é por ele que a vendedora fala), a pergunta do CNPJ
  * em dois botões grandes em vez de uma lista, e o botão de envio na largura toda.
- * Em contêiner largo (@md), WhatsApp + e-mail e CNPJ + loja ficam lado a lado.
+ * Em contêiner de 384 px ou mais, WhatsApp + e-mail e CNPJ + loja ficam lado a lado.
+ *
+ * Ajuda antes do envio: WhatsApp e CNPJ/CPF ganham máscara enquanto a pessoa digita, e ao
+ * sair do campo um documento completo e inválido ou um e-mail pela metade já mostram o
+ * mesmo aviso que o servidor daria. Os avisos somem quando a pessoa volta a digitar e
+ * não bloqueiam o envio: quem decide continua sendo o servidor.
+ *
+ * Botão da página que aponta para #formulario: ao fim da rolagem o cartão ganha um anel
+ * que aparece e some ([data-chamado], globals.css) e, no desktop, o primeiro campo
+ * recebe o foco. Mostra onde é para agir, mesmo quando o formulário já estava na tela.
  *
  * Um único LeadForm por página: os id dos campos são fixos.
  */
@@ -54,12 +105,15 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     initialLeadState,
   );
   const [hasCnpj, setHasCnpj] = useState<string>(state.values?.has_cnpj ?? "");
-  // Documento é controlado para receber a máscara enquanto a pessoa digita.
+  // Documento e WhatsApp são controlados para receber a máscara enquanto a pessoa digita.
   const [documento, setDocumento] = useState<string>(state.values?.document ?? "");
+  const [whats, setWhats] = useState<string>(formatarWhatsApp(state.values?.whatsapp ?? ""));
+  // Avisos na saída do campo, antes do envio (os do servidor chegam em state.errors).
+  const [avisos, setAvisos] = useState<{ document?: string; email?: string }>({});
   // Sem escolha ainda, o campo já nasce como CNPJ: quem se cadastra costuma ser lojista.
   const ehLojista = (hasCnpj || state.values?.has_cnpj || "sim") !== "nao";
 
-  const err = state.errors ?? {};
+  const err: NonNullable<LeadFormState["errors"]> = { ...avisos, ...(state.errors ?? {}) };
   const v = state.values ?? {};
   const isContact = source === "contato";
   // Representante não tem loja: os rótulos de empresa e mensagem mudam de sentido.
@@ -85,17 +139,73 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         : form.current?.querySelector<HTMLElement>(`#${primeiro}`);
     alvo?.focus();
   }, [state]);
-  const aoFocar = () => {
+  const aoComecar = () => {
     if (comecou.current) return;
     comecou.current = true;
     enviarEvento("form_inicio", { lead_source: source });
   };
+  // Foco posto pelo site (e não pela pessoa) não conta como começo de preenchimento.
+  const focoDoSite = useRef(false);
+
+  // Um botão da página chamou o formulário (#formulario): mostra onde é para agir.
+  useEffect(() => {
+    const f = form.current;
+    if (!f) return;
+    const cartao = f.parentElement?.closest<HTMLElement>("[data-sem-barra]") ?? f;
+    let espera = 0;
+    let reserva = 0;
+    let apagar = 0;
+    let pendente = false;
+    const chamar = () => {
+      if (!pendente) return;
+      pendente = false;
+      window.clearTimeout(espera);
+      window.clearTimeout(reserva);
+      window.removeEventListener("scrollend", chamar);
+      cartao.dataset.chamado = "";
+      window.clearTimeout(apagar);
+      apagar = window.setTimeout(() => delete cartao.dataset.chamado, 1500);
+      // Só no desktop: no celular o foco abriria o teclado em cima do título.
+      if (!window.matchMedia("(min-width: 1024px)").matches) return;
+      const nome = f.querySelector<HTMLInputElement>("#name");
+      if (!nome || f.contains(document.activeElement)) return;
+      focoDoSite.current = true;
+      nome.focus({ preventScroll: true });
+      focoDoSite.current = false;
+    };
+    const aoClicar = (e: MouseEvent) => {
+      const a = e.target instanceof Element ? e.target.closest("a[href]") : null;
+      if (!(a instanceof HTMLAnchorElement) || a.hash !== "#formulario" || a.pathname !== window.location.pathname) return;
+      const y = window.scrollY;
+      pendente = true;
+      window.clearTimeout(espera);
+      window.clearTimeout(reserva);
+      window.addEventListener("scrollend", chamar, { once: true });
+      // Nada rolou (o formulário já estava no lugar): responde logo. Senão, ao fim da rolagem;
+      // a reserva cobre o navegador que não avisa o fim (Safari).
+      espera = window.setTimeout(() => {
+        if (Math.abs(window.scrollY - y) < 2) chamar();
+      }, 160);
+      reserva = window.setTimeout(chamar, 1300);
+    };
+    document.addEventListener("click", aoClicar);
+    return () => {
+      document.removeEventListener("click", aoClicar);
+      window.removeEventListener("scrollend", chamar);
+      window.clearTimeout(espera);
+      window.clearTimeout(reserva);
+      window.clearTimeout(apagar);
+    };
+  }, []);
 
   return (
     <form
       ref={form}
       action={action}
-      onFocusCapture={aoFocar}
+      onFocusCapture={() => {
+        if (!focoDoSite.current) aoComecar();
+      }}
+      onInputCapture={aoComecar}
       // Enviando: um segundo toque (ou Enter) não manda de novo. O botão não fica
       // "disabled" para o foco do teclado não se perder no meio do envio.
       onSubmit={(e) => {
@@ -118,12 +228,44 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         <input id="name" className="field" name="name" autoComplete="name" required aria-invalid={Boolean(err.name)} aria-describedby={err.name ? "name-error" : undefined} defaultValue={v.name} placeholder="Nome e sobrenome" />
       </Field>
 
-      <div className="grid gap-4 @md:grid-cols-2">
+      <div className="grid gap-4 @[24rem]:grid-cols-2">
         <Field label="WhatsApp com DDD" name="whatsapp" error={err.whatsapp}>
-          <input id="whatsapp" className="field" type="tel" name="whatsapp" autoComplete="tel" inputMode="tel" required aria-invalid={Boolean(err.whatsapp)} aria-describedby={err.whatsapp ? "whatsapp-error" : undefined} defaultValue={v.whatsapp} placeholder="32 90000-9999" />
+          <input
+            id="whatsapp"
+            className="field tabular-nums"
+            type="tel"
+            name="whatsapp"
+            autoComplete="tel"
+            inputMode="tel"
+            required
+            aria-invalid={Boolean(err.whatsapp)}
+            aria-describedby={err.whatsapp ? "whatsapp-error" : undefined}
+            value={whats}
+            onChange={(e) => aplicarMascara(e.target, formatarWhatsApp, setWhats)}
+            placeholder="(32) 90000-9999"
+          />
         </Field>
         <Field label="E-mail" name="email" error={err.email}>
-          <input id="email" className="field" type="email" name="email" autoComplete="email" inputMode="email" required aria-invalid={Boolean(err.email)} aria-describedby={err.email ? "email-error" : undefined} defaultValue={v.email} placeholder="compras@sualoja.com" />
+          <input
+            id="email"
+            className="field"
+            type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
+            required
+            aria-invalid={Boolean(err.email)}
+            aria-describedby={err.email ? "email-error" : undefined}
+            defaultValue={v.email}
+            placeholder="compras@sualoja.com"
+            onChange={() => {
+              if (avisos.email) setAvisos((a) => ({ ...a, email: undefined }));
+            }}
+            onBlur={(e) => {
+              const valor = e.target.value.trim();
+              if (valor && !EMAIL_SIMPLES.test(valor)) setAvisos((a) => ({ ...a, email: "Informe um e-mail válido." }));
+            }}
+          />
         </Field>
       </div>
 
@@ -146,6 +288,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
                   setHasCnpj(e.target.value);
                   // Trocou de CNPJ para CPF (ou o contrário): o que estava digitado não serve mais.
                   setDocumento("");
+                  setAvisos((a) => ({ ...a, document: undefined }));
                 }}
               />
               <span>{o.rotulo}</span>
@@ -166,7 +309,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </p>
       )}
 
-      <div className="grid gap-4 @md:grid-cols-2">
+      <div className="grid gap-4 @[24rem]:grid-cols-2">
         {/* Lojista informa o CNPJ; quem não tem loja informa o CPF. */}
         <Field label={ehLojista ? "CNPJ" : "CPF"} name="document" error={err.document}>
           <input
@@ -179,7 +322,18 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             aria-invalid={Boolean(err.document)}
             aria-describedby={err.document ? "document-error" : undefined}
             value={documento}
-            onChange={(e) => setDocumento(formatarDocumento(e.target.value, ehLojista ? "cnpj" : "cpf"))}
+            onChange={(e) => {
+              aplicarMascara(e.target, (valor) => formatarDocumento(valor, ehLojista ? "cnpj" : "cpf"), setDocumento);
+              if (avisos.document) setAvisos((a) => ({ ...a, document: undefined }));
+            }}
+            // Completo e com dígito verificador errado: avisa na saída do campo, com a frase do servidor.
+            onBlur={() => {
+              const tipo = ehLojista ? "cnpj" : "cpf";
+              const completo = somenteDigitos(documento).length === (ehLojista ? 14 : 11);
+              if (completo && !documentoValido(documento, tipo)) {
+                setAvisos((a) => ({ ...a, document: ehLojista ? "CNPJ inválido. Confira os números." : "CPF inválido. Confira os números." }));
+              }
+            }}
             placeholder={ehLojista ? "00.000.000/0000-00" : "000.000.000-00"}
             maxLength={ehLojista ? 18 : 14}
           />

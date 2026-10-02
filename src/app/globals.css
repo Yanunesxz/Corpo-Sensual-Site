@@ -86,12 +86,16 @@
 
 html {
   scroll-behavior: smooth;
-  /* Âncoras (#formulario, #pecas) param abaixo da barra presa do cabeçalho. */
-  scroll-padding-top: 5rem;
+  /* Âncoras (#formulario, #pecas) param logo abaixo da barra presa do cabeçalho: 64 px de
+     barra + 1 px de fio (72 + 1 no desktop). Com folga, sobrava uma tira da seção anterior
+     colada no cabeçalho. Todo alvo é uma seção com respiro próprio. */
+  scroll-padding-top: 65px;
+  /* O clarão cinza do toque sai: quem responde ao dedo é o :active de cada coisa. */
+  -webkit-tap-highlight-color: transparent;
 }
 @media (min-width: 1024px) {
   html {
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 73px;
   }
 }
 
@@ -134,10 +138,16 @@ body {
 @layer components {
   /* Seções abaixo da dobra: estilo, layout e pintura só quando chegam perto da tela.
      "auto" guarda a altura real depois da primeira vez (a barra de rolagem não pula).
-     Cada seção reserva a própria altura com [contain-intrinsic-size:auto_Npx] (celular e
-     lg:), perto da real: com a reserva errada, um link para uma âncora mais abaixo
-     (#perguntas, #formulario) parava fora do lugar. Fica dentro da camada: o utilitário
-     da seção precisa ganhar deste padrão.
+     Cada seção reserva a própria altura com [contain-intrinsic-size:auto_Npx] (celular,
+     md:, lg:, xl: e min-[90rem]:), perto da real: com a reserva errada, um link para uma
+     âncora mais abaixo (#perguntas, #formulario) parava fora do lugar e o Voltar do
+     navegador devolvia a página deslocada.
+     ATENÇÃO: a reserva é a altura do CONTEÚDO, sem o padding da própria seção. Numa seção
+     com .sec (padding de 64/88/120 px em cima e embaixo), reserve a altura real menos
+     128/176/240 px; reservando a altura inteira, a seção ainda não montada ficava 128 a
+     240 px mais alta que a de verdade. Use rem no ponto de corte arbitrário (min-[90rem]:,
+     não min-[1440px]:), senão o Tailwind o ordena antes do xl: e ele não vale.
+     Fica dentro da camada: o utilitário da seção precisa ganhar deste padrão.
      Nunca numa seção com formulário: o axe mede contraste errado do que não foi pintado. */
   .cv-auto {
     content-visibility: auto;
@@ -363,6 +373,16 @@ body {
   .btn:active {
     transform: translateY(1px);
   }
+  /* No toque não há hover: o dedo precisa de resposta. */
+  @media (hover: none) {
+    .btn:active {
+      opacity: 0.88;
+    }
+    a:active .zoom-img,
+    a.zoom-img:active {
+      opacity: 0.9;
+    }
+  }
   .btn svg {
     flex: none;
     transition: transform 0.25s var(--ease-saida);
@@ -484,6 +504,14 @@ body {
   .field[aria-invalid="true"] {
     border-color: var(--color-erro);
   }
+  /* Com mouse o alvo pode ser menor: 48 px no desktop põem o botão de envio na primeira
+     tela de um monitor de 1680x830 (landing e /catalogo). No celular ficam os 52 px. */
+  @media (min-width: 1024px) {
+    .field,
+    .seg span {
+      min-height: 48px;
+    }
+  }
   .field::placeholder {
     color: #6b7380;
   }
@@ -499,7 +527,10 @@ body {
      o desenho vem do <span> irmão (input:checked + span), sem :has(). */
   .seg {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Metade para cada opção, alinhadas com os campos de cima e de baixo. A primeira
+       ("Sim, tenho CNPJ") é mais longa e nunca quebra em duas linhas: no cartão de 280 px
+       do celular de 360 px ela fica com a largura do texto e a segunda com o resto. */
+    grid-template-columns: minmax(max-content, 1fr) minmax(0, 1fr);
     gap: 0.5rem;
   }
   .seg label {
@@ -521,7 +552,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 52px;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem;
     border: 1px solid var(--color-line-strong);
     border-radius: var(--radius-field);
     background: #fff;
@@ -529,6 +560,7 @@ body {
     font-size: 0.9375rem;
     line-height: 1.2;
     text-align: center;
+    white-space: nowrap;
     transition:
       border-color 0.15s ease,
       background-color 0.15s ease,
@@ -618,6 +650,25 @@ body {
   .faq summary:hover {
     color: var(--color-noite);
   }
+  /* A resposta abre e fecha deslizando, onde o navegador sabe animar até "auto"
+     (interpolate-size). Nos outros, abre de uma vez, como sempre. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (interpolate-size: allow-keywords) {
+      .faq details {
+        interpolate-size: allow-keywords;
+      }
+      .faq details::details-content {
+        block-size: 0;
+        overflow: clip;
+        transition:
+          block-size 0.3s var(--ease-saida),
+          content-visibility 0.3s allow-discrete;
+      }
+      .faq details[open]::details-content {
+        block-size: auto;
+      }
+    }
+  }
 
   /* ---------- Fotos ---------- */
 
@@ -629,7 +680,12 @@ body {
     background: linear-gradient(to top, rgb(14 31 41 / 0.78), rgb(14 31 41 / 0.42) 32%, rgb(14 31 41 / 0) 62%);
     pointer-events: none;
   }
-  /* Degradê mais alto para texto branco grande (capa com H1 e lead por cima). */
+  /* Degradê mais alto para texto branco grande (capa com H1 e lead por cima).
+     Fecha a 72% da altura (era 82%): a força fica onde há texto (a metade de baixo) e o
+     rosto da modelo, no terço de cima, fica com a cor da foto. Medido no p90, com o rótulo
+     de 12 px como pior linha: capas de coleção 5,1:1 ou mais (360x640 a 768), cartões de
+     /colecoes 4,7:1 ou mais, H1 da landing 3,4:1 (texto grande) a 360x640. Fechando a 68%
+     o rótulo da capa caía a 4,2:1 a 360 px. */
   .shade-capa::after {
     content: "";
     position: absolute;
@@ -638,8 +694,8 @@ body {
       to top,
       rgb(14 31 41 / 0.86) 0%,
       rgb(14 31 41 / 0.72) 34%,
-      rgb(14 31 41 / 0.45) 58%,
-      rgb(14 31 41 / 0) 82%
+      rgb(14 31 41 / 0.5) 52%,
+      rgb(14 31 41 / 0) 72%
     );
     pointer-events: none;
   }
@@ -662,6 +718,11 @@ body {
       background:
         linear-gradient(to right, rgb(14 31 41 / 0.8) 0%, rgb(14 31 41 / 0.58) 34%, rgb(14 31 41 / 0) 62%),
         linear-gradient(to top, rgb(14 31 41 / 0.45) 0%, rgb(14 31 41 / 0) 45%);
+    }
+    /* Capa dividida (texto num painel azul-noite, foto só na outra metade): não há texto
+       sobre a foto, então ela fica sem degradê nenhum. */
+    .sem-shade-lg::after {
+      display: none;
     }
   }
 
@@ -693,14 +754,20 @@ body {
   }
 
   /* ---------- Trilho (carrossel com scroll-snap, sem biblioteca) ----------
-     Sangra até a borda da tela: margem negativa igual à margem do .wrap e o mesmo
-     respiro por dentro, então o primeiro cartão alinha com o texto. */
+     Até 1023 px sangra até a borda da tela (margem negativa igual à margem do .wrap e o
+     mesmo respiro por dentro, então o primeiro cartão alinha com o texto): o cartão
+     cortado na borda avisa que o trilho rola com o dedo.
+     A partir de 1024 px não sangra: fica na largura do texto e mostra cartões INTEIROS
+     (--por-tela), e as setas avançam uma página. Assim nada fica cortado no meio da tela
+     quando o monitor é mais largo que o .wrap.
+     O vão entre cartões é --vao: não use gap-* do Tailwind num trilho que rola. */
   .trilho {
+    --vao: 0.75rem;
     position: relative;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 46%;
-    gap: 0.75rem;
+    gap: var(--vao);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -735,8 +802,8 @@ body {
   }
   @media (min-width: 768px) {
     .trilho {
+      --vao: 1.25rem;
       grid-auto-columns: 30%;
-      gap: 1.25rem;
       margin-inline: -2rem;
       padding-inline: 2rem;
       scroll-padding-inline: 2rem;
@@ -749,10 +816,20 @@ body {
     }
   }
   @media (min-width: 1024px) {
+    /* Cartões inteiros: quatro por tela (cinco a partir de 1280), dois largos, três médios.
+       Os 4 px em volta são só para o anel de foco dos cartões não ser cortado. */
     .trilho {
-      margin-inline: -3rem;
-      padding-inline: 3rem;
-      scroll-padding-inline: 3rem;
+      --por-tela: 4;
+      grid-auto-columns: calc((100% - (var(--por-tela) - 1) * var(--vao)) / var(--por-tela));
+      margin-inline: -4px;
+      padding: 4px;
+      scroll-padding-inline: 4px;
+    }
+    .trilho-largo {
+      --por-tela: 2;
+    }
+    .trilho-medio {
+      --por-tela: 3;
     }
     /* Vira grade comum na tela larga: nada para rolar, as setas somem sozinhas.
        Número de colunas em --colunas (padrão 4): class="... [--colunas:5]". */
@@ -763,12 +840,12 @@ body {
       overflow: visible;
       margin-inline: 0;
       padding-inline: 0;
+      padding-top: 0;
     }
   }
   @media (min-width: 1280px) {
-    /* Quatro cartões e meio à vista: o meio cartão avisa que o trilho continua. */
     .trilho:not(.trilho-largo, .trilho-medio) {
-      grid-auto-columns: calc((100% - 4 * 1.25rem) / 4.5);
+      --por-tela: 5;
     }
   }
 
@@ -882,6 +959,79 @@ body {
     background: rgb(14 47 68 / 0.45);
     animation: var(--animate-aparecer);
   }
+  /* Fechando: a folha desce e o fundo clareia (o componente tira do DOM em seguida). */
+  [data-saindo] > .folha {
+    animation: descer 0.2s ease-in both;
+  }
+  [data-saindo] > .folha-fundo {
+    animation: sumir 0.2s ease both;
+  }
+  @keyframes descer {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sumir {
+    to {
+      opacity: 0;
+    }
+  }
+
+  /* ---------- Cabeçalho: uma chamada por tela no celular ----------
+     Abaixo de 1024 px, quando a barra fixa do polegar está à vista, a pílula do topo sai
+     (mesma ação, duas vezes na tela). Só opacidade: nada se desloca. */
+  @media (max-width: 1023px) {
+    html[data-cta-fixo="1"] .botao-topo {
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.2s ease,
+        visibility 0s linear 0.2s;
+    }
+    .botao-topo {
+      transition:
+        opacity 0.2s ease,
+        visibility 0s,
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+    }
+  }
+
+  /* ---------- Cartão do cadastro "chamado" por um botão (#formulario) ----------
+     O anel aparece e some uma vez, para mostrar onde é para agir (components/lead-form.tsx). */
+  [data-chamado] {
+    animation: chamado 1.4s var(--ease-saida) both;
+  }
+  @keyframes chamado {
+    0%,
+    35% {
+      box-shadow: 0 0 0 2px var(--color-ink);
+    }
+    100% {
+      box-shadow: var(--shadow-card);
+    }
+  }
+
+  /* ---------- Peça que leva ao cadastro (components/product-card.tsx) ----------
+     Só com mouse: a etiqueta "Receber o catálogo" aparece na base da foto no hover. */
+  .peca-chamada {
+    display: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .peca-chamada {
+      display: inline-flex;
+      opacity: 0;
+      transform: translateY(4px);
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s var(--ease-saida);
+    }
+    a:hover > .peca-chamada,
+    a:focus-visible > .peca-chamada {
+      opacity: 1;
+      transform: none;
+    }
+  }
 }
 
 /* ---------- Revelar ao rolar (components/revelar.tsx) ----------
@@ -921,7 +1071,17 @@ body {
     transform: none;
   }
   .folha,
-  .folha-fundo {
+  .folha-fundo,
+  [data-saindo] > .folha,
+  [data-saindo] > .folha-fundo {
     animation: none;
+  }
+  [data-chamado] {
+    animation: none;
+    box-shadow: 0 0 0 2px var(--color-ink);
+  }
+  .peca-chamada,
+  .botao-topo {
+    transition: none;
   }
 }
