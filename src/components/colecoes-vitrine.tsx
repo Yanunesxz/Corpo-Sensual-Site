@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Collection } from "@/lib/types";
 import { REFERENCIAS_POR_COLECAO, collectionShortName, seasonLabel } from "@/lib/site";
 import { altCapa } from "@/lib/content/alt-fotos";
+import { capaVertical } from "@/lib/content/capas";
 import { HeroImage } from "./hero-image";
 import { Trilho } from "./trilho";
 import { ArrowRight } from "./icons";
@@ -25,6 +26,15 @@ type Props = {
   linhasPorColecao?: Record<string, string[]>;
 };
 
+/**
+ * Ponto de interesse da foto larga no cartão 16:9 do desktop. Sem isto, o 16:9 corta a
+ * testa da modelo de Delícias e, em Entrelaços (foto em pé), o rosto da filha.
+ */
+const FOCO_CARTAO: Record<string, string> = {
+  "delicias-de-verao": "center 30%",
+  entrelacos: "center 35%",
+};
+
 function referencias(slug: string): string {
   const n = REFERENCIAS_POR_COLECAO[slug];
   return n ? `${n} referências` : "";
@@ -43,12 +53,15 @@ export function ColecoesVitrine({ collections, variante, prioridade = false, lin
             <li key={c.id} data-reveal={i > 0 ? "" : undefined}>
               <Link
                 href={`/colecoes/${c.slug}`}
-                className="zoom-img shade-capa group relative block aspect-[4/5] overflow-hidden bg-sky md:aspect-[3/2] lg:aspect-[21/9]"
+                // No desktop o degradê vem da esquerda (.shade-lado-cartao): o texto ocupa só o
+                // terço esquerdo e o resto da foto fica com a cor da campanha.
+                className="zoom-img shade-capa shade-lado-cartao group relative block aspect-[4/5] overflow-hidden bg-sky md:aspect-[3/2] lg:aspect-[16/9]"
               >
                 {c.hero_image_url && (
                   <HeroImage
                     desktop={c.hero_image_url}
-                    mobile={c.hero_mobile_url}
+                    mobile={capaVertical(c)}
+                    desktopPosition={Object.hasOwn(FOCO_CARTAO, c.slug) ? FOCO_CARTAO[c.slug] : undefined}
                     alt={altCapa(c.slug, `Campanha da coleção ${nome}`)}
                     priority={prioridade && i === 0}
                     quality={80}
@@ -77,7 +90,7 @@ export function ColecoesVitrine({ collections, variante, prioridade = false, lin
     <Trilho rotulo="Coleções do ano" className="trilho-largo trilho-lg-grade [--colunas:12] lg:gap-x-10">
       {collections.map((c, i) => {
         const nome = collectionShortName(c.name);
-        const foto = c.hero_mobile_url || c.hero_image_url;
+        const foto = capaVertical(c);
         const primeira = i === 0;
         return (
           <li key={c.id} className={primeira ? "lg:col-span-7" : "lg:col-span-4 lg:col-start-9 lg:mt-40"} data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>

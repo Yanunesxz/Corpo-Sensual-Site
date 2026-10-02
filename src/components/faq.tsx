@@ -1,4 +1,7 @@
-export type FaqItem = { q: string; a: string };
+import type { ReactNode } from "react";
+
+/** A resposta pode ter link (política de trocas, página de contato). */
+export type FaqItem = { q: string; a: ReactNode };
 
 /**
  * Perguntas frequentes com <details> nativo: funciona sem JavaScript e é acessível.

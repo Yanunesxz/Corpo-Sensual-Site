@@ -14,11 +14,11 @@ export const metadata: Metadata = {
 const messages: Record<string, { title: string; text: string }> = {
   catalogo: {
     title: "Cadastro recebido",
-    text: "Nossa equipe confirma os dados da sua loja e envia o catálogo digital com a tabela de atacado.",
+    text: "Nossa equipe confere o seu cadastro e envia o catálogo digital com a tabela de atacado.",
   },
   colecao: {
     title: "Cadastro recebido",
-    text: "Nossa equipe confirma os dados da sua loja e envia o catálogo digital com a tabela de atacado.",
+    text: "Nossa equipe confere o seu cadastro e envia o catálogo digital com a tabela de atacado.",
   },
   "fabrica-de-pijamas": {
     title: "Recebemos o seu interesse",
@@ -44,17 +44,17 @@ const messages: Record<string, { title: string; text: string }> = {
  */
 const vendaPorOrigem: Record<string, { chamada: string; abertura: string; pedido: string }> = {
   catalogo: {
-    chamada: "Quer adiantar? Escolha com quem falar no WhatsApp:",
+    chamada: "Agora escolha a sua vendedora no WhatsApp:",
     abertura: "Acabei de me cadastrar no site da Corpo Sensual.",
     pedido: "Quero receber o catálogo.",
   },
   colecao: {
-    chamada: "Quer adiantar? Escolha com quem falar no WhatsApp:",
+    chamada: "Agora escolha a sua vendedora no WhatsApp:",
     abertura: "Acabei de me cadastrar no site da Corpo Sensual.",
     pedido: "Quero receber o catálogo.",
   },
   "fabrica-de-pijamas": {
-    chamada: "Quer adiantar? Escolha com quem falar no WhatsApp:",
+    chamada: "Agora escolha a sua vendedora no WhatsApp:",
     abertura: "Acabei de me cadastrar no site da Corpo Sensual.",
     pedido: "Quero comprar da fábrica.",
   },
@@ -88,7 +88,7 @@ const passosPorOrigem: Record<string, { itens: { titulo: string; texto: string }
   compra: {
     semNumeros: false,
     itens: [
-      { titulo: "Escolha a vendedora", texto: "Se quiser adiantar, fale agora pelo WhatsApp." },
+      { titulo: "Fale com a vendedora", texto: `Pelo WhatsApp, com a ${equipe.vendedoras[0].nome} ou a ${equipe.vendedoras[1].nome}.` },
       { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
       { titulo: "Monte o seu pedido", texto: "Sem pedido mínimo." },
     ],
@@ -163,7 +163,8 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
               <Check width={26} height={26} strokeWidth={2} />
             </span>
             {mostraRotulo && <p className="eyebrow mt-7 md:mt-8">{rotulo}</p>}
-            <h1 className={`t-hero max-w-[16ch] ${mostraRotulo ? "mt-3" : "mt-6 md:mt-8"}`}>{m.title}</h1>
+            {/* No desktop um degrau abaixo do t-hero: a ação da página é o WhatsApp ao lado, não o título. */}
+            <h1 className={`t-hero max-w-[16ch] lg:text-[clamp(2.25rem,1.4rem+1.6vw,3.25rem)] ${mostraRotulo ? "mt-3" : "mt-6 md:mt-8"}`}>{m.title}</h1>
             <p className="lead mt-5 max-w-xl md:mt-6">{m.text}</p>
             <p className="mt-4 max-w-xl text-[15px] leading-[1.6] text-body">
               Retornamos em horário comercial{c.hours ? `, ${c.hours.toLowerCase()}` : ""}. Fique de olho no telefone e no e-mail
@@ -172,7 +173,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
           </div>
 
           {temPainel && (
-            <div className="bg-sky px-5 py-7 sm:p-8 lg:col-span-5 lg:col-start-8 lg:self-end lg:p-10">
+            <div className="bg-sky px-5 py-7 sm:p-8 lg:col-span-5 lg:col-start-8 lg:self-center lg:p-10">
               {venda && <ContatoWhatsApp contatos={vendedoras} chamada={venda.chamada} abertura={venda.abertura} pedido={venda.pedido} />}
               {ehRepresentante && (
                 <ContatoWhatsApp

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
 import { TOTAL_REFERENCIAS } from "@/lib/site";
 import { pecasDaVitrine } from "@/lib/vitrine";
@@ -9,7 +8,6 @@ import { SectionHeading } from "@/components/section-heading";
 import { ColecoesVitrine } from "@/components/colecoes-vitrine";
 import { Linhas } from "@/components/linhas";
 import { ProducaoSection } from "@/components/producao-section";
-import { ArrowRight } from "@/components/icons";
 import { CapaHome } from "@/components/home/capa";
 import { FechoHome } from "@/components/home/fecho";
 
@@ -44,7 +42,9 @@ export default async function HomePage() {
       </section>
 
       {/* 3. Vitrine: as mais vendidas em cotas 6/6/3/3, com filtro por linha e o cartão "210". */}
-      <section id="pecas" className="sec scroll-mt-24 bg-areia">
+      {/* cv-auto: estilo, layout e pintura só quando a seção chega perto da tela (altura
+          reservada próxima da real, no celular e no desktop). */}
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_710px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"
@@ -54,22 +54,14 @@ export default async function HomePage() {
             title="As mais pedidas pelos lojistas"
             description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo digital traz todas, com grade e tabela de preços.`}
           />
-          <Link href={`${hrefAtual}#pecas`} className="link-seta mt-6 md:mt-8">
-            Ver as peças da coleção
-            <ArrowRight width={18} height={18} />
-          </Link>
         </div>
       </section>
 
       {/* 4. As duas coleções do ano (spread de revista) e o atalho por linha. */}
       {collections.length > 0 && (
-        <section id="colecoes" className="sec scroll-mt-16">
+        <section id="colecoes" className="cv-auto sec [contain-intrinsic-size:auto_1200px] md:[contain-intrinsic-size:auto_1450px] lg:[contain-intrinsic-size:auto_1800px] xl:[contain-intrinsic-size:auto_2150px]">
           <div className="wrap">
-            <SectionHeading
-              eyebrow="Coleções"
-              title="Duas coleções por ano, para a família inteira"
-              description={`Verão e inverno, com campanha fotografada e filmada a cada estação. No site você vê uma parte; o catálogo traz as ${TOTAL_REFERENCIAS} referências.`}
-            />
+            <SectionHeading eyebrow="Coleções" title="Duas coleções por ano, para a família inteira" />
             <div className="mt-8 lg:mt-14">
               <ColecoesVitrine collections={collections.slice(0, 2)} variante="spread" />
             </div>

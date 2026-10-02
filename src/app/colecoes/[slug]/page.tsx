@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCategories, getCollectionBySlug, getCollections, getProducts } from "@/lib/data";
 import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS, urlImagem } from "@/lib/site";
 import { altCapa } from "@/lib/content/alt-fotos";
+import { capaVertical } from "@/lib/content/capas";
 import { trilhaJsonLd } from "@/lib/schema";
 import { pecasDaVitrine } from "@/lib/vitrine";
 import { JsonLd } from "@/components/json-ld";
@@ -78,7 +79,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** Ponto de interesse da capa em cada coleção (rosto no quadro, nos dois recortes). */
 const FOCO_CAPA: Record<string, { tela: string; celular: string }> = {
   "delicias-de-verao": { tela: "30% 35%", celular: "center 25%" },
-  entrelacos: { tela: "center 30%", celular: "center 25%" },
+  // Entrelaços: a foto larga é em pé (2:3); a 36% os dois rostos (mãe e filha) ficam no quadro.
+  entrelacos: { tela: "center 36%", celular: "center 22%" },
 };
 
 export default async function ColecaoPage({ params }: Props) {
@@ -109,6 +111,7 @@ export default async function ColecaoPage({ params }: Props) {
       : [];
 
   const nome = collectionShortName(collection.name);
+  const referenciasDaColecao = !showingBestSellers && Object.hasOwn(REFERENCIAS_POR_COLECAO, collection.slug) ? REFERENCIAS_POR_COLECAO[collection.slug] : null;
   const foco = Object.hasOwn(FOCO_CAPA, collection.slug) ? FOCO_CAPA[collection.slug] : { tela: "center 35%", celular: "center 25%" };
 
   return (
@@ -119,11 +122,13 @@ export default async function ColecaoPage({ params }: Props) {
       {/* 1. Capa presa. A altura fica sempre dentro da tela: um bloco preso mais alto
           que a janela esconderia o botão. No tablet e no desktop desconta o cabeçalho
           (faixa de 44 px + barra de 64/72 px), para o botão e a nota caberem na primeira tela. */}
-      <section className="shade-capa sticky top-0 h-[70svh] overflow-hidden bg-sky md:h-[calc(100svh-6.75rem)] md:min-h-[34rem] lg:h-[calc(100svh-7.25rem)]">
+      {/* No desktop o degradê vem da esquerda (.shade-lado), onde fica o texto: o resto da foto
+          fica com a cor da campanha. No celular, o de baixo para cima (.shade-capa). */}
+      <section className="shade-capa shade-lado sticky top-0 h-[70svh] overflow-hidden bg-sky md:h-[calc(100svh-6.75rem)] md:min-h-[34rem] lg:h-[calc(100svh-7.25rem)]">
         {collection.hero_image_url && (
           <HeroImage
             desktop={collection.hero_image_url}
-            mobile={collection.hero_mobile_url}
+            mobile={capaVertical(collection)}
             alt={altCapa(collection.slug, collection.name)}
             priority
             desktopPosition={foco.tela}
@@ -157,7 +162,7 @@ export default async function ColecaoPage({ params }: Props) {
         {/* 2. Manifesto. O gatilho da barra fica aqui: a capa é presa e nunca sai da tela. */}
         {collection.headline && (
           <section className="bg-sky" data-barra-depois>
-            <div className="wrap sec text-center">
+            <div className="wrap py-10 text-center md:py-[5.5rem] lg:py-[7.5rem]">
               <p className="t-titulo mx-auto max-w-[24ch]">{collection.headline}</p>
             </div>
           </section>
@@ -172,7 +177,8 @@ export default async function ColecaoPage({ params }: Props) {
         </section>
 
         {/* 4. Peças antes da inspiração. */}
-        <section id="pecas" className="sec">
+        {/* cv-auto: a grade só é montada quando chega perto da tela (os chips presos continuam presos). */}
+        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1930px] md:[contain-intrinsic-size:auto_2800px] lg:[contain-intrinsic-size:auto_1500px] xl:[contain-intrinsic-size:auto_1700px]">
           {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). */}
           <div className="wrap">
             <ProductGrid
@@ -181,18 +187,35 @@ export default async function ColecaoPage({ params }: Props) {
               products={pecasDaVitrine(products)}
               categories={categories}
               variant="grade"
-              eyebrow="As mais vendidas"
-              title={showingBestSellers ? "Mais vendidas" : "Peças da coleção"}
-              description={`Uma amostra. São ${TOTAL_REFERENCIAS} referências no ano e o catálogo digital traz todas.`}
+              eyebrow={showingBestSellers ? "Mais vendidas" : "Peças da coleção"}
+              title={showingBestSellers ? "As mais pedidas pelos lojistas" : "As mais vendidas"}
+              description={
+                referenciasDaColecao
+                  ? `Uma amostra das ${referenciasDaColecao} referências desta coleção. O catálogo digital traz todas, com grade e preços.`
+                  : `Uma amostra. São ${TOTAL_REFERENCIAS} referências no ano, e o catálogo digital traz todas.`
+              }
             />
           </div>
         </section>
 
-        {/* 5. Campanha: fotos em composição e filmes. */}
+        {/* 5. Campanha: fotos em composição e filmes. Reserva de altura perto da real (com e
+            sem filmes): com a reserva errada, a página pulava ao voltar. */}
         {(gallery.length > 0 || videos.length > 0) && (
-          <section className="sec bg-areia">
+          <section
+            className={`cv-auto sec bg-areia ${
+              videos.length > 0
+                ? "[contain-intrinsic-size:auto_1400px] md:[contain-intrinsic-size:auto_2180px] lg:[contain-intrinsic-size:auto_1900px] xl:[contain-intrinsic-size:auto_2300px]"
+                : "[contain-intrinsic-size:auto_880px] md:[contain-intrinsic-size:auto_1610px] lg:[contain-intrinsic-size:auto_1460px] xl:[contain-intrinsic-size:auto_1750px]"
+            }`}
+          >
             <div className="wrap">
-              <CampanhaColecao nome={collection.name} fotos={gallery} videos={videos} />
+              {/* As capas vão junto: no celular a galeria não repete a foto da capa. */}
+              <CampanhaColecao
+                nome={collection.name}
+                fotos={gallery}
+                videos={videos}
+                capas={{ tela: collection.hero_image_url, celular: capaVertical(collection) }}
+              />
             </div>
           </section>
         )}

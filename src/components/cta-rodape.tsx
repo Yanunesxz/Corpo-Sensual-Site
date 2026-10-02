@@ -5,48 +5,42 @@ import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 import { ArrowRight } from "./icons";
 
-type Chamada = { href: string; rotulo: string; nota: string };
-
 /**
- * A chamada do rodapé muda com a página. Nas páginas de anúncio e de representante o
- * botão leva ao formulário da própria página (a pessoa não sai dela); no cadastro e no
- * obrigado não há chamada, porque a pessoa já está no fim do caminho.
- * Representante: sem números, como o dono pediu para aquela página.
+ * Páginas que já terminam com a própria chamada (formulário, fecho com botão) ou que
+ * são o fim do caminho (cadastro e obrigado). Nelas o rodapé não repete o botão que a
+ * pessoa acabou de ver logo acima: era o mesmo "Quero a tabela de preços" duas vezes
+ * em 300 px na landing, e um segundo formulário igual depois do da home e da coleção.
  */
-function chamadaDa(pathname: string): Chamada | null {
-  if (pathname === "/catalogo" || pathname === "/obrigado") return null;
-  if (pathname === "/fabrica-de-pijamas") {
-    return { href: "#formulario", rotulo: "Quero a tabela de preços", nota: `${site.commercial.noMinOrder}. ${site.commercial.noCnpjNote}` };
-  }
-  if (pathname === "/seja-representante") {
-    return { href: "#formulario", rotulo: "Quero ser representante", nota: "Depois do cadastro você fala direto com o nosso gerente comercial." };
-  }
-  return { href: "/catalogo", rotulo: "Receber catálogo", nota: `${site.commercial.noMinOrder}. ${site.commercial.noCnpjNote}` };
+function temChamadaPropria(pathname: string): boolean {
+  return (
+    pathname === "/" ||
+    pathname === "/sobre" ||
+    pathname === "/catalogo" ||
+    pathname === "/obrigado" ||
+    pathname === "/fabrica-de-pijamas" ||
+    pathname === "/seja-representante" ||
+    pathname === "/colecoes" ||
+    pathname.startsWith("/colecoes/")
+  );
 }
 
+/**
+ * A chamada do rodapé só onde a página não fecha com a sua: ajuda, contato, políticas
+ * e a página não encontrada. Leva ao cadastro do catálogo.
+ */
 export function CtaRodape() {
   const pathname = usePathname();
-  const chamada = chamadaDa(pathname);
-  if (!chamada) return null;
+  if (temChamadaPropria(pathname)) return null;
 
-  const conteudo = (
-    <>
-      {chamada.rotulo}
-      <ArrowRight width={18} height={18} className="seta" />
-    </>
-  );
   return (
-    <div className="mt-7">
-      {chamada.href.startsWith("#") ? (
-        <a href={chamada.href} className="btn btn-light btn-sm px-5">
-          {conteudo}
-        </a>
-      ) : (
-        <Link href={chamada.href} className="btn btn-light btn-sm px-5">
-          {conteudo}
-        </Link>
-      )}
-      <p className="mt-3 max-w-xs text-[13px] leading-[1.5] text-noite-texto">{chamada.nota}</p>
+    <div className="mt-6 md:mt-7">
+      <Link href="/catalogo" className="btn btn-light btn-sm px-5">
+        Receber catálogo
+        <ArrowRight width={18} height={18} className="seta" />
+      </Link>
+      <p className="mt-3 max-w-xs text-[13px] leading-[1.5] text-noite-texto">
+        {site.commercial.noMinOrder}. {site.commercial.noCnpjNote}
+      </p>
     </div>
   );
 }

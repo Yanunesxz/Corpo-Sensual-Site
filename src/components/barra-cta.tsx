@@ -15,7 +15,7 @@ const MENSAGEM_WHATS = "Olá! Vim pelo site da Corpo Sensual e quero saber mais 
  * 404) a barra não existe: ali o formulário ou o atendimento já é a tela.
  * Representante: sem WhatsApp, o caminho é o cadastro e a conversa com o gerente.
  */
-function acaoDa(pathname: string): Acao | null {
+export function acaoDa(pathname: string): Acao | null {
   if (pathname === "/fabrica-de-pijamas") return { href: "#formulario", rotulo: "Quero a tabela de preços", whats: true };
   if (pathname === "/seja-representante") return { href: "#formulario", rotulo: "Quero ser representante", whats: false };
   if (pathname === "/" || pathname === "/sobre" || pathname === "/colecoes" || pathname.startsWith("/colecoes/")) {

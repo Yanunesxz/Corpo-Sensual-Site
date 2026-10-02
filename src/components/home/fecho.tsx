@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TOTAL_REFERENCIAS } from "@/lib/site";
+import { equipe, TOTAL_REFERENCIAS } from "@/lib/site";
 import { altFoto } from "@/lib/content/alt-fotos";
 import { SectionHeading } from "@/components/section-heading";
 import { Passos } from "@/components/passos";
@@ -9,10 +9,12 @@ import { BlocoCadastro } from "@/components/bloco-cadastro";
 const RIACHO = "/images/editorial/riacho.jpg";
 const ORQUIDEA = "/images/editorial/orquidea.jpg";
 
+const [nicoli, simone] = equipe.vendedoras;
+
 const PASSOS = [
   { titulo: "Cadastre a sua loja", texto: "CNPJ não é obrigatório." },
   { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
-  { titulo: "Monte o seu pedido", texto: "Sem pedido mínimo, com uma vendedora no WhatsApp." },
+  { titulo: "Monte o seu pedido", texto: "Sem pedido mínimo, com a sua vendedora no WhatsApp." },
 ];
 
 /**
@@ -25,7 +27,7 @@ const PASSOS = [
  */
 export function FechoHome() {
   return (
-    <section id="receber" className="sec scroll-mt-16 bg-sky" data-sem-barra>
+    <section id="receber" className="sec bg-sky" data-sem-barra>
       <div className="wrap lg:grid lg:grid-cols-12 lg:gap-x-10">
         <div className="relative hidden lg:sticky lg:top-28 lg:col-span-5 lg:block lg:self-center lg:pb-[30%]" data-reveal>
           <div className="relative aspect-[4/5] w-[88%] overflow-hidden bg-sky-deep">
@@ -42,7 +44,7 @@ export function FechoHome() {
           <SectionHeading
             eyebrow="Catálogo digital"
             title={`As ${TOTAL_REFERENCIAS} referências na sua mão`}
-            description="Cadastre a sua loja e receba o catálogo das duas coleções, com grade e tabela de preços. Depois do envio, você escolhe com quem falar no WhatsApp."
+            description={`Cadastre a sua loja e receba o catálogo com grade e tabela de preços. Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
           />
           <Passos itens={PASSOS} className="mt-8 lg:mt-10" />
           <BlocoCadastro source="catalogo" submitLabel="Quero receber o catálogo" className="mt-8 lg:mt-12" />

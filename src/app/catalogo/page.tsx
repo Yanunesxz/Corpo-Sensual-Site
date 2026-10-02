@@ -6,7 +6,7 @@ import { Passos } from "@/components/passos";
 import { SectionHeading } from "@/components/section-heading";
 import { altFoto } from "@/lib/content/alt-fotos";
 import { faqCurto } from "@/lib/content/faq";
-import { equipe, site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { equipe, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Receba o catálogo de pijamas no atacado",
@@ -17,7 +17,8 @@ export const metadata: Metadata = {
 
 const FOTO = "/images/colecoes/delicias-3.jpg";
 
-const LEAD = `As ${TOTAL_REFERENCIAS} referências das duas coleções do ano, Delícias de Verão e Entrelaços. O site mostra só uma parte. ${site.commercial.noCnpjNote}`;
+/* Sem repetir "com grade e tabela de preços", que o H1 logo acima já diz. */
+const LEAD = `As ${TOTAL_REFERENCIAS} referências das duas coleções do ano, Delícias de Verão e Entrelaços. ${site.commercial.noCnpjNote}`;
 
 const [nicoli, simone] = equipe.vendedoras;
 
@@ -25,7 +26,7 @@ const [nicoli, simone] = equipe.vendedoras;
 const DEPOIS = [
   {
     titulo: "Você escolhe a vendedora",
-    texto: `Logo depois do envio, fale com a ${nicoli.nome} ou a ${simone.nome} pelo WhatsApp, se quiser adiantar.`,
+    texto: `Logo depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome} pelo WhatsApp.`,
   },
   { titulo: "Recebe o catálogo", texto: `As ${TOTAL_REFERENCIAS} referências, com grade de tamanhos e tabela de preços.` },
   { titulo: "Monta o pedido", texto: "Sem pedido mínimo. O pedido sai da fábrica em até 15 dias úteis." },
@@ -34,7 +35,9 @@ const DEPOIS = [
 /**
  * Para onde vão todos os botões "Receber catálogo". Nada para distrair: título, o
  * cadastro e, depois dele, o que acontece agora. Sem barra fixa, sem chamada no rodapé
- * e sem link de saída na abertura.
+ * e sem link de saída na abertura. O cartão começa direto pelos campos (o H1 já diz o
+ * que é) e a lista ✓ das condições fica abaixo do botão: o primeiro campo aparece na
+ * primeira tela do celular e do notebook.
  * Celular: abre com o título (o LCP é texto) e o formulário logo abaixo; a foto não
  * existe nem é baixada. Desktop: a foto fica presa à esquerda enquanto a pessoa preenche.
  */
@@ -52,28 +55,31 @@ export default function CatalogoPage() {
               sizes="(min-width: 1024px) 40vw, 1px"
               className="object-cover object-[center_40%]"
             />
-            <p className="tag absolute left-5 top-5">Delícias de Verão · Primavera / Verão 2027</p>
+            <p className="tag absolute left-5 top-5">
+              <span className="h-1.5 w-1.5 rounded-full bg-noite" aria-hidden />
+              Delícias de Verão · {seasonLabel("verao", 2027)}
+            </p>
           </div>
 
           <div className="lg:col-span-7 lg:pl-2 xl:pl-8">
+            {/* No desktop o título fica menor (até ~46 px), para o primeiro campo caber na tela do notebook. */}
             <h1>
-              <span className="eyebrow">Catálogo digital de atacado</span>
-              <span className="t-hero mt-3 block max-w-[16ch] lg:mt-5">Receba o catálogo com grade e tabela de preços</span>
+              <span className="eyebrow">Catálogo digital de atacado</span>{" "}
+              <span className="t-hero mt-3 block max-w-[16ch] lg:mt-4 lg:max-w-[20ch] lg:text-[clamp(2.25rem,1.1rem+1.75vw,2.875rem)]">
+                Receba o catálogo com grade e tabela de preços
+              </span>
             </h1>
             {/* Um nó de texto só: quando a Inter chega, as linhas quebram em outro lugar. Com
                 vários nós ("210", a nota do CNPJ), o começo de cada um muda de lugar e o Chrome
                 conta como deslocamento de layout (CLS). Com um nó, o começo fica parado. */}
-            <p className="lead mt-4 max-w-xl lg:mt-6">{LEAD}</p>
+            <p className="lead mt-4 max-w-xl lg:mt-5">{LEAD}</p>
 
             <BlocoCadastro
-              eyebrow="Cadastro de lojista"
-              titulo="Para onde enviamos o catálogo?"
-              texto="Depois do envio, você escolhe com quem falar no WhatsApp."
-              condicoes
+              condicoes="depois"
               source="catalogo"
               submitLabel="Quero receber o catálogo"
               nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
-              className="mt-6 lg:mt-10"
+              className="mt-6 lg:mt-8"
             />
           </div>
         </div>

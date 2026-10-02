@@ -188,11 +188,11 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
       />
 
       {/* Pausa: todo vídeo em laço precisa de uma (WCAG 2.2.2). Com "reduzir movimento"
-          o vídeo não toca sozinho e mostra os controles do navegador. */}
+          o vídeo não toca sozinho e mostra os controles do navegador. O rótulo diz a ação
+          (sem aria-pressed: "Reproduzir vídeo, pressionado" contradizia o estado). */}
       <button
         type="button"
         onClick={alternarPausa}
-        aria-pressed={pausado}
         aria-label={pausado ? "Reproduzir vídeo" : "Pausar vídeo"}
         className="absolute bottom-2 left-2 flex h-11 w-11 items-center justify-center rounded-full bg-ink/70 text-white transition hover:bg-ink/85 motion-reduce:hidden md:bottom-3 md:left-3"
       >
@@ -203,7 +203,6 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
         <button
           type="button"
           onClick={alternarSom}
-          aria-pressed={comSom}
           aria-label={comSom ? "Desligar o som do vídeo" : "Ligar o som do vídeo"}
           // Fundo sólido em vez de desfoque: desfocar por cima de um vídeo tocando
           // obriga o celular a recompor a imagem a cada quadro.

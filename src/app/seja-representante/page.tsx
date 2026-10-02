@@ -8,7 +8,7 @@ import { ArrowRight } from "@/components/icons";
 import { Passos } from "@/components/passos";
 import { ProducaoSection } from "@/components/producao-section";
 import { SectionHeading } from "@/components/section-heading";
-import { RepEstrutura } from "@/components/rep/estrutura";
+import { Trilho } from "@/components/trilho";
 import { altFoto } from "@/lib/content/alt-fotos";
 
 export const metadata: Metadata = {
@@ -42,12 +42,13 @@ const motivos = [
     texto: "Feminino, masculino e infantil na mesma coleção: um pedido abastece a seção de pijamas da loja.",
   },
   {
-    titulo: "Coleção nova a cada estação",
-    texto: "Primavera/verão e outono/inverno. É o motivo certo para voltar a cada cliente com lançamento.",
+    titulo: "Coleção nova no verão e no inverno",
+    texto: "Primavera/verão e outono/inverno. É o motivo para visitar cada cliente de novo com lançamento.",
   },
   {
     titulo: "Condições que ajudam a fechar pedido",
-    texto: "Desconto no Pix, parcelamento sem juros no cartão, frete grátis conforme a região e referências a pronta entrega.",
+    texto:
+      "Desconto no Pix, parcelamento sem juros no cartão, frete grátis conforme a região e referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",
   },
 ];
 
@@ -88,34 +89,31 @@ const perguntas: FaqItem[] = [
   },
 ];
 
-/** O que o comercial precisa saber antes de conversar. Serve de roteiro para a mensagem. */
-const oQueContar = [
-  "A região que você atende hoje e as cidades que cobre",
-  "Há quanto tempo trabalha com representação e em quais marcas",
-  "Quantas lojas de moda íntima ou pijama você já visita",
-];
 
 export default function RepresentantePage() {
   return (
     <>
-      {/* 1. Capa dividida. No celular o texto vem antes da foto: título e botão na
-          primeira tela. No desktop o texto alinha com a margem do .wrap mesmo em tela
-          mais larga que 1440 px, e a foto sangra até a borda direita. */}
-      <section className="bg-sky lg:grid lg:grid-cols-2" data-barra-depois>
-        <div className="wrap pb-12 pt-10 md:pb-16 md:pt-14 lg:flex lg:items-center lg:py-20 lg:pl-[max(3rem,calc((100vw_-_1440px)/2_+_3rem))] lg:pr-14 xl:pr-20">
+      {/* 1. Capa dividida. No celular a foto vem antes, numa faixa (como na home): a
+          primeira tela já mostra a marca, com o título e o botão logo abaixo. No desktop o
+          texto alinha com a margem do .wrap mesmo em tela mais larga que 1440 px, e a foto
+          sangra até a borda direita. */}
+      <section className="flex flex-col bg-sky lg:grid lg:grid-cols-2" data-barra-depois>
+        <div className="wrap pb-12 pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:pb-16 md:pt-12 lg:flex lg:items-center lg:py-20 lg:pl-[max(3rem,calc((100vw_-_1440px)/2_+_3rem))] lg:pr-14 xl:pr-20">
           <div className="max-w-[36rem]">
             <p className="eyebrow eyebrow-fio">Representação comercial</p>
-            <h1 className="t-hero mt-4 max-w-[13ch] md:max-w-[18ch] lg:mt-5 lg:max-w-[13ch]">Leve a Corpo Sensual para as lojas da sua região</h1>
-            <p className="lead mt-5 max-w-[32rem] lg:mt-6">
-              Fábrica própria em Muriaé, MG, coleção nova a cada estação e uma linha que veste a família inteira. Você
-              apresenta ao lojista uma marca pronta para vender.
+            {/* O nome da marca nunca quebra no meio ("Corpo / Sensual") e, no celular, fica numa linha só dele. */}
+            <h1 className="t-hero mt-4 max-w-[14ch] text-balance md:max-w-[18ch] lg:mt-5 lg:max-w-[14ch]">
+              Leve a <span className="whitespace-nowrap max-sm:block">Corpo Sensual</span> para as lojas da sua região
+            </h1>
+            <p className="lead mt-4 max-w-[32rem] lg:mt-6">
+              Fábrica própria em Muriaé, MG, coleção nova no verão e no inverno e uma linha que veste a família inteira.
             </p>
-            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-10 lg:flex-col lg:items-start lg:gap-3 xl:flex-row xl:items-center xl:gap-8">
+            <div className="mt-7 flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-8 lg:mt-10 lg:flex-col lg:items-start lg:gap-3 xl:flex-row xl:flex-wrap xl:items-center xl:gap-x-8 xl:gap-y-3">
               <a href="#formulario" className="btn btn-primary btn-lg w-full whitespace-nowrap sm:w-auto" data-ga-local="hero">
                 Quero ser representante
                 <ArrowRight width={18} height={18} className="seta" />
               </a>
-              <a href="#motivos" className="link-seta">
+              <a href="#motivos" className="link-seta whitespace-nowrap">
                 Por que representar
                 <ArrowRight width={18} height={18} />
               </a>
@@ -123,7 +121,7 @@ export default function RepresentantePage() {
             <p className="legenda mt-6 max-w-[22rem]">Depois do cadastro você fala direto com o Fabian, nosso gerente comercial.</p>
           </div>
         </div>
-        <div className="relative aspect-[4/5] bg-sky-deep sm:aspect-[4/3] lg:aspect-auto lg:min-h-[max(36rem,min(calc(100svh_-_7rem),50rem))]">
+        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] lg:order-none lg:h-auto lg:max-h-none lg:min-h-[max(36rem,min(calc(100svh_-_7rem),50rem))]">
           <Image
             src="/images/representante/casal.jpg"
             alt="Casal com pijama masculino azul-marinho e camisola azul com renda, na varanda à beira do lago, campanha Corpo Sensual"
@@ -135,35 +133,26 @@ export default function RepresentantePage() {
         </div>
       </section>
 
-      {/* 2. A estrutura da empresa, numa faixa com fio */}
-      <RepEstrutura />
-
-      {/* 3. Por que representar. A sexta casa da grade (desktop e tablet) é o botão:
-          nada de buraco ao lado do quinto motivo. */}
+      {/* 2. Por que representar: cinco motivos (3 + 2 no desktop) e o botão embaixo. */}
       <section id="motivos" className="sec bg-paper">
         <div className="wrap">
           <SectionHeading
             title="Por que representar a Corpo Sensual"
             description="O que faz o lojista comprar na primeira visita e voltar na próxima estação."
           />
-          {/* A lista some da caixa (contents) para os itens e o botão dividirem a mesma
-              grade; o botão fica fora da <ul>, que continua com só os cinco motivos. */}
-          <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 sm:gap-y-10 lg:mt-14 lg:grid-cols-3 lg:gap-y-14">
-            <ul className="contents">
-              {motivos.map((m, i) => (
-                <li key={m.titulo} className="border-t border-line pt-5" data-reveal style={{ ["--atraso" as string]: `${(i % 3) * 80}ms` }}>
-                  <h3 className="t-sub">{m.titulo}</h3>
-                  <p className="mt-2.5 max-w-[26rem] text-[15px] leading-[1.6] text-body">{m.texto}</p>
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-end sm:pt-5" data-reveal style={{ ["--atraso" as string]: "160ms" }}>
-              {/* Numa linha só: na casa de 290 px da grade a 1024 px ele quebrava em duas. */}
-              <a href="#formulario" className="btn btn-primary w-full whitespace-nowrap sm:w-auto lg:px-6">
-                Quero representar a marca
-                <ArrowRight width={18} height={18} className="seta" />
-              </a>
-            </div>
+          <ul className="mt-8 grid gap-x-10 gap-y-7 sm:grid-cols-2 sm:gap-y-10 lg:mt-14 lg:grid-cols-3 lg:gap-y-14">
+            {motivos.map((m, i) => (
+              <li key={m.titulo} className="border-t border-line pt-4 md:pt-5" data-reveal style={{ ["--atraso" as string]: `${(i % 3) * 80}ms` }}>
+                <h3 className="t-sub">{m.titulo}</h3>
+                <p className="mt-2 max-w-[26rem] text-[15px] leading-[1.6] text-body md:mt-2.5">{m.texto}</p>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-9 lg:mt-14" data-reveal>
+            <a href="#formulario" className="btn btn-primary w-full whitespace-nowrap sm:w-auto lg:px-6">
+              Quero ser representante
+              <ArrowRight width={18} height={18} className="seta" />
+            </a>
           </div>
         </div>
       </section>
@@ -173,22 +162,24 @@ export default function RepresentantePage() {
         <div className="wrap">
           <SectionHeading
             eyebrow="A marca na sua pasta"
-            title="Uma marca que se apresenta sozinha"
-            description="Cada coleção ganha campanha fotografada e filmada e catálogo digital completo. Você chega na loja com uma marca de verdade, do catálogo ao pedido."
+            title="A campanha vai junto na sua pasta"
+            description="Cada coleção ganha campanha fotografada e filmada e catálogo digital completo. Você chega na loja com a coleção apresentada, do catálogo ao pedido."
             link={{ href: "/colecoes", label: "Ver as coleções" }}
           />
-          {/* Colunas pares descidas, como num lookbook: a grade não fica de catálogo. */}
-          <div className="mt-10 grid grid-cols-2 gap-x-3 gap-y-3 md:gap-x-5 md:gap-y-5 lg:mt-14 lg:grid-cols-4 lg:gap-x-6">
-            {campanha.map((url, i) => (
-              <div key={url} className={i % 2 === 1 ? "mt-8 lg:mt-16" : ""} data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
-                <Figura
-                  src={url}
-                  alt={altFoto(url, "Foto de campanha da Corpo Sensual")}
-                  sizes="(min-width: 1024px) 23vw, 46vw"
-                  foco={url.includes("entrelacos-3") ? "object-[center_30%]" : "object-center"}
-                />
-              </div>
-            ))}
+          {/* Celular: um trilho de uma linha. Desktop: quatro colunas, as pares descidas, como num lookbook. */}
+          <div className="mt-8 lg:mt-14">
+            <Trilho rotulo="Fotos da campanha" className="trilho-lg-grade [--colunas:4] lg:gap-x-6">
+              {campanha.map((url, i) => (
+                <li key={url} className={i % 2 === 1 ? "lg:mt-16" : ""} data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
+                  <Figura
+                    src={url}
+                    alt={altFoto(url, "Foto de campanha da Corpo Sensual")}
+                    sizes="(min-width: 1024px) 23vw, (min-width: 768px) 30vw, 46vw"
+                    foco={url.includes("entrelacos-3") ? "object-[center_30%]" : "object-center"}
+                  />
+                </li>
+              ))}
+            </Trilho>
           </div>
         </div>
       </section>
@@ -199,7 +190,8 @@ export default function RepresentantePage() {
       {/* 6. Como funciona e dúvidas, lado a lado no desktop. Os dois títulos dividem a
           primeira linha da grade (alinhados pela base), e os passos e as perguntas
           começam na mesma altura. No celular a ordem é a do DOM: título, passos, título, perguntas. */}
-      <section className="sec bg-sky-soft">
+      {/* Em areia: o cadastro logo abaixo é azul-claro (dois azuis seguidos liam como uma faixa só). */}
+      <section className="sec bg-areia">
         <div className="wrap grid lg:grid-cols-12 lg:items-end lg:gap-x-10" data-reveal>
           <h2 className="t-titulo lg:col-span-5 lg:row-start-1">Como funciona</h2>
           <Passos semNumeros itens={passos} className="mt-8 self-start lg:col-span-5 lg:row-start-2 lg:mt-12" />
@@ -214,20 +206,11 @@ export default function RepresentantePage() {
           O id="formulario" fica na seção (a barra, o rodapé e os botões apontam para
           cá); o cartão leva outro id para não repetir. */}
       <section id="formulario" className="sec bg-sky" data-sem-barra>
-        <div className="wrap grid gap-y-10 lg:grid-cols-12 lg:items-start lg:gap-x-10">
-          <div className="lg:sticky lg:top-28 lg:col-span-5">
+        {/* Desktop: o texto fica no meio da altura do cartão (sem a lista "O que contar", ele é curto). */}
+        <div className="wrap grid gap-y-10 lg:grid-cols-12 lg:items-center lg:gap-x-10">
+          <div className="lg:col-span-5">
             <h2 className="t-titulo">Cadastre a sua região</h2>
             <p className="lead mt-4 max-w-xl">O Fabian, nosso gerente comercial, avalia o cadastro e fala com você pelo WhatsApp.</p>
-
-            <h3 className="t-sub mt-10 lg:mt-12">O que contar no cadastro</h3>
-            <ul className="mt-4 border-y border-line">
-              {oQueContar.map((item) => (
-                <li key={item} className="flex gap-3 border-b border-line py-3.5 text-[15px] leading-[1.55] text-ink last:border-b-0">
-                  <span aria-hidden className="mt-[0.55rem] block h-1.5 w-1.5 flex-none rounded-full bg-noite" />
-                  {item}
-                </li>
-              ))}
-            </ul>
 
             <p className="mt-6 text-[15px] leading-[1.6] text-body">
               É lojista e não representante?{" "}
@@ -241,7 +224,7 @@ export default function RepresentantePage() {
           <BlocoCadastro
             id="cadastro-rep"
             source="representante"
-            submitLabel="Quero representar a marca"
+            submitLabel="Quero ser representante"
             withMessage
             className="lg:col-span-7 lg:col-start-6 xl:col-span-6 xl:col-start-7"
           />

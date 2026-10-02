@@ -19,6 +19,25 @@ import {
 import { AnalyticsEventos } from "./analytics-eventos";
 
 const escolhaNoServidor = () => "servidor" as const;
+
+/*
+ * Celular: o aviso só aparece depois da primeira rolagem. Na primeira tela ele cobria o
+ * botão da capa (em 375x667, o botão inteiro). Nada do Google carrega antes do aceite,
+ * então esperar não muda nada da LGPD. Trava em true: rolou uma vez, fica.
+ */
+let rolou = false;
+function assinarRolagem(cb: () => void) {
+  const aoRolar = () => {
+    if (window.scrollY > 80) {
+      rolou = true;
+      cb();
+    }
+  };
+  window.addEventListener("scroll", aoRolar, { passive: true });
+  return () => window.removeEventListener("scroll", aoRolar);
+}
+const podeMostrar = () => rolou || !window.matchMedia("(max-width: 767px)").matches;
+const podeMostrarNoServidor = () => false;
 const painelNoServidor = () => false;
 
 /**
@@ -31,6 +50,7 @@ export function Analytics() {
   const painel = useSyncExternalStore(assinarCookies, painelEstaAberto, painelNoServidor);
   const pathname = usePathname();
   const aceito = escolha === "aceito";
+  const mostrarAviso = useSyncExternalStore(assinarRolagem, podeMostrar, podeMostrarNoServidor);
 
   useEffect(() => {
     if (escolha === "aceito") ligarGtag();
@@ -46,7 +66,7 @@ export function Analytics() {
     <>
       {aceito && <Script id="gtag-js" src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} strategy="lazyOnload" />}
       {aceito && <AnalyticsEventos />}
-      {(painel || escolha === "") && <AvisoCookies />}
+      {(painel || (escolha === "" && mostrarAviso)) && <AvisoCookies />}
     </>
   );
 }
@@ -102,20 +122,26 @@ function AvisoCookies() {
       aria-label="Aviso de cookies"
       className={`fixed inset-x-0 bottom-0 z-[45] border-t border-line bg-paper shadow-[var(--shadow-bar)] ${digitando ? "invisible" : ""}`}
     >
-      <div className="wrap flex flex-col gap-3 py-3 md:flex-row md:items-center md:justify-between md:gap-8 md:py-4">
-        <p className="text-sm leading-[1.5] text-body">
-          {ADS_CONVERSAO
-            ? "Usamos cookies do Google para contar as visitas e medir os nossos anúncios."
-            : "Usamos cookies do Google Analytics para contar as visitas e melhorar o site."}{" "}
+      {/* Compacto no celular (texto e botões numa linha só, ~63 px); como antes a partir de 768 px. */}
+      <div className="wrap flex items-center gap-3 py-2 md:justify-between md:gap-8 md:py-4">
+        <p className="min-w-0 flex-1 text-[13px] leading-[1.35] text-body md:flex-none md:text-sm md:leading-[1.5]">
+          <span className="md:hidden">
+            {ADS_CONVERSAO ? "Usamos cookies do Google para medir visitas e anúncios." : "Usamos cookies do Google para contar as visitas."}
+          </span>
+          <span className="max-md:hidden">
+            {ADS_CONVERSAO
+              ? "Usamos cookies do Google para contar as visitas e medir os nossos anúncios."
+              : "Usamos cookies do Google Analytics para contar as visitas e melhorar o site."}
+          </span>{" "}
           <Link href="/politicas/cookies" className="link">
             Saiba mais
           </Link>
         </p>
-        <div className="grid shrink-0 grid-cols-2 gap-3">
-          <button type="button" className="btn btn-outline btn-sm px-6" onClick={() => salvarEscolha("recusado")}>
+        <div className="flex shrink-0 gap-2 md:grid md:grid-cols-2 md:gap-3">
+          <button type="button" className="btn btn-outline btn-sm px-3.5 md:px-6" onClick={() => salvarEscolha("recusado")}>
             Recusar
           </button>
-          <button type="button" className="btn btn-primary btn-sm px-6" onClick={() => salvarEscolha("aceito")}>
+          <button type="button" className="btn btn-primary btn-sm px-3.5 md:px-6" onClick={() => salvarEscolha("aceito")}>
             Aceitar
           </button>
         </div>

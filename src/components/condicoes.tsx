@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { site } from "@/lib/site";
 import { Check } from "./icons";
@@ -8,15 +7,9 @@ const { commercial } = site;
 /** "R$ 1.200" de "Frete grátis a partir de R$ 1.200 no Sudeste": um número digitado num lugar só. */
 const freteGratis = commercial.freeShippingSudeste.replace(/^Frete grátis /, "");
 
-const cnpj = (
-  <>
-    Ainda não tem CNPJ?{" "}
-    <Link href="/contato" className="text-ink underline underline-offset-4 hover:decoration-2">
-      Fale com a gente
-    </Link>
-    .
-  </>
-);
+/* CNPJ: o próprio formulário resolve ("Ainda não" + CPF). Antes havia um "Fale com a gente"
+   que mandava a lojista sem CNPJ para o formulário de contato, fora da landing. */
+const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
 
 /** Faixa logo abaixo da capa: as quatro perguntas da lojista, na ordem em que ela pergunta. */
 const FAIXA = [
@@ -60,7 +53,7 @@ type Props = {
   variante: "faixa" | "ficha" | "lista";
   /** Fundo da seção em volta (só na ficha): sobre branco as células ficam azuladas; sobre azul, brancas. */
   fundo?: "branco" | "azul";
-  /** Esconde a nota de rodapé da faixa (frete nas demais regiões, pagamento, pronta entrega, CNPJ). */
+  /** Esconde a nota de rodapé da faixa (frete nas demais regiões, pagamento, CNPJ). */
   semNota?: boolean;
   className?: string;
 };
@@ -92,16 +85,15 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
   if (variante === "ficha") {
     const celula = fundo === "branco" ? "bg-sky-soft" : "bg-paper";
     return (
-      // Colunas pela largura que a ficha tem (container query), não pela tela: uma coluna
-      // abaixo de ~450 px (em duas, as células ficavam com 130 px de texto), duas até
-      // ~900 px (a coluna de 7/12 da landing) e três na largura toda.
+      // Duas colunas já no celular (em uma eram seis cartões altos, ~730 px), com letra
+      // menor dentro do contêiner estreito; três colunas na largura toda (container query).
       <div className={`@container ${className}`}>
-        <ul className="grid gap-px border border-line bg-line @md:grid-cols-2 @4xl:grid-cols-3">
+        <ul className="grid grid-cols-2 gap-px border border-line bg-line @4xl:grid-cols-3">
           {FICHA.map((f) => (
-            <li key={f.rotulo} className={`${celula} flex flex-col px-5 py-4 @md:p-5 lg:p-8`}>
+            <li key={f.rotulo} className={`${celula} flex flex-col p-4 @md:p-5 lg:p-8`}>
               <p className="text-[13px] leading-snug text-muted">{f.rotulo}</p>
-              <p className="t-sub mt-1.5 text-[1.25rem] lg:mt-2 lg:text-[1.375rem]">{f.valor}</p>
-              <p className="mt-2 text-[14px] leading-[1.5] text-body">{f.detalhe}</p>
+              <p className="t-sub mt-1 text-[1.0625rem] @md:mt-1.5 @md:text-[1.25rem] lg:mt-2 lg:text-[1.375rem]">{f.valor}</p>
+              <p className="mt-1.5 text-[13px] leading-[1.45] text-body @md:mt-2 @md:text-[14px] @md:leading-[1.5]">{f.detalhe}</p>
             </li>
           ))}
         </ul>
@@ -121,7 +113,7 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
       </ul>
       {!semNota && (
         <p className="legenda mt-5 max-w-4xl lg:mt-7">
-          *{commercial.freeShippingOutras}. Pix, boleto ou cartão com parcelamento sem juros. {commercial.prontaEntrega} {cnpj}
+          *{commercial.freeShippingOutras}. Pix, boleto ou cartão com parcelamento sem juros. {commercial.noCnpjNote}
         </p>
       )}
     </div>

@@ -9,16 +9,18 @@ type Props = {
 };
 
 /**
- * Foto de estúdio sobre areia (o mesmo tom do fundo do estúdio), sem canto, com nome
- * e referência embaixo. Nada por cima da foto e sem preço: preço é do catálogo.
+ * Foto de estúdio sobre areia, sem canto, com nome e referência embaixo. Nada por cima
+ * da foto e sem preço: preço é do catálogo.
+ * mix-blend-multiply: o branco do estúdio vira o areia do fundo (a peça muda menos de
+ * 5%), e as duas coleções, fotografadas em fundos diferentes, ficam no mesmo estúdio.
  */
 export function ProductCard({ product, priority = false, sizes = "(min-width: 1024px) 16vw, (min-width: 768px) 30vw, 46vw" }: Props) {
   const image = product.images[0];
   return (
     <article className="group">
-      <div className="zoom-img relative aspect-[4/5] overflow-hidden bg-areia">
+      <div className="zoom-img relative isolate aspect-[4/5] overflow-hidden bg-areia">
         {image ? (
-          <Image src={image.url} alt={image.alt ?? product.name} fill sizes={sizes} className="object-cover" priority={priority} />
+          <Image src={image.url} alt={image.alt ?? product.name} fill sizes={sizes} className="object-cover mix-blend-multiply" priority={priority} />
         ) : (
           <div className="flex h-full items-center justify-center text-sm text-muted">Sem foto</div>
         )}

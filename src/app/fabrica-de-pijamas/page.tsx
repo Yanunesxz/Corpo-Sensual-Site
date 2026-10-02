@@ -13,7 +13,7 @@ import { FormularioPreso } from "@/components/lojista/formulario-preso";
 import { altFoto } from "@/lib/content/alt-fotos";
 import { faqLojista } from "@/lib/content/faq";
 import { getCategories, getProducts } from "@/lib/data";
-import { site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { equipe, site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { pecasDaVitrine } from "@/lib/vitrine";
 
 // A vitrine usa as mais vendidas do catálogo: renova a cada hora, como a home.
@@ -27,6 +27,10 @@ export const metadata: Metadata = {
 };
 
 const FOTO_CAPA = "/images/lojista/capa.jpg";
+/** Fecho, só no desktop: a modelo à beira da piscina, como a capa (no celular a foto não existe nem é baixada). */
+const FOTO_FECHO = "/images/home/fechamento.jpg";
+
+const [nicoli, simone] = equipe.vendedoras;
 
 /** Do cadastro ao primeiro pedido. Fica só aqui: a home e o /sobre mandam o lojista para esta página. */
 const PASSOS = [
@@ -75,12 +79,15 @@ export default async function FabricaPage() {
             alt={altFoto(FOTO_CAPA, "Modelo de short doll rosa à beira da piscina, coleção Delícias de Verão")}
             fill
             preload
-            quality={80}
+            quality={75}
             sizes="(min-width: 1024px) 58vw, 100vw"
             className="object-cover object-[center_30%]"
           />
           <div className={`absolute inset-x-0 bottom-0 z-10 px-5 pb-7 md:px-8 md:pb-12 lg:pb-14 lg:pr-12 ${MARGEM_ESQ}`}>
-            <p className="tag bg-noite/90 text-white">Atacado para lojistas · {site.legal.cidade}, {site.legal.uf}</p>
+            <p className="tag">
+              <span className="h-1.5 w-1.5 rounded-full bg-noite" aria-hidden />
+              Atacado para lojistas · {site.legal.cidade}, {site.legal.uf}
+            </p>
             <h1 className="t-hero mt-4 max-w-[13ch] text-white lg:mt-5">
               Pijamas direto da fábrica, sem pedido mínimo
             </h1>
@@ -110,7 +117,7 @@ export default async function FabricaPage() {
               className="lg:p-6 xl:p-8"
               eyebrow="Cadastro de lojista"
               titulo="Receba o catálogo com a tabela de preços"
-              texto="Preencha os dados da sua loja. Em seguida você escolhe com quem falar no WhatsApp."
+              texto={`Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
               condicoes
               source="fabrica-de-pijamas"
               submitLabel="Quero receber a tabela de preços"
@@ -120,31 +127,27 @@ export default async function FabricaPage() {
         </aside>
 
         {/* C. Condições por escrito, em ficha. */}
-        <section className={`wrap py-14 md:py-20 lg:col-span-7 lg:row-start-2 lg:max-w-none lg:pb-20 lg:pr-12 lg:pt-24 ${MARGEM_ESQ}`}>
-          <SectionHeading
-            eyebrow="Condições"
-            title="Por que comprar direto da fábrica"
-            description="As condições por escrito, antes do primeiro pedido."
-          />
-          {/* A ficha escolhe as colunas pela própria largura: na coluna de 7/12 fica em duas. */}
-          <Condicoes variante="ficha" fundo="branco" className="mt-8 md:mt-10" />
+        <section className={`wrap py-12 md:py-20 lg:col-span-7 lg:row-start-2 lg:max-w-none lg:pb-20 lg:pr-12 lg:pt-24 ${MARGEM_ESQ}`}>
+          <SectionHeading eyebrow="Condições" title="As condições, por escrito" />
+          {/* Duas colunas já no celular; três só na largura toda (container query). */}
+          <Condicoes variante="ficha" fundo="branco" className="mt-7 md:mt-10" />
         </section>
 
         {/* D. Como funciona. */}
         <section className={`wrap lg:col-span-7 lg:row-start-3 lg:max-w-none lg:pr-12 ${MARGEM_ESQ}`}>
-          <div className="border-t border-line py-14 md:py-20 lg:pb-24">
+          <div className="border-t border-line py-12 md:py-20 lg:pb-24">
             <SectionHeading eyebrow="Como funciona" title="Do cadastro ao primeiro pedido" />
             <Passos itens={PASSOS} className="mt-8 md:mt-10" />
-            <p className="mt-10 max-w-xl bg-sky-soft p-5 text-[15px] leading-[1.6] text-ink md:p-6" data-reveal>
-              Depois da compra você continua atendido: o SAC cuida de pedido, entrega e troca, e o financeiro, de boleto e nota
-              fiscal, pelo WhatsApp.
+            <p className="mt-8 max-w-xl border-l border-line-strong pl-4 text-[15px] leading-[1.6] text-body md:mt-10" data-reveal>
+              Depois da compra, o atendimento continua pelo WhatsApp: o SAC cuida de pedido, entrega e troca; o financeiro, de
+              boleto e nota fiscal.
             </p>
           </div>
         </section>
       </div>
 
       {/* E. Vitrine: as mais vendidas, 6/6/3/3, com filtro. O cartão final volta ao formulário. */}
-      <section id="pecas" className="sec scroll-mt-24 bg-areia">
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_720px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"
@@ -162,7 +165,7 @@ export default async function FabricaPage() {
       <ProducaoSection escuro numeros comLink={false} cta={{ href: "#formulario", label: "Quero a tabela de preços" }} />
 
       {/* G. Perguntas (o rodapé e outras páginas apontam para cá). */}
-      <section id="perguntas" className="sec scroll-mt-24 bg-sky-soft">
+      <section id="perguntas" className="sec bg-sky-soft">
         <div className="wrap lg:grid lg:grid-cols-12 lg:gap-x-10">
           <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
             <SectionHeading
@@ -180,26 +183,37 @@ export default async function FabricaPage() {
             />
           </div>
           <div className="mt-8 md:mt-10 lg:col-span-7 lg:mt-0" data-reveal>
-            <Faq items={faqLojista} abrirPrimeira />
+            <Faq items={faqLojista} />
           </div>
         </div>
       </section>
 
-      {/* H. Fecho: a última chamada volta ao formulário do topo. */}
-      <section className="on-dark border-b border-white/10 bg-noite" data-sem-barra>
-        <div className="wrap sec">
+      {/* H. Fecho: a última chamada volta ao formulário do topo. Em areia (não em azul-noite):
+          o rodapé logo abaixo já é azul-noite, e os dois viravam um bloco escuro só.
+          No desktop, a foto da campanha ao lado do texto, como uma página dupla. */}
+      <section className="cv-auto bg-areia [contain-intrinsic-size:auto_440px] md:[contain-intrinsic-size:auto_460px] lg:[contain-intrinsic-size:auto_650px] xl:[contain-intrinsic-size:auto_820px]" data-sem-barra>
+        <div className="wrap sec lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10 lg:py-24">
+          <div className="relative hidden aspect-[4/5] overflow-hidden bg-sky-deep lg:col-span-5 lg:block" data-reveal>
+            <Image
+              src={FOTO_FECHO}
+              alt={altFoto(FOTO_FECHO, "Modelo de regata e short brancos à beira da piscina, coleção Delícias de Verão")}
+              fill
+              sizes="(min-width: 1440px) 540px, (min-width: 1024px) 38vw, 1px"
+              className="object-cover object-[center_35%]"
+            />
+          </div>
+          <div className="lg:col-span-6 lg:col-start-7">
           <SectionHeading
-            center
-            dark
             eyebrow="Catálogo com tabela de preços"
-            title="Compre direto de quem fabrica, no valor que a sua loja precisa"
-            description={`${commercial.noMinOrder}, 5% de desconto no Pix e frete grátis a partir de R$ 1.200 no Sudeste. ${commercial.noCnpjNote}`}
+            title="Compre da fábrica, no valor que a sua loja precisa"
+            description={`${commercial.noMinOrder}. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.`}
           />
-          <div className="mt-8 flex justify-center md:mt-10" data-reveal>
-            <a href="#formulario" className="btn btn-light btn-lg w-full sm:w-auto">
+          <div className="mt-8 md:mt-10" data-reveal>
+            <a href="#formulario" className="btn btn-primary btn-lg w-full sm:w-auto">
               Quero a tabela de preços
               <ArrowRight width={18} height={18} className="seta" />
             </a>
+          </div>
           </div>
         </div>
       </section>

@@ -25,6 +25,20 @@ const MENU = [
   { href: "/seja-representante", label: "Seja representante" },
 ];
 
+/**
+ * O botão à direita da barra muda com a página, como a barra fixa e o CTA do rodapé:
+ * na landing dos anúncios e no representante ele leva ao formulário da própria página
+ * (quem veio do anúncio não sai dela, e o lead entra com a origem certa); no cadastro e
+ * no obrigado não há botão, porque a pessoa já está no fim do caminho.
+ */
+type Botao = { href: string; curto: string; longo: string; largo?: boolean };
+function botaoDa(pathname: string): Botao | null {
+  if (pathname === "/catalogo" || pathname === "/obrigado") return null;
+  if (pathname === "/fabrica-de-pijamas") return { href: "#formulario", curto: "Preços", longo: "Quero a tabela de preços", largo: true };
+  if (pathname === "/seja-representante") return { href: "#formulario", curto: "Cadastro", longo: "Quero ser representante", largo: true };
+  return { href: "/catalogo", curto: "Catálogo", longo: "Receber catálogo" };
+}
+
 const contatoLink = "inline-flex min-h-11 items-center self-start text-ink underline decoration-line-strong underline-offset-[6px] hover:decoration-ink";
 const linkFaixa = "min-h-11 items-center whitespace-nowrap text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white";
 
@@ -99,9 +113,10 @@ export function SiteHeader() {
   const ativo = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
   // Na página de representante o dono pediu zero números: a faixa fala da estrutura.
   const representante = pathname.startsWith("/seja-representante");
+  const botao = botaoDa(pathname);
   const faixaCurta = representante ? "Fábrica própria em Muriaé, MG" : `Atacado ${site.commercial.noMinOrder.toLowerCase()}`;
   const faixaLonga = representante
-    ? ["Fábrica própria em Muriaé, MG", "Coleção nova a cada estação", "Feminino, masculino e infantil"]
+    ? ["Fábrica própria em Muriaé, MG", "Coleção nova no verão e no inverno", "Feminino, masculino e infantil"]
     : ["Atacado para lojistas de todo o Brasil", site.commercial.noMinOrder, site.commercial.pixDiscount, site.commercial.freeShippingSudeste];
 
   return (
@@ -196,19 +211,38 @@ export function SiteHeader() {
             >
               Contato
             </Link>
-            <Link href="/catalogo" className="btn btn-primary btn-sm px-4 lg:hidden">
-              Catálogo
-            </Link>
-            <Link href="/catalogo" className="btn btn-primary btn-sm hidden lg:inline-flex">
-              Receber catálogo
-              <ArrowRight width={16} height={16} className="seta" />
-            </Link>
+            {botao && (
+              <>
+                {/* Rótulo longo ("Quero a tabela de preços") só a partir de 1280 px: entre 1024 e 1279
+                    ele quebrava em duas linhas na barra. "Receber catálogo" cabe desde 1024. */}
+                <BotaoBarra href={botao.href} className={`btn btn-primary btn-sm whitespace-nowrap px-4 ${botao.largo ? "xl:hidden" : "lg:hidden"}`}>
+                  {botao.curto}
+                </BotaoBarra>
+                <BotaoBarra href={botao.href} className={`btn btn-primary btn-sm hidden whitespace-nowrap ${botao.largo ? "xl:inline-flex" : "lg:inline-flex"}`}>
+                  {botao.longo}
+                  <ArrowRight width={16} height={16} className="seta" />
+                </BotaoBarra>
+              </>
+            )}
           </div>
         </div>
       </div>
 
-      {open && <MenuFolha botaoFechar={botaoFechar} fechar={fechar} ativo={ativo} />}
+      {open && <MenuFolha botaoFechar={botaoFechar} fechar={fechar} ativo={ativo} representante={representante} />}
     </header>
+  );
+}
+
+/** Âncora da própria página vira <a> (sem o roteador); página nova vira <Link>. */
+function BotaoBarra({ href, className, children }: { href: string; className: string; children: React.ReactNode }) {
+  return href.startsWith("#") ? (
+    <a href={href} className={className}>
+      {children}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
   );
 }
 
@@ -216,12 +250,16 @@ function MenuFolha({
   botaoFechar,
   fechar,
   ativo,
+  representante,
 }: {
   botaoFechar: React.RefObject<HTMLButtonElement | null>;
   fechar: () => void;
   ativo: (href: string) => boolean;
+  /** Página de representante: sem telefones nem horário (o dono pediu zero números lá). */
+  representante: boolean;
 }) {
   const c = site.contact;
+  const comNumeros = !representante;
   return (
     <div className="fixed inset-0 z-[60] lg:hidden">
       {/* Fundo: tocar fora fecha. Não recebe foco (o "Fechar menu" já faz isso). */}
@@ -283,12 +321,12 @@ function MenuFolha({
               {site.legal.cidade}, {site.legal.uf}
             </p>
             <div className="mt-1 flex flex-col">
-              {c.whatsappUrl && (
+              {comNumeros && c.whatsappUrl && (
                 <a className={contatoLink} href={c.whatsappUrl} target="_blank" rel="noreferrer">
                   WhatsApp {c.whatsappLabel}
                 </a>
               )}
-              {c.phoneUrl && (
+              {comNumeros && c.phoneUrl && (
                 <a className={contatoLink} href={c.phoneUrl}>
                   Telefone {c.phoneLabel}
                 </a>
@@ -307,7 +345,7 @@ function MenuFolha({
                 Todos os contatos
               </Link>
             </div>
-            {c.hours && <p className="mt-2">{c.hours}</p>}
+            {comNumeros && c.hours && <p className="mt-2">{c.hours}</p>}
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
 import { formatarDocumento } from "@/lib/documento";
@@ -12,6 +12,9 @@ import { site } from "@/lib/site";
 import { ArrowRight, Lock } from "./icons";
 
 const initialLeadState: LeadFormState = { ok: false };
+
+/** Ordem dos campos na tela: depois de um erro, o foco vai ao primeiro que falhou. */
+const ORDEM_DOS_CAMPOS = ["name", "whatsapp", "email", "has_cnpj", "document", "company", "city", "state", "message"] as const;
 
 type Props = {
   source: LeadSource;
@@ -67,6 +70,21 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   // form_inicio: a pessoa começou a preencher (primeiro foco num campo), uma vez por
   // montagem. Só a origem, nada digitado; sem consentimento enviarEvento não faz nada.
   const comecou = useRef(false);
+  const form = useRef<HTMLFormElement>(null);
+
+  // Voltou com erro de validação: leva o foco (e a tela) ao primeiro campo que falhou.
+  // No celular o teclado já abre nele, e o leitor de tela lê o erro pelo aria-describedby.
+  useEffect(() => {
+    const erros = state.errors;
+    if (!erros) return;
+    const primeiro = ORDEM_DOS_CAMPOS.find((k) => erros[k]);
+    if (!primeiro) return;
+    const alvo =
+      primeiro === "has_cnpj"
+        ? form.current?.querySelector<HTMLInputElement>('input[name="has_cnpj"]')
+        : form.current?.querySelector<HTMLElement>(`#${primeiro}`);
+    alvo?.focus();
+  }, [state]);
   const aoFocar = () => {
     if (comecou.current) return;
     comecou.current = true;
@@ -74,7 +92,19 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   };
 
   return (
-    <form action={action} onFocusCapture={aoFocar} className="@container space-y-4" noValidate data-sem-barra>
+    <form
+      ref={form}
+      action={action}
+      onFocusCapture={aoFocar}
+      // Enviando: um segundo toque (ou Enter) não manda de novo. O botão não fica
+      // "disabled" para o foco do teclado não se perder no meio do envio.
+      onSubmit={(e) => {
+        if (pending) e.preventDefault();
+      }}
+      className="@container space-y-4"
+      noValidate
+      data-sem-barra
+    >
       <input type="hidden" name="source" value={source} />
       {/* Honeypot: fica invisível para pessoas e é preenchido por bots. */}
       <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden>
@@ -123,7 +153,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
           ))}
         </div>
         {err.has_cnpj && (
-          <p id="has_cnpj-error" className="mt-1.5 text-[13px] text-erro" role="alert">
+          <p id="has_cnpj-error" className="mt-1.5 text-[13px] text-erro">
             {err.has_cnpj}
           </p>
         )}
@@ -154,7 +184,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             maxLength={ehLojista ? 18 : 14}
           />
         </Field>
-        <Field label={ehRepresentante ? "Representação (opcional)" : "Nome da loja (opcional)"} name="company" error={err.company}>
+        <Field label={ehRepresentante ? "Empresa de representação (opcional)" : "Nome da loja (opcional)"} name="company" error={err.company}>
           <input
             id="company"
             className="field"
@@ -245,7 +275,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         {/* Rótulos longos ("Quero receber a tabela de preços") cabem numa linha a 360 px e
             na coluna estreita da landing entre 1024 e 1279 px: letra de 15 px e sem seta
             quando o formulário é estreito (pela largura do formulário, não da tela). */}
-        <button type="submit" className="btn btn-primary btn-lg w-full px-2.5 text-[15px] @[21rem]:px-6 @[21rem]:text-base" disabled={pending}>
+        <button type="submit" className="btn btn-primary btn-lg w-full px-2.5 text-[15px] @[21rem]:px-6 @[21rem]:text-base" aria-disabled={pending || undefined}>
           {pending ? "Enviando..." : submitLabel}
           {!pending && <ArrowRight width={18} height={18} className="seta hidden @[23.5rem]:block" />}
         </button>
@@ -263,21 +293,19 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       </p>
       {/* Fora do contato (que já é o canal) e do representante: lá o caminho é o cadastro
           e o Fabian, e o telefone poria dígitos numa página que não pode ter número. */}
-      {!isContact && !ehRepresentante && (
+      {/* Sem WhatsApp nem e-mail configurados a linha some: mandar para /contato, que
+          também é um formulário, era um laço sem saída. */}
+      {!isContact && !ehRepresentante && (c.whatsappUrl || c.email) && (
         <p className="text-[13px] text-muted">
           Prefere falar direto?{" "}
           {c.whatsappUrl ? (
             <a className="text-ink underline underline-offset-2" href={c.whatsappUrl} target="_blank" rel="noreferrer">
               WhatsApp {c.whatsappLabel}
             </a>
-          ) : c.email ? (
+          ) : (
             <a className="text-ink underline underline-offset-2" href={`mailto:${c.email}`}>
               {c.email}
             </a>
-          ) : (
-            <Link className="text-ink underline underline-offset-2" href="/contato">
-              Veja os canais de contato
-            </Link>
           )}
         </p>
       )}
@@ -292,8 +320,10 @@ function Field({ label, name, error, children }: { label: string; name: string; 
         {label}
       </label>
       {children}
+      {/* Sem role="alert": eram oito avisos de uma vez. O erro é lido pelo aria-describedby
+          quando o foco chega ao campo; o aviso geral, no fim do formulário, é o alerta. */}
       {error && (
-        <p id={`${name}-error`} className="mt-1.5 text-[13px] text-erro" role="alert">
+        <p id={`${name}-error`} className="mt-1.5 text-[13px] text-erro">
           {error}
         </p>
       )}

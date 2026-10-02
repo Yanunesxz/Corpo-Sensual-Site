@@ -95,6 +95,16 @@ html {
   }
 }
 
+/* O foco do teclado nunca para atrás do aviso de cookies nem da barra fixa (WCAG 2.4.11). */
+html[data-aviso-cookies] {
+  scroll-padding-bottom: calc(var(--aviso-cookies-h, 0px) + 1rem);
+}
+@media (max-width: 1023px) {
+  html[data-cta-fixo="1"] {
+    scroll-padding-bottom: 6.5rem;
+  }
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-body);
@@ -103,7 +113,6 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 ::selection {
@@ -121,7 +130,20 @@ body {
   outline-color: #fff;
 }
 
+
 @layer components {
+  /* Seções abaixo da dobra: estilo, layout e pintura só quando chegam perto da tela.
+     "auto" guarda a altura real depois da primeira vez (a barra de rolagem não pula).
+     Cada seção reserva a própria altura com [contain-intrinsic-size:auto_Npx] (celular e
+     lg:), perto da real: com a reserva errada, um link para uma âncora mais abaixo
+     (#perguntas, #formulario) parava fora do lugar. Fica dentro da camada: o utilitário
+     da seção precisa ganhar deste padrão.
+     Nunca numa seção com formulário: o axe mede contraste errado do que não foi pintado. */
+  .cv-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 1000px;
+  }
+
   /* ---------- Grade ---------- */
   .wrap {
     width: 100%;
@@ -376,7 +398,8 @@ body {
     background: var(--color-noite);
     border-color: var(--color-noite);
   }
-  .btn-primary:disabled {
+  .btn-primary:disabled,
+  .btn-primary[aria-disabled="true"] {
     opacity: 0.65;
     cursor: wait;
   }
@@ -621,6 +644,27 @@ body {
     pointer-events: none;
   }
 
+  /* Tela larga: o texto ocupa só o terço esquerdo da foto, então o degradê vem da
+     esquerda (e um pouco de baixo) e o resto da campanha fica com a cor de verdade.
+     No celular vale o .shade-capa (o texto ocupa a largura toda).
+     Use junto com .shade-capa: a partir de 1024 px este substitui aquele. */
+  @media (min-width: 1024px) {
+    /* 0.52 a 36%: entre 1024 e 1279 px o link "Ver as peças" cai sobre a blusa clara de
+       Entrelaços; com o degradê anterior (0.45 a 32%) ficava abaixo de 4,5:1 no p90. */
+    .shade-lado::after {
+      background:
+        linear-gradient(to right, rgb(14 31 41 / 0.74) 0%, rgb(14 31 41 / 0.52) 36%, rgb(14 31 41 / 0) 64%),
+        linear-gradient(to top, rgb(14 31 41 / 0.55) 0%, rgb(14 31 41 / 0) 50%);
+    }
+    /* Cartão de /colecoes: o texto é menor e mais baixo, o degradê fica um pouco mais fechado
+       (a 1024 px a linha de referências de Entrelaços pedia 0.58 a 34% para passar de 4,5:1). */
+    .shade-lado-cartao::after {
+      background:
+        linear-gradient(to right, rgb(14 31 41 / 0.8) 0%, rgb(14 31 41 / 0.58) 34%, rgb(14 31 41 / 0) 62%),
+        linear-gradient(to top, rgb(14 31 41 / 0.45) 0%, rgb(14 31 41 / 0) 45%);
+    }
+  }
+
   /* Foto de capa com direção de arte (ver components/hero-image.tsx). */
   .hero-foto {
     object-position: var(--pos-celular, center 30%);
@@ -814,6 +858,16 @@ body {
       transition:
         opacity 0.2s ease,
         visibility 0s linear 0.2s;
+    }
+  }
+
+  /* Abaixo de 1024 px: onde há barra fixa, o WhatsApp mora nela (o flutuante cobriria o
+     botão da capa); com o aviso de cookies aberto, o flutuante espera (uma coisa por vez
+     na base da tela). */
+  @media (max-width: 1023px) {
+    .wa-com-barra,
+    html[data-aviso-cookies] .wa-flutuante {
+      display: none;
     }
   }
 

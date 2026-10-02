@@ -21,9 +21,13 @@ const fahkwang = Fahkwang({
   display: "swap",
 });
 
+// Inter e Montserrat sem preload: o texto já aparece na fonte de reserva ajustada pelo
+// next/font, e as duas não disputam banda com a foto da capa (LCP). Só a Fahkwang, que
+// é a fonte do H1, continua com preload.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  preload: false,
   display: "swap",
 });
 
@@ -31,6 +35,7 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400"],
   variable: "--font-montserrat",
+  preload: false,
   display: "swap",
 });
 
@@ -69,12 +74,23 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={`${fahkwang.variable} ${inter.variable} ${montserrat.variable} h-full`}>
+    // data-scroll-behavior: o roteador desliga a rolagem suave na troca de página (a página
+    // nova abre no topo, sem deslizar); as âncoras (#formulario, #pecas) continuam suaves.
+    <html lang="pt-BR" data-scroll-behavior="smooth" className={`${fahkwang.variable} ${inter.variable} ${montserrat.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         {/* Empresa e site para o Google e os assistentes de IA (src/lib/schema.ts). */}
         <JsonLd data={[organizacaoJsonLd(), siteJsonLd()]} />
+        {/* Primeiro Tab da página: pula a faixa, a navegação e o cabeçalho. */}
+        <a
+          href="#conteudo"
+          className="btn btn-primary btn-sm sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70]"
+        >
+          Pular para o conteúdo
+        </a>
         <SiteHeader />
-        <main className="flex-1">{children}</main>
+        <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
+          {children}
+        </main>
         <SiteFooter />
         {/* Base da tela: barra do polegar (só abaixo de 1024), WhatsApp flutuante e,
             com GA, o aviso de cookies. Uma coisa por vez (ver globals.css). */}

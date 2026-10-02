@@ -104,8 +104,9 @@ export const site = {
     salesNote: "Venda no atacado, por grade, sem pedido mínimo.",
     /** Para onde o título ao lado já diz que não há mínimo, e repetir soaria estranho. */
     wholesaleNote: "Venda no atacado, por grade.",
-    /** Convite para quem ainda não tem CNPJ: o caso é avaliado, não recusado. */
-    noCnpjNote: "Ainda não tem CNPJ? Fale com a gente.",
+    /** Para quem ainda não tem CNPJ: o formulário já resolve ("Ainda não" + CPF). Antes era
+        "Ainda não tem CNPJ? Fale com a gente.", um convite sem link no meio da página. */
+    noCnpjNote: "CNPJ não é obrigatório.",
     /** Não há valor mínimo de pedido. É argumento de venda, não ressalva. */
     noMinOrder: "Sem pedido mínimo",
     installments: "Parcelamento sem juros no cartão",
@@ -202,6 +203,7 @@ export function collectionShortName(name: string): string {
 
 /** Rótulo de temporada usado em títulos e etiquetas. */
 export function seasonLabel(season: "verao" | "inverno" | "atemporal", year?: number | null): string {
-  const base = season === "verao" ? "Primavera / Verão" : season === "inverno" ? "Outono / Inverno" : "Atemporal";
+  // Mesma grafia em todo o site: "Primavera/Verão 2027" (etiqueta, FAQ, /colecoes).
+  const base = season === "verao" ? "Primavera/Verão" : season === "inverno" ? "Outono/Inverno" : "Atemporal";
   return year ? `${base} ${year}` : base;
 }

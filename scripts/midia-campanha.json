@@ -1,5 +1,5 @@
 {
-  "_comentario": "Campanha Delícias de Verão (Verão 2026/2027). Origens no servidor da empresa: \\\\192.168.0.2\\Comercial\\MARKETER CORPO SENSUAL\\CA_VERAO_2027. Rode com: node scripts/midia-campanha.mjs. As fotos de hero saem grandes de propósito: o Next serve o tamanho certo para cada tela e uma tela de notebook em 2x pede quase 3000px de largura. Quadros: fotos tiradas do vídeo 4K da produção (AG_REELS_09-09-26, pasta CO_SETEMBRO) para as etapas da fábrica. Para não reexportar o acervo inteiro, passe um filtro: node scripts/midia-campanha.mjs scripts/midia-campanha.json editorial/",
+  "_comentario": "Campanha Delícias de Verão (Verão 2026/2027). Origens no servidor da empresa: \\\\192.168.0.2\\Comercial\\MARKETER CORPO SENSUAL\\CA_VERAO_2027. Rode com: node scripts/midia-campanha.mjs. As fotos de hero saem grandes de propósito: o Next serve o tamanho certo para cada tela e uma tela de notebook em 2x pede quase 3000px de largura. Quadros: fotos tiradas do vídeo 4K da produção (AG_REELS_09-09-26, pasta CO_SETEMBRO) para as etapas da fábrica. Para não reexportar o acervo inteiro, passe um filtro: node scripts/midia-campanha.mjs scripts/midia-campanha.json editorial/ Pôster do vídeo da produção no segundo 20 (peças indo para a caixa): o primeiro quadro repetia a foto da costura ao lado. Quadro da caixa em 25,6 s: o de 26,8 s saía estourado.",
   "fotos": [
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4479.jpg",
@@ -106,6 +106,14 @@
       "qualidade": 62
     },
     {
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4797.jpg",
+      "saida": "home/hero-familia-celular.jpg",
+      "largura": 1500,
+      "proporcao": "3/2",
+      "y": 0.48,
+      "qualidade": 72
+    },
+    {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS EXTERNA/8E9A4670.jpg",
       "saida": "lojista/hero-casal.jpg",
       "largura": 1600,
@@ -184,10 +192,11 @@
       "fps": 25
     },
     {
-      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/05_CONTEUDOS/PRODUCAO_DA COSTURA A CAIXA.mp4",
+      "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CO_SETEMBRO/PRODUCAO_DA COSTURA A CAIXA.mp4",
       "saida": "producao/da-costura-a-caixa",
       "altura": 1024,
-      "crf": 26
+      "crf": 26,
+      "posterTempo": 20
     }
   ],
   "quadros": [
@@ -217,7 +226,7 @@
     },
     {
       "origem": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CO_SETEMBRO/AG_REELS_09-09-26.mp4",
-      "tempo": 26.8,
+      "tempo": 25.6,
       "saida": "producao/caixa.jpg",
       "largura": 720,
       "proporcao": "4/5",

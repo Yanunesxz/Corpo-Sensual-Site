@@ -7,6 +7,8 @@ import { HeroImage } from "@/components/hero-image";
 import { ArrowRight } from "@/components/icons";
 
 const FOTO = "/images/home/hero-familia.jpg";
+/** Recorte 3:2 da mesma foto para a faixa do celular: a faixa é larga e baixa, e a 6:5 inteira pesava 20% a mais. */
+const FOTO_CELULAR = "/images/home/hero-familia-celular.jpg";
 
 type Props = {
   /** Coleção atual (a primeira do ano): etiqueta da foto e cartão do desktop. */
@@ -35,39 +37,49 @@ export function CapaHome({ atual }: Props) {
             baixo (375x667) o respiro aperta um pouco para o botão caber sem rolar. */}
         <div className="px-5 pb-10 pt-6 min-[400px]:pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:px-8 md:pb-14 md:pt-10 lg:col-span-5 lg:self-center lg:px-0 lg:py-16">
           <h1>
-            <span className="eyebrow">Fábrica de pijamas e moda íntima · Muriaé, MG</span>{" "}
+            {/* No celular, "Muriaé, MG" desce para a linha de baixo (o ponto ficava sozinho no fim da
+                linha). Do tablet em diante é texto corrido (block): com o inline-flex do .eyebrow, as
+                três partes viravam colunas na coluna estreita de 1024 px. */}
+            <span className="eyebrow gap-0 max-sm:flex max-sm:flex-col max-sm:items-start max-sm:gap-1 sm:block">
+              Fábrica de pijamas e moda íntima
+              <span className="max-sm:hidden">&nbsp;·&nbsp;</span>
+              <span className="whitespace-nowrap">Muriaé, MG</span>
+            </span>{" "}
             <span className="t-hero mt-3 block max-w-[13ch] md:mt-4 lg:mt-6">Direto da fábrica para a sua loja</span>
           </h1>
           <p className="lead mt-3.5 max-w-[34rem] [@media(max-width:767px)_and_(max-height:700px)]:mt-3 md:mt-5 lg:mt-6">
             Pijamas, camisolas, robes e short dolls nas linhas feminina, masculina e infantil. Atacado por grade, sem pedido mínimo.
           </p>
-          {/* Lado a lado enquanto o texto ocupa a largura toda; nas 5 colunas do desktop os
-              dois não cabem numa linha, então empilham com a mesma largura. */}
-          <div className="mt-5 flex flex-col gap-3 [@media(max-width:767px)_and_(max-height:700px)]:mt-4 sm:flex-row sm:items-center md:mt-7 lg:mt-9 lg:w-max lg:flex-col lg:items-stretch">
-            <Link href="/catalogo" className="btn btn-primary btn-lg w-full sm:w-auto" data-ga-local="hero">
+          {/* Um botão cheio e, ao lado, um link com seta (como nas outras capas): o
+              secundário não disputa com a ação principal. Entre 1024 e 1279 px a coluna do texto
+              é estreita para os dois lado a lado: o link desce para baixo do botão (de 1280 em diante,
+              ao lado, e quebra para baixo se não couber). */}
+          <div className="mt-5 flex flex-col gap-3 [@media(max-width:767px)_and_(max-height:700px)]:mt-4 sm:flex-row sm:items-center sm:gap-8 md:mt-7 lg:mt-9 lg:flex-col lg:items-start lg:gap-4 xl:flex-row xl:flex-wrap xl:items-center xl:gap-x-8 xl:gap-y-4">
+            <Link href="/catalogo" className="btn btn-primary btn-lg w-full whitespace-nowrap sm:w-auto" data-ga-local="hero">
               Quero receber o catálogo
               <ArrowRight width={18} height={18} className="seta" />
             </Link>
-            <a href="#pecas" className="btn btn-outline btn-lg hidden sm:inline-flex">
+            <a href="#pecas" className="link-seta hidden whitespace-nowrap sm:inline-flex">
               Ver as mais vendidas
+              <ArrowRight width={18} height={18} />
             </a>
           </div>
-          <p className="legenda mt-3 max-w-[30rem] text-balance lg:mt-5">
-            Catálogo digital com grade e tabela de preços. Ainda não tem CNPJ? Fale com a gente.
-          </p>
+          <p className="legenda mt-3 max-w-[30rem] text-balance lg:mt-5">Catálogo digital com grade e tabela de preços.</p>
         </div>
 
         {/* Foto: faixa no topo do celular; no desktop, 7 colunas até a borda da tela. */}
-        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] lg:order-none lg:col-span-7 lg:h-auto lg:max-h-none lg:min-h-0">
+        {/* Celular baixo (360x640, 360x660): a faixa encolhe até 184 px para o botão caber na primeira tela. */}
+        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] [@media(max-width:767px)_and_(max-height:700px)]:h-[28svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[184px] lg:order-none lg:col-span-7 lg:h-auto lg:max-h-none lg:min-h-0">
           <div className="absolute inset-0 overflow-hidden bg-sky-deep lg:right-[calc(-3rem_-_max(0px,(100cqw_-_1440px)/2))]">
             <HeroImage
               desktop={FOTO}
+              mobile={FOTO_CELULAR}
               alt={altFoto(FOTO, "Família com pijamas da coleção Delícias de Verão")}
               priority
               quality={85}
               sizes="(min-width: 1024px) 58vw, 100vw"
               desktopPosition="center 45%"
-              mobilePosition="center 38%"
+              mobilePosition="center 50%"
               // A foto vira coluna só a partir de 1024 px; abaixo é a faixa do celular (q80).
               switchAt="lg"
             />

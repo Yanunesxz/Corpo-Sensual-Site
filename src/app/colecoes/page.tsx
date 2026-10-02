@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
-import { REFERENCIAS_POR_COLECAO, TOTAL_REFERENCIAS } from "@/lib/site";
+import { TOTAL_REFERENCIAS } from "@/lib/site";
 import { ColecoesVitrine } from "@/components/colecoes-vitrine";
 import { Condicoes } from "@/components/condicoes";
 import { Linhas } from "@/components/linhas";
@@ -15,7 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/colecoes" },
 };
 
-const LEAD_CAPA = `Delícias de Verão (Primavera/Verão 2027, ${REFERENCIAS_POR_COLECAO["delicias-de-verao"]} referências) e Entrelaços (Outono/Inverno 2026, ${REFERENCIAS_POR_COLECAO.entrelacos} referências): ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
+/* Os cartões logo abaixo já dizem o nome, a estação e as referências de cada coleção. */
+const LEAD_CAPA = `Verão e inverno: ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
 
 export default async function ColecoesPage() {
   const [collections, categories] = await Promise.all([getCollections(), getCategories()]);

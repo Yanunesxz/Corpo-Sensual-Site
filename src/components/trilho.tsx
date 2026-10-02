@@ -81,6 +81,9 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
   // Na grade da tela larga não há o que rolar: as setas nem aparecem.
   const setasNoLg = className.includes("trilho-lg-grade") ? "lg:hidden" : "";
   const Lista = ordenada ? "ol" : "ul";
+  // Só recebe o foco do Tab quando há o que rolar. Na grade da tela larga (tudo cabe)
+  // ela seria uma parada inútil, com o anel de foco num bloco maior que a tela.
+  const rola = !(inicio && fim);
 
   const setas = (
     <div className={`hidden shrink-0 gap-2 ${inicio && fim ? "" : "md:flex"} ${setasNoLg}`}>
@@ -118,7 +121,7 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
       {filtros}
       <div role="region" aria-label={rotulo}>
         {/* A lista é o que rola: com foco, as setas do teclado rolam o trilho. */}
-        <Lista ref={ref} onScroll={medir} tabIndex={0} className={`trilho focus-visible:outline-offset-[-2px] ${className}`}>
+        <Lista ref={ref} onScroll={medir} tabIndex={rola ? 0 : undefined} className={`trilho focus-visible:outline-offset-[-2px] ${className}`}>
           {children}
         </Lista>
       </div>

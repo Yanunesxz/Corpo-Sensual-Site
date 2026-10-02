@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Collection } from "@/lib/types";
 import { collectionShortName } from "@/lib/site";
+import { capaVertical } from "@/lib/content/capas";
 import { ArrowRight } from "@/components/icons";
 
 /**
@@ -12,7 +13,7 @@ import { ArrowRight } from "@/components/icons";
 export function VejaTambem({ outras, className = "" }: { outras: Collection[]; className?: string }) {
   if (outras.length === 0) return null;
   const primeira = outras[0];
-  const foto = primeira.hero_mobile_url || primeira.hero_image_url;
+  const foto = capaVertical(primeira);
   return (
     <div className={`flex items-center gap-5 border-t border-line-strong/40 pt-6 ${className}`}>
       {foto && (

@@ -14,7 +14,8 @@
  *               "y": 0.4 }   // opcional: altura do corte, de 0 (topo) a 1 (base)
  *   "videos": { "origem": "<caminho>", "saida": "campanha/teaser",
  *               "inicio": 0, "duracao": 12, "altura": 1280,
- *               "crf": 27, "audioKbps": 128 }   // opcionais
+ *               "crf": 27, "audioKbps": 128,
+ *               "posterTempo": 20 }   // opcionais; posterTempo: segundo do quadro do pôster
  *   "quadros": { "origem": "<vídeo>", "tempo": 2.4, "saida": "producao/costura.jpg",
  *               "largura": 720, "proporcao": "4/5", "foco": "centre" }
  *              Foto tirada de um quadro do vídeo (etapas da produção).
@@ -113,7 +114,9 @@ for (const v of videos) {
     ],
     { stdio: ["ignore", "inherit", "inherit"] },
   );
-  execFileSync(ffmpegPath, ["-y", "-v", "error", ...recorte, "-i", v.origem, "-vframes", "1", "-vf", `scale=-2:${Math.round(altura / 2)}`, "-q:v", "4", poster], {
+  // Pôster: o primeiro quadro, ou o de "posterTempo" (quando o primeiro repete uma foto ao lado).
+  const quadroDoPoster = typeof v.posterTempo === "number" ? ["-ss", String((v.inicio ?? 0) + v.posterTempo)] : recorte;
+  execFileSync(ffmpegPath, ["-y", "-v", "error", ...quadroDoPoster, "-i", v.origem, "-vframes", "1", "-vf", `scale=-2:${Math.round(altura / 2)}`, "-q:v", "4", poster], {
     stdio: ["ignore", "inherit", "inherit"],
   });
   console.log(`vídeo  ${v.saida}.mp4  ${mb(destino)} MB  (pôster ${mb(poster)} MB)`);

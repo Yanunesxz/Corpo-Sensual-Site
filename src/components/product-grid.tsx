@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore, type ReactNode } from "react";
+import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
 import { COTAS, daCota, intercalar } from "@/lib/vitrine";
@@ -43,6 +43,25 @@ type Props = {
 
 const SIZES_VITRINE = "(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw";
 
+/** Grade do celular: quantas peças aparecem antes do "Ver mais peças" (quatro linhas de duas). */
+const NO_CELULAR = 8;
+
+/*
+ * Cartão "210" no fim da grade: ocupa as colunas que sobram na última linha. Classes
+ * escritas por extenso para o Tailwind encontrar (2 colunas no celular, 3 no tablet, 6 no desktop).
+ */
+const SPAN_BASE: Record<number, string> = { 1: "col-span-1", 2: "col-span-2" };
+const SPAN_MD: Record<number, string> = { 1: "md:col-span-1", 2: "md:col-span-2", 3: "md:col-span-3" };
+const SPAN_LG: Record<number, string> = {
+  1: "lg:col-span-1",
+  2: "lg:col-span-2",
+  3: "lg:col-span-3",
+  4: "lg:col-span-4",
+  5: "lg:col-span-5",
+  6: "lg:col-span-6",
+};
+const sobra = (n: number, colunas: number) => colunas - (n % colunas);
+
 /**
  * Peças mais vendidas, com filtro por linha no navegador.
  *
@@ -53,6 +72,9 @@ const SIZES_VITRINE = "(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw";
  */
 export function ProductGrid({ products, categories, title = "Peças", variant = "grade", eyebrow, description, fim }: Props) {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  // Grade do celular: começa com oito peças; "Ver mais peças" mostra o resto.
+  const [todas, setTodas] = useState(false);
+  const lista = useRef<HTMLUListElement>(null);
 
   const activeName = categories.find((c) => c.slug === active)?.name;
   // Só oferece as categorias que existem nesta lista.
@@ -70,6 +92,9 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
     window.dispatchEvent(new Event(EVENT));
   }
 
+  // Abaixo de 640 px os chips encolhem (13 px, respiro menor) para os quatro caberem na
+  // largura do celular; se ainda sobrar, o fim esmaece, para o corte ler como "role para o lado".
+  const chip = "chip shrink-0 whitespace-nowrap max-sm:px-3 max-sm:text-[13px]";
   const chips =
     disponiveis.length > 1 ? (
       <div
@@ -77,20 +102,20 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         aria-label="Filtrar por linha"
         className={
           vitrine
-            ? "-mx-5 mt-6 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] md:mx-0 md:mt-8 md:px-0"
+            ? "-mx-5 mt-6 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] max-[379px]:[mask-image:linear-gradient(to_right,#000_86%,transparent)] sm:gap-2 md:mx-0 md:mt-8 md:px-0"
             : // Presos no topo (abaixo da barra do cabeçalho) enquanto a grade passa: ficam
               // direto no contêiner da grade, sem invólucro, senão o sticky não tem onde andar.
-              "sticky top-16 z-20 -mx-5 mt-3 flex gap-2 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] md:-mx-8 md:px-8 lg:static lg:mx-0 lg:mt-8 lg:flex-wrap lg:p-0"
+              "sticky top-16 z-20 -mx-5 mt-3 flex gap-1.5 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] max-[379px]:[mask-image:linear-gradient(to_right,#000_86%,transparent)] sm:gap-2 md:-mx-8 md:px-8 lg:static lg:mx-0 lg:mt-8 lg:flex-wrap lg:p-0"
         }
       >
-        <button type="button" className={`chip shrink-0 whitespace-nowrap ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
+        <button type="button" className={`${chip} ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
           Todas
         </button>
         {disponiveis.map((c) => (
           <button
             key={c.id}
             type="button"
-            className={`chip shrink-0 whitespace-nowrap ${active === c.slug ? "chip-active" : ""}`}
+            className={`${chip} ${active === c.slug ? "chip-active" : ""}`}
             aria-pressed={active === c.slug}
             onClick={() => select(c.slug)}
           >
@@ -99,6 +124,14 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         ))}
       </div>
     ) : null;
+
+  // Trocar o filtro muda a lista sem recarregar: o leitor de tela ouve quantas peças ficaram.
+  const aviso = (
+    <p className="sr-only" aria-live="polite">
+      {shown.length} {shown.length === 1 ? "peça" : "peças"}
+      {activeName ? ` da linha ${activeName}` : ""}
+    </p>
+  );
 
   if (vitrine) {
     const destino = fim ?? { href: "/catalogo", rotulo: "Receber o catálogo" };
@@ -128,6 +161,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
             {eyebrow && <p className="eyebrow eyebrow-fio">{eyebrow}</p>}
             <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{activeName ? `${activeName}: as mais pedidas` : title}</h2>
             {description && <p className="lead mt-4">{description}</p>}
+            {aviso}
           </div>
         }
         filtros={chips}
@@ -159,6 +193,29 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
     );
   }
 
+  // Grade: o cartão "210" fecha a última linha, ocupando as colunas que sobram (a linha
+  // inteira quando ela já está cheia). Sozinho na linha, vira faixa, com o texto ao lado.
+  const n = shown.length;
+  const recolhida = !todas && n > NO_CELULAR;
+  const naTelaDoCelular = recolhida ? NO_CELULAR : n;
+  const spanBase = sobra(naTelaDoCelular, 2);
+  const spanMd = sobra(n, 3);
+  const spanLg = sobra(n, 6);
+  const faixaBase = spanBase === 2;
+  const faixaMd = spanMd >= 2;
+  const faixaLg = spanLg >= 3;
+  const desenhoFim = [
+    faixaBase ? "flex-row flex-wrap items-end justify-between gap-x-8 gap-y-6" : "flex-col justify-between gap-8",
+    faixaMd ? "md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-x-8" : "md:flex-col md:justify-between md:gap-8",
+    faixaLg ? "lg:flex-row lg:flex-nowrap lg:items-end lg:justify-between lg:gap-x-10" : "lg:flex-col lg:justify-between lg:gap-8",
+  ].join(" ");
+
+  function verMais() {
+    setTodas(true);
+    // O botão some: o foco vai para a lista, que o leitor de tela anuncia com as peças novas.
+    requestAnimationFrame(() => lista.current?.focus({ preventScroll: true }));
+  }
+
   return (
     <div>
       <div className="max-w-2xl">
@@ -175,32 +232,55 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
             </>
           )}
         </p>
+        {aviso}
       </div>
 
       {chips}
 
-      {shown.length === 0 ? (
+      {n === 0 ? (
         <p className="mt-8 bg-sky-soft py-10 text-center text-muted">Nenhuma peça publicada nesta linha ainda.</p>
       ) : (
-        <ul className="mt-6 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-5 lg:mt-10 lg:grid-cols-6">
-          {shown.map((p) => (
-            <li key={p.id}>
+        <ul
+          ref={lista}
+          tabIndex={-1}
+          aria-label={activeName ? `Peças da linha ${activeName}` : "Peças da coleção"}
+          className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6 outline-none md:grid-cols-3 md:gap-x-5 md:gap-y-8 lg:mt-10 lg:grid-cols-6"
+        >
+          {shown.map((p, i) => (
+            // As oito primeiras já trazem as três linhas (a ordem é intercalada).
+            <li key={p.id} className={recolhida && i >= NO_CELULAR ? "max-md:hidden" : undefined}>
               <ProductCard product={p} />
             </li>
           ))}
+          {recolhida && (
+            <li className="col-span-2 md:hidden">
+              <button type="button" className="btn btn-outline w-full" onClick={verMais}>
+                Ver mais peças
+              </button>
+            </li>
+          )}
+          <li className={`${SPAN_BASE[spanBase]} ${SPAN_MD[spanMd]} ${SPAN_LG[spanLg]}`}>
+            <Link
+              href="/catalogo"
+              className={`on-dark group flex h-full bg-noite p-5 transition-colors hover:bg-noite-hover md:p-6 lg:p-8 ${desenhoFim}`}
+            >
+              <span className="flex min-w-0 flex-col gap-4">
+                <span className="eyebrow">Catálogo completo</span>
+                <span>
+                  <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
+                  <span className="mt-3 block max-w-[17rem] text-[15px] leading-snug text-noite-texto">
+                    referências no catálogo, com grade de tamanhos e tabela de preços
+                  </span>
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-2 font-[family-name:var(--font-button)] text-[15px] text-white">
+                Quero receber o catálogo
+                <ArrowRight width={18} height={18} className="transition-transform duration-300 group-hover:translate-x-[3px]" />
+              </span>
+            </Link>
+          </li>
         </ul>
       )}
-
-      {/* Saída depois das peças: o catálogo é o próximo passo, não uma paginação. */}
-      <div className="mt-12 flex flex-col items-start gap-5 bg-sky p-5 sm:flex-row sm:items-center sm:justify-between md:p-8">
-        <p className="max-w-xl text-[15px] leading-[1.6] text-ink md:text-base">
-          No catálogo você vê as {TOTAL_REFERENCIAS} referências, a grade de tamanhos e os preços de atacado.
-        </p>
-        <Link href="/catalogo" className="btn btn-primary w-full shrink-0 whitespace-nowrap sm:w-auto">
-          Quero receber o catálogo
-          <ArrowRight width={18} height={18} className="seta" />
-        </Link>
-      </div>
     </div>
   );
 }
