@@ -23,7 +23,7 @@ classes abaixo. Nenhuma cor fora dos tokens, nenhum `style` com cor.
 | `noite` | `#0E2F44` | tom profundo, só estrutura: faixa do topo, fábrica, rodapé, cartão 210, chip ativo |
 | `noite-hover` | `#16405C` | hover sobre noite |
 | `noite-texto` | `#BFD0DC` | texto corrido sobre noite |
-| `areia` | `#F4EEE8` | apoio: vitrine e fundo das fotos de peça |
+| `areia` | `#F4EEE8` | apoio: seção da vitrine e passe-partout da foto de peça na seção branca |
 | `body` | `#454B54` | texto corrido |
 | `muted` | `#5F6670` | notas, referência da peça, microtexto |
 | `line` | `#DCE8F0` | fios e divisórias |
@@ -95,7 +95,8 @@ cascata com `style={{ "--atraso": "80ms" }}`; **nunca** na primeira tela. Foto a
 `.btn-outline-light` `.btn-sm` `.btn-lg` · `.tag` `.tag-sky` `.tag-areia` · `.field`
 `.seg` `.chip` `.chip-active` `.faq` · `.shade` (texto curto sobre foto) `.shade-capa`
 (texto grande sobre foto) `.hero-foto*` `.zoom-img` · `.trilho` `.trilho-largo` (84%)
-`.trilho-medio` (72%) `.trilho-lg-grade` (vira grade a partir de 1024 px, colunas em
+`.trilho-medio` (72%; no desktop o trilho mostra cartões inteiros: 4, 5 a partir de 1280 px, 2
+largos ou 3 médios) `.trilho-lg-grade` (vira grade a partir de 1024 px, colunas em
 `[--colunas:N]`) · `.cta-bar` `.wa-flutuante` `.folha` `.folha-fundo`.
 
 Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
@@ -111,8 +112,8 @@ Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
 | `SectionHeading` | fólio + título + texto + link |
 | `Condicoes` | condições comerciais: `faixa`, `ficha`, `lista` |
 | `Passos` | passos numerados (ou com ponto, `semNumeros`) |
-| `ProductCard`, `ProductGrid` | peça; vitrine em trilho com cartão "210" ou grade 6/3/2 |
-| `Trilho` | carrossel com scroll-snap e setas a partir de 768 px |
+| `ProductCard`, `ProductGrid` | peça; vitrine em trilho com cartão "210" ou grade 2/3/4/5 |
+| `Trilho` | carrossel com scroll-snap; setas a partir de 768 px (avançam uma página); cartões inteiros e fio de progresso a partir de 1024 px |
 | `ProducaoSection`, `NumerosFabrica` | "Da costura à caixa lacrada" e os números da fábrica |
 | `LeadForm`, `BlocoCadastro` | formulário de cadastro e o cartão em volta |
 | `Faq` | perguntas com `<details>` |
@@ -123,6 +124,16 @@ Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
 | `HeroImage` | foto de capa com direção de arte (`<picture>`, baixa só uma) |
 
 A API de cada um está no comentário do próprio arquivo.
+
+### Foto de peça
+
+Todas as fotos de `public/images/produtos` saem de `scripts/foto-produto.mjs` no mesmo
+quadro: 1400x1750 (4:5), fundo branco, topo do cabelo a 5,5% da altura, figura centrada,
+base cortada na canela encostada na borda de baixo (ou corpo inteiro com 3,5% de folga
+sob o pé). A foto entra **sem mistura de cor** (nada de `mix-blend`): a lojista compra
+pela cor. A moldura é sempre branco contra areia: na seção areia o cartão é o próprio
+branco da foto (`<ProductCard sobre="areia">`); na seção branca a foto ganha um
+passe-partout areia de 6/8 px (padrão, `sobre="papel"`).
 
 ### Marcadores de página
 

@@ -178,7 +178,7 @@ export default async function ColecaoPage({ params }: Props) {
 
         {/* 4. Peças antes da inspiração. */}
         {/* cv-auto: a grade só é montada quando chega perto da tela (os chips presos continuam presos). */}
-        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1930px] md:[contain-intrinsic-size:auto_2800px] lg:[contain-intrinsic-size:auto_1500px] xl:[contain-intrinsic-size:auto_1700px]">
+        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1930px] md:[contain-intrinsic-size:auto_2800px] lg:[contain-intrinsic-size:auto_2340px] xl:[contain-intrinsic-size:auto_2100px]">
           {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). */}
           <div className="wrap">
             <ProductGrid

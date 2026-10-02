@@ -693,14 +693,20 @@ body {
   }
 
   /* ---------- Trilho (carrossel com scroll-snap, sem biblioteca) ----------
-     Sangra até a borda da tela: margem negativa igual à margem do .wrap e o mesmo
-     respiro por dentro, então o primeiro cartão alinha com o texto. */
+     Até 1023 px sangra até a borda da tela (margem negativa igual à margem do .wrap e o
+     mesmo respiro por dentro, então o primeiro cartão alinha com o texto): o cartão
+     cortado na borda avisa que o trilho rola com o dedo.
+     A partir de 1024 px não sangra: fica na largura do texto e mostra cartões INTEIROS
+     (--por-tela), e as setas avançam uma página. Assim nada fica cortado no meio da tela
+     quando o monitor é mais largo que o .wrap.
+     O vão entre cartões é --vao: não use gap-* do Tailwind num trilho que rola. */
   .trilho {
+    --vao: 0.75rem;
     position: relative;
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 46%;
-    gap: 0.75rem;
+    gap: var(--vao);
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
@@ -735,8 +741,8 @@ body {
   }
   @media (min-width: 768px) {
     .trilho {
+      --vao: 1.25rem;
       grid-auto-columns: 30%;
-      gap: 1.25rem;
       margin-inline: -2rem;
       padding-inline: 2rem;
       scroll-padding-inline: 2rem;
@@ -749,10 +755,20 @@ body {
     }
   }
   @media (min-width: 1024px) {
+    /* Cartões inteiros: quatro por tela (cinco a partir de 1280), dois largos, três médios.
+       Os 4 px em volta são só para o anel de foco dos cartões não ser cortado. */
     .trilho {
-      margin-inline: -3rem;
-      padding-inline: 3rem;
-      scroll-padding-inline: 3rem;
+      --por-tela: 4;
+      grid-auto-columns: calc((100% - (var(--por-tela) - 1) * var(--vao)) / var(--por-tela));
+      margin-inline: -4px;
+      padding: 4px;
+      scroll-padding-inline: 4px;
+    }
+    .trilho-largo {
+      --por-tela: 2;
+    }
+    .trilho-medio {
+      --por-tela: 3;
     }
     /* Vira grade comum na tela larga: nada para rolar, as setas somem sozinhas.
        Número de colunas em --colunas (padrão 4): class="... [--colunas:5]". */
@@ -763,12 +779,12 @@ body {
       overflow: visible;
       margin-inline: 0;
       padding-inline: 0;
+      padding-top: 0;
     }
   }
   @media (min-width: 1280px) {
-    /* Quatro cartões e meio à vista: o meio cartão avisa que o trilho continua. */
     .trilho:not(.trilho-largo, .trilho-medio) {
-      grid-auto-columns: calc((100% - 4 * 1.25rem) / 4.5);
+      --por-tela: 5;
     }
   }
 
