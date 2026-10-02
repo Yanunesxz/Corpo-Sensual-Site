@@ -284,7 +284,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       <p className="flex gap-2 text-[13px] leading-relaxed text-muted">
         <Lock width={16} height={16} className="mt-0.5 flex-none" />
         <span>
-          Ao continuar você concorda com a nossa{" "}
+          Ao continuar, você concorda com a nossa{" "}
           <Link href="/politicas/privacidade" className="text-ink underline underline-offset-2">
             política de privacidade
           </Link>
