@@ -49,7 +49,7 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
     const p = pontas(el);
     setInicio(p.inicio);
     setFim(p.fim);
-    // Marca do fio de progresso: largura = quanto do trilho cabe na tela; posição = onde está.
+    // Marca da linha de progresso: largura = quanto do trilho cabe na tela; posição = onde está.
     // Vai direto no estilo (sem estado): acompanha a rolagem sem redesenhar o componente.
     const m = marca.current;
     if (m && el.scrollWidth > 0 && el.clientWidth > 0) {
@@ -68,10 +68,16 @@ export function Trilho({ children, rotulo, cabecalho, filtros, reinicio, escuro 
   }, []);
 
   // Outro filtro: volta ao começo. A medida sai no quadro seguinte, já com o conteúdo novo.
+  // A lista nova entra esmaecendo (a troca era seca, em 0 ms); não na primeira montagem.
+  const montado = useRef(false);
   useEffect(() => {
     const el = ref.current;
     if (!el || reinicio === undefined) return;
     el.scrollTo({ left: 0 });
+    if (montado.current && typeof el.animate === "function" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: "ease-out" });
+    }
+    montado.current = true;
     const id = requestAnimationFrame(() => medir());
     return () => cancelAnimationFrame(id);
   }, [reinicio]);

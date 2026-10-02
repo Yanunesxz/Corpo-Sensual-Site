@@ -15,6 +15,8 @@ type Props = {
    * campos; "depois": abaixo do botão, para o primeiro campo subir na tela (/catalogo).
    */
   condicoes?: boolean | "topo" | "depois";
+  /** Classe da lista ✓ e da nota, ex.: "max-lg:hidden" quando a página já mostra as condições logo abaixo. */
+  classeCondicoes?: string;
   source: LeadSource;
   submitLabel: string;
   withMessage?: boolean;
@@ -33,7 +35,19 @@ const ORIGENS_DE_COMPRA = new Set<LeadSource>(["catalogo", "colecao", "fabrica-d
  * cidade): a lojista que informa o CNPJ dela vê, ali mesmo, o da fábrica.
  * Nunca no representante: lá o conteúdo não tem número.
  */
-export function BlocoCadastro({ id = "formulario", eyebrow, titulo, texto, condicoes = false, source, submitLabel, withMessage = false, nota, className = "" }: Props) {
+export function BlocoCadastro({
+  id = "formulario",
+  eyebrow,
+  titulo,
+  texto,
+  condicoes = false,
+  classeCondicoes = "",
+  source,
+  submitLabel,
+  withMessage = false,
+  nota,
+  className = "",
+}: Props) {
   const listaNoTopo = condicoes === true || condicoes === "topo";
   const listaDepois = condicoes === "depois";
   const temTopo = Boolean(eyebrow || titulo || texto || listaNoTopo);
@@ -44,14 +58,14 @@ export function BlocoCadastro({ id = "formulario", eyebrow, titulo, texto, condi
       {eyebrow && <p className="eyebrow">{eyebrow}</p>}
       {titulo && <h2 className={`t-sub text-[1.5rem] md:text-[1.75rem] ${eyebrow ? "mt-3" : ""}`}>{titulo}</h2>}
       {texto && <p className={`text-[15px] leading-[1.6] text-body ${eyebrow || titulo ? "mt-2" : ""}`}>{texto}</p>}
-      {listaNoTopo && <Condicoes variante="lista" className={eyebrow || titulo || texto ? "mt-5" : ""} />}
+      {listaNoTopo && <Condicoes variante="lista" className={`${eyebrow || titulo || texto ? "mt-5" : ""} ${classeCondicoes}`} />}
       <div className={temTopo ? "mt-6 border-t border-line pt-6" : ""}>
         <LeadForm source={source} submitLabel={submitLabel} withMessage={withMessage} />
       </div>
-      {listaDepois && <Condicoes variante="lista" className="mt-6 border-t border-line pt-6" />}
+      {listaDepois && <Condicoes variante="lista" className={`mt-6 border-t border-line pt-6 ${classeCondicoes}`} />}
       {(nota || empresa) && (
         <div className="mt-4 space-y-1">
-          {nota && <p className="legenda">{nota}</p>}
+          {nota && <p className={`legenda ${classeCondicoes}`}>{nota}</p>}
           {empresa && (
             <p className="legenda">
               {site.legal.razaoSocial} · <span className="whitespace-nowrap">CNPJ {site.legal.cnpj}</span> · {site.legal.cidade}, {site.legal.uf}

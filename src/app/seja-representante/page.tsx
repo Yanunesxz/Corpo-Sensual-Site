@@ -121,19 +121,22 @@ export default function RepresentantePage() {
             <p className="legenda mt-6 max-w-[22rem]">Depois do cadastro você fala direto com o Fabian, nosso gerente comercial.</p>
           </div>
         </div>
-        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] lg:order-none lg:h-auto lg:max-h-none lg:min-h-[max(36rem,min(calc(100svh_-_7rem),50rem))]">
+        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] md:h-[min(56vw,58svh)] md:max-h-none lg:order-none lg:h-auto lg:max-h-none lg:min-h-[max(36rem,min(calc(100svh_-_7rem),50rem))]">
           <Image
             src="/images/representante/casal.jpg"
             alt="Casal com pijama masculino azul-marinho e camisola azul com renda, na varanda à beira do lago, campanha Corpo Sensual"
             fill
             priority
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover object-[center_22%]"
+            // Na faixa do celular e do tablet o rosto dele está colado no topo do arquivo: o
+            // recorte sobe para o cabelo caber. No desktop (coluna em pé) fica como era.
+            className="object-cover object-[center_6%] lg:object-[center_22%]"
           />
         </div>
       </section>
 
-      {/* 2. Por que representar: cinco motivos (3 + 2 no desktop) e o botão embaixo. */}
+      {/* 2. Por que representar: cinco motivos e, no desktop, o botão na sexta célula da grade
+          (3 + 3, sem vão). Abaixo de 1024 px o botão não existe: a barra fixa já traz a mesma ação. */}
       <section id="motivos" className="sec bg-paper">
         <div className="wrap">
           <SectionHeading
@@ -147,13 +150,14 @@ export default function RepresentantePage() {
                 <p className="mt-2 max-w-[26rem] text-[15px] leading-[1.6] text-body md:mt-2.5">{m.texto}</p>
               </li>
             ))}
+            <li className="hidden border-t border-line pt-5 lg:block" data-reveal style={{ ["--atraso" as string]: "160ms" }}>
+              <p className="t-sub">Quer levar a marca?</p>
+              <a href="#formulario" className="btn btn-primary mt-5 whitespace-nowrap lg:px-6">
+                Quero ser representante
+                <ArrowRight width={18} height={18} className="seta" />
+              </a>
+            </li>
           </ul>
-          <div className="mt-9 lg:mt-14" data-reveal>
-            <a href="#formulario" className="btn btn-primary w-full whitespace-nowrap sm:w-auto lg:px-6">
-              Quero ser representante
-              <ArrowRight width={18} height={18} className="seta" />
-            </a>
-          </div>
         </div>
       </section>
 

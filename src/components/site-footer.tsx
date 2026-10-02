@@ -5,7 +5,7 @@ import { politicas } from "@/lib/content/politicas";
 import { GA_ID } from "@/lib/analytics";
 import { PreferenciasCookies } from "./preferencias-cookies";
 import { CtaRodape } from "./cta-rodape";
-import { ForaDoRepresentante } from "./fora-do-representante";
+import { EnderecoDoRodape, ForaDoRepresentante } from "./fora-do-representante";
 
 type Item = { href: string; label: string };
 
@@ -50,7 +50,7 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="cv-auto on-dark overflow-hidden bg-noite text-white [contain-intrinsic-size:auto_640px] md:[contain-intrinsic-size:auto_820px]"
+      className="cv-auto on-dark overflow-hidden bg-noite text-white [contain-intrinsic-size:auto_600px] md:[contain-intrinsic-size:auto_850px] lg:[contain-intrinsic-size:auto_680px]"
       data-sem-barra
     >
       <div className="wrap grid gap-y-8 pb-8 pt-10 md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:pb-12 md:pt-16 lg:grid-cols-12 lg:pb-16 lg:pt-24">
@@ -66,7 +66,7 @@ export function SiteFooter() {
           <p className="mt-4 max-w-sm text-[15px] leading-[1.6] text-noite-texto max-md:hidden">{site.tagline}</p>
           <CtaRodape />
 
-          <address className="mt-6 text-[15px] not-italic leading-[1.6] md:mt-8 lg:mt-10">
+          <EnderecoDoRodape className="mt-6 text-[15px] not-italic leading-[1.6] md:mt-8 lg:mt-10">
             <p className="eyebrow">Fábrica e atendimento</p>
             <p className="mt-3 text-white">
               {site.legal.endereco}
@@ -107,7 +107,7 @@ export function SiteFooter() {
                 <p className="mt-2 text-noite-texto">{c.hours}</p>
               </ForaDoRepresentante>
             )}
-          </address>
+          </EnderecoDoRodape>
         </div>
 
         {/* Celular: as três listas fechadas; um toque abre cada uma. */}
@@ -155,9 +155,11 @@ export function SiteFooter() {
         </div>
       </div>
 
-      {/* Assinatura em letra grande: só desenho, discreta, e só a partir de 768 px. */}
+      {/* Assinatura em letra grande: só desenho, discreta, e só a partir de 768 px.
+          A 40% o azul-claro fica a 3,3:1 sobre o azul-noite (mínimo de texto grande); a 25%
+          ficava a 2,1:1 e o Lighthouse do desktop acusava contraste, mesmo sendo enfeite. */}
       <div className="wrap pb-4 max-md:hidden" aria-hidden>
-        <p className="select-none whitespace-nowrap text-center font-[family-name:var(--font-display)] text-[10.4vw] leading-[0.9] tracking-[-0.01em] text-sky/25 lg:text-[min(10.4vw,10.75rem)]">
+        <p className="select-none whitespace-nowrap text-center font-[family-name:var(--font-display)] text-[10.4vw] leading-[0.9] tracking-[-0.01em] text-sky/40 lg:text-[min(10.4vw,10.75rem)]">
           {site.name}
         </p>
       </div>

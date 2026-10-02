@@ -48,6 +48,9 @@ const SIZES_VITRINE = "(min-width: 1440px) 253px, (min-width: 1280px) 18vw, (min
 /** Grade do celular: quantas peças aparecem antes do "Ver mais peças" (quatro linhas de duas). */
 const NO_CELULAR = 8;
 
+/** Onde a lista começa quando os chips estão presos (celular e tablet): cabeçalho + chips + respiro. */
+const CHIPS_PRESOS = 142;
+
 /*
  * Cartão "210" no fim da grade: ocupa as colunas que sobram na última linha. Classes
  * escritas por extenso para o Tailwind encontrar (2 colunas no celular, 3 no tablet,
@@ -109,6 +112,22 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
     url.hash = "pecas";
     window.history.replaceState(null, "", url.toString());
     window.dispatchEvent(new Event(EVENT));
+    if (vitrine) return;
+    // Grade: no quadro seguinte a lista nova já está na tela.
+    requestAnimationFrame(() => {
+      const el = lista.current;
+      if (!el) return;
+      const reduzido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      // A troca era seca (0 ms): a lista nova entra esmaecendo, sem remontar nada.
+      if (!reduzido && typeof el.animate === "function") el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: "ease-out" });
+      // Abaixo de 1024 px os chips ficam presos sob o cabeçalho. Se a pessoa já rolou a
+      // grade, a lista nova começava escondida acima deles: leva o começo dela para logo
+      // abaixo dos chips (65 px de cabeçalho + 69 de chips + 8 de respiro).
+      const topo = el.getBoundingClientRect().top;
+      if (topo < CHIPS_PRESOS && window.matchMedia("(max-width: 1023px)").matches) {
+        window.scrollTo({ top: window.scrollY + topo - CHIPS_PRESOS, behavior: reduzido ? "auto" : "smooth" });
+      }
+    });
   }
 
   // Abaixo de 640 px os chips encolhem (13 px, respiro menor) para os quatro caberem na
@@ -124,7 +143,8 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
             ? "-mx-5 mt-6 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none] max-[379px]:[mask-image:linear-gradient(to_right,#000_86%,transparent)] sm:gap-2 md:mx-0 md:mt-8 md:px-0"
             : // Presos no topo (abaixo da barra do cabeçalho) enquanto a grade passa: ficam
               // direto no contêiner da grade, sem invólucro, senão o sticky não tem onde andar.
-              "sticky top-16 z-20 -mx-5 mt-3 flex gap-1.5 overflow-x-auto bg-paper px-5 py-3 [scrollbar-width:none] max-[379px]:[mask-image:linear-gradient(to_right,#000_86%,transparent)] sm:gap-2 md:-mx-8 md:px-8 lg:static lg:mx-0 lg:mt-8 lg:flex-wrap lg:p-0"
+              // O fio embaixo (sombra de 1 px, sem ocupar altura) separa os chips das peças que passam por baixo deles.
+              "sticky top-16 z-20 -mx-5 mt-3 flex gap-1.5 overflow-x-auto bg-paper px-5 py-3 shadow-[0_1px_0_var(--color-line)] [scrollbar-width:none] max-[379px]:[mask-image:linear-gradient(to_right,#000_86%,transparent)] sm:gap-2 md:-mx-8 md:px-8 lg:static lg:mx-0 lg:mt-8 lg:flex-wrap lg:p-0 lg:shadow-none"
         }
       >
         <button type="button" className={`${chip} ${!active ? "chip-active" : ""}`} aria-pressed={!active} onClick={() => select("")}>
@@ -178,7 +198,9 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         cabecalho={
           <div className="max-w-2xl" data-reveal>
             {eyebrow && <p className="eyebrow eyebrow-fio">{eyebrow}</p>}
-            <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{activeName ? `${activeName}: as mais pedidas` : title}</h2>
+            {/* O título não muda com o filtro: de duas linhas ele passava a uma, e os chips
+                saíam de baixo do cursor. O chip ativo e o aviso (aria-live) já dizem a linha. */}
+            <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{title}</h2>
             {description && <p className="lead mt-4">{description}</p>}
             {aviso}
           </div>
@@ -193,7 +215,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         ) : (
           shown.map((p) => (
             <li key={p.id}>
-              <ProductCard product={p} sizes={SIZES_VITRINE} sobre="areia" />
+              <ProductCard product={p} sizes={SIZES_VITRINE} sobre="areia" chamada={destino} />
             </li>
           ))
         )}
@@ -267,7 +289,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
           {shown.map((p, i) => (
             // As oito primeiras já trazem as três linhas (a ordem é intercalada).
             <li key={p.id} className={recolhida && i >= NO_CELULAR ? "max-md:hidden" : undefined}>
-              <ProductCard product={p} />
+              <ProductCard product={p} chamada={{ href: "/catalogo", rotulo: "Receber o catálogo" }} />
             </li>
           ))}
           {recolhida && (

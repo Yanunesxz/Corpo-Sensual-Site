@@ -37,7 +37,8 @@ const PASSOS = [
   { titulo: "Cadastro", texto: "Você informa os dados da sua loja. O CNPJ não é obrigatório." },
   {
     titulo: "Catálogo e atendimento",
-    texto: "Você escolhe com quem falar no WhatsApp e recebe o catálogo digital com grade e tabela de preços.",
+    // O nome das vendedoras fica aqui (saiu do cartão do formulário, que começa direto pelos campos).
+    texto: `Você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp e recebe o catálogo digital com grade e tabela de preços.`,
   },
   { titulo: "Primeiro pedido", texto: "Você monta a grade, sem pedido mínimo. O pedido sai da fábrica em até 15 dias úteis." },
 ];
@@ -48,9 +49,14 @@ const PASSOS = [
  * a margem do .wrap: o padding em % de um item de grade é medido sobre a largura da
  * área dele (7/12 ou 5/12 da tela), então 85,7143% = 12/7 da área e 120% = 12/5.
  * Até 1440 px fica 3rem; acima disso, cresce junto com a margem do .wrap.
+ *
+ * De 1024 a 1279 px a divisão é 7/5. A partir de 1280 px é meio a meio (a área de cada
+ * lado é metade da tela, então 100% da área = 50vw): com 7/5 o cartão do formulário
+ * ENCOLHIA conforme a tela crescia (a margem direita cresce junto com o .wrap), perdia
+ * as duas colunas e o botão de envio caía 360 px abaixo da primeira tela a 1680 px.
  */
-const MARGEM_ESQ = "lg:pl-[max(3rem,calc(85.7143%-720px+3rem))]";
-const MARGEM_DIR = "lg:pr-[max(3rem,calc(120%-720px+3rem))]";
+const MARGEM_ESQ = "lg:pl-[max(3rem,calc(85.7143%-720px+3rem))] xl:pl-[max(3rem,calc(100%-720px+3rem))]";
+const MARGEM_DIR = "lg:pr-[max(3rem,calc(120%-720px+3rem))] xl:pr-[max(3rem,calc(100%-720px+3rem))]";
 
 /*
  * Landing dos anúncios. Quem chega já veio decidido a ver preço, então toda chamada da
@@ -69,7 +75,7 @@ export default async function FabricaPage() {
         {/* A. Capa: foto da campanha com o H1 por cima. É o LCP. */}
         <section
           data-barra-depois
-          className="on-photo shade-capa relative h-[78svh] max-h-[760px] min-h-[520px] overflow-hidden bg-noite lg:col-span-7 lg:row-start-1 lg:h-[calc(100svh-7rem)] lg:max-h-none lg:min-h-[640px]"
+          className="on-photo shade-capa relative h-[78svh] max-h-[760px] min-h-[520px] overflow-hidden bg-noite lg:col-span-7 lg:row-start-1 lg:h-[calc(100svh-7rem)] lg:max-h-none lg:min-h-[640px] xl:col-span-6"
         >
           {/* A mesma foto em todas as larguras (sem direção de arte), direto pelo next/image.
               Única imagem com preload na página. Sem fetchPriority="high": no Lighthouse móvel
@@ -80,7 +86,7 @@ export default async function FabricaPage() {
             fill
             preload
             quality={75}
-            sizes="(min-width: 1024px) 58vw, 100vw"
+            sizes="(min-width: 1280px) 50vw, (min-width: 1024px) 58vw, 100vw"
             className="object-cover object-[center_30%]"
           />
           <div className={`absolute inset-x-0 bottom-0 z-10 px-5 pb-7 md:px-8 md:pb-12 lg:pb-14 lg:pr-12 ${MARGEM_ESQ}`}>
@@ -109,16 +115,22 @@ export default async function FabricaPage() {
         <aside
           id="formulario"
           aria-label="Cadastro de lojista"
-          className={`scroll-mt-0 bg-sky px-5 py-6 md:px-8 md:py-12 lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:scroll-mt-48 lg:py-10 lg:pl-6 xl:pl-8 ${MARGEM_DIR}`}
+          className={`scroll-mt-0 bg-sky px-5 py-6 md:px-8 md:py-12 lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:scroll-mt-48 lg:py-6 lg:pl-6 xl:col-span-6 xl:col-start-7 xl:pl-8 ${MARGEM_DIR}`}
         >
-          <FormularioPreso className="md:mx-auto md:max-w-[36rem] lg:mx-0 lg:max-w-[34rem]">
+          {/* A partir de 1280 px o cartão vai até a linha do .wrap (alinhado ao botão do cabeçalho):
+              560 px a 1280 e 640 px de 1440 em diante, sempre com os campos em duas colunas. */}
+          <FormularioPreso className="md:mx-auto md:max-w-[36rem] lg:mx-0 lg:max-w-[34rem] xl:max-w-none">
+            {/* O cartão começa pelo título e pelos campos. As condições (lista ✓ e a nota do
+                asterisco) vêm depois do botão e só no desktop: no celular e no tablet a ficha
+                "As condições, por escrito" está logo abaixo do cartão, e a lista em cima dos
+                campos era a mesma informação três vezes seguidas. Quem atende (as duas
+                vendedoras) está no passo 2 de "Como funciona". */}
             <BlocoCadastro
               id="cadastro"
               className="lg:p-6 xl:p-8"
-              eyebrow="Cadastro de lojista"
               titulo="Receba o catálogo com a tabela de preços"
-              texto={`Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
-              condicoes
+              condicoes="depois"
+              classeCondicoes="max-lg:hidden"
               source="fabrica-de-pijamas"
               submitLabel="Quero receber a tabela de preços"
               nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
@@ -127,14 +139,14 @@ export default async function FabricaPage() {
         </aside>
 
         {/* C. Condições por escrito, em ficha. */}
-        <section className={`wrap py-12 md:py-20 lg:col-span-7 lg:row-start-2 lg:max-w-none lg:pb-20 lg:pr-12 lg:pt-24 ${MARGEM_ESQ}`}>
+        <section className={`wrap py-12 md:py-20 lg:col-span-7 lg:row-start-2 lg:max-w-none lg:pb-20 lg:pr-12 lg:pt-24 xl:col-span-6 ${MARGEM_ESQ}`}>
           <SectionHeading eyebrow="Condições" title="As condições, por escrito" />
           {/* Duas colunas já no celular; três só na largura toda (container query). */}
           <Condicoes variante="ficha" fundo="branco" className="mt-7 md:mt-10" />
         </section>
 
         {/* D. Como funciona. */}
-        <section className={`wrap lg:col-span-7 lg:row-start-3 lg:max-w-none lg:pr-12 ${MARGEM_ESQ}`}>
+        <section className={`wrap lg:col-span-7 lg:row-start-3 lg:max-w-none lg:pr-12 xl:col-span-6 ${MARGEM_ESQ}`}>
           <div className="border-t border-line py-12 md:py-20 lg:pb-24">
             <SectionHeading eyebrow="Como funciona" title="Do cadastro ao primeiro pedido" />
             <Passos itens={PASSOS} className="mt-8 md:mt-10" />
@@ -147,7 +159,8 @@ export default async function FabricaPage() {
       </div>
 
       {/* E. Vitrine: as mais vendidas, 6/6/3/3, com filtro. O cartão final volta ao formulário. */}
-      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_720px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
+      {/* Reserva: a altura do conteúdo, sem o padding do .sec (ver .cv-auto no globals.css). */}
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_592px] md:[contain-intrinsic-size:auto_605px] lg:[contain-intrinsic-size:auto_648px] xl:[contain-intrinsic-size:auto_705px] min-[90rem]:[contain-intrinsic-size:auto_751px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"
@@ -191,7 +204,7 @@ export default async function FabricaPage() {
       {/* H. Fecho: a última chamada volta ao formulário do topo. Em areia (não em azul-noite):
           o rodapé logo abaixo já é azul-noite, e os dois viravam um bloco escuro só.
           No desktop, a foto da campanha ao lado do texto, como uma página dupla. */}
-      <section className="cv-auto bg-areia [contain-intrinsic-size:auto_440px] md:[contain-intrinsic-size:auto_460px] lg:[contain-intrinsic-size:auto_650px] xl:[contain-intrinsic-size:auto_820px]" data-sem-barra>
+      <section className="cv-auto bg-areia [contain-intrinsic-size:auto_440px] md:[contain-intrinsic-size:auto_460px] lg:[contain-intrinsic-size:auto_650px] xl:[contain-intrinsic-size:auto_800px] min-[90rem]:[contain-intrinsic-size:auto_863px]" data-sem-barra>
         <div className="wrap sec lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10 lg:py-24">
           <div className="relative hidden aspect-[4/5] overflow-hidden bg-sky-deep lg:col-span-5 lg:block" data-reveal>
             <Image

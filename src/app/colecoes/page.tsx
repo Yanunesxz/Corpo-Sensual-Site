@@ -41,7 +41,9 @@ export default async function ColecoesPage() {
     <>
       {/* Capa: título à esquerda, apoio e chamada à direita no desktop. É o gatilho da barra fixa. */}
       <section className="bg-sky" data-barra-depois>
-        <div className="wrap pb-14 pt-12 md:pb-20 md:pt-16 lg:grid lg:grid-cols-12 lg:items-end lg:gap-x-10 lg:pb-24 lg:pt-24">
+        {/* Capa baixa: quem chega quer ver roupa. No celular o primeiro cartão de coleção já
+            aparece na primeira tela; no desktop, os dois rostos. */}
+        <div className="wrap pb-8 pt-8 md:pb-20 md:pt-16 lg:grid lg:grid-cols-12 lg:items-end lg:gap-x-10 lg:py-16">
           <div className="lg:col-span-6">
             <p className="eyebrow eyebrow-fio">Coleções</p>
             <h1 className="t-hero mt-3 max-w-[12ch]">Duas coleções por ano</h1>
@@ -53,12 +55,13 @@ export default async function ColecoesPage() {
                 Medida de 22,5rem no celular (~48 caracteres): entre 400 e 640 px a Inter e a
                 fonte de reserva quebram no mesmo número de linhas, e nada abaixo se mexe. */}
             <p className="lead max-w-[22.5rem] sm:max-w-none">{LEAD_CAPA}</p>
-            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
+            <div className="mt-5 flex flex-col items-start gap-4 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
               <Link href="/catalogo" className="btn btn-primary btn-lg w-full whitespace-nowrap sm:w-auto" data-ga-local="hero">
                 Quero receber o catálogo
                 <ArrowRight width={18} height={18} className="seta" />
               </Link>
-              <Link href="/fabrica-de-pijamas" className="link-seta whitespace-nowrap">
+              {/* No celular sai: o mesmo destino está no menu ("Para lojistas") e as condições, na faixa abaixo. */}
+              <Link href="/fabrica-de-pijamas" className="link-seta whitespace-nowrap max-sm:hidden">
                 Como comprar
                 <ArrowRight width={18} height={18} />
               </Link>
@@ -67,7 +70,7 @@ export default async function ColecoesPage() {
         </div>
       </section>
 
-      {/* As coleções: cartões em largura total, texto branco sobre o degradê da capa. */}
+      {/* As coleções: um cartão por linha no celular, lado a lado a partir de 768 px. */}
       <section aria-label="As coleções" className="pb-16 pt-5 md:pb-24 md:pt-8 lg:pb-32 lg:pt-10">
         <div className="wrap">
           {collections.length === 0 ? (

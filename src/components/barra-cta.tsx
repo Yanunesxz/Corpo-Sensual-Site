@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRota } from "@/lib/rota";
 import { useEffect, useRef } from "react";
 import { whatsappLink } from "@/lib/site";
 import { ArrowRight, WhatsApp } from "./icons";
@@ -37,7 +37,7 @@ export function acaoDa(pathname: string): Acao | null {
  * inert e html[data-cta-fixo], que esconde o WhatsApp flutuante no celular).
  */
 export function BarraCta() {
-  const pathname = usePathname();
+  const pathname = useRota();
   const acao = acaoDa(pathname);
   const temAcao = acao !== null;
   const ref = useRef<HTMLDivElement>(null);

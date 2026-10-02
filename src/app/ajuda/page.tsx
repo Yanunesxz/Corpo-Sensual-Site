@@ -88,7 +88,8 @@ export default function AjudaPage() {
                   href={linkWhatsApp(a.numero, a.mensagem)}
                   target="_blank"
                   rel="noreferrer"
-                  className="btn btn-primary btn-lg mt-7 w-full sm:w-auto sm:self-start"
+                  // Tablet (dois cartões de 276 px): o botão ocupa a largura do cartão e não quebra em duas linhas.
+                  className="btn btn-primary btn-lg mt-7 w-full whitespace-nowrap sm:w-auto sm:self-start md:max-lg:w-full md:max-lg:self-stretch md:max-lg:px-4"
                 >
                   <WhatsApp width={22} height={22} />
                   {a.botao}
@@ -96,8 +97,9 @@ export default function AjudaPage() {
                 {/* O número tem largura fixa na linha do desktop: com a Inter os algarismos
                     tabulares são mais largos que os da fonte provisória, e o link ao lado
                     andava quando a fonte carregava (deslocamento de layout). Abaixo de 1024 px
-                    número e link ficam um embaixo do outro, sem risco de quebra. */}
-                <p className="mt-5 flex flex-col items-start gap-y-1 text-[15px] text-body lg:flex-row lg:items-center lg:gap-x-3">
+                    número e link ficam um embaixo do outro, sem risco de quebra. No tablet a linha
+                    reserva a altura das duas (número + link), para os dois botões ficarem na mesma altura. */}
+                <p className="mt-5 flex flex-col items-start gap-y-1 text-[15px] text-body md:max-lg:min-h-[3.75rem] lg:flex-row lg:items-center lg:gap-x-3">
                   <span className="tabular-nums lg:w-[8.5rem] lg:flex-none">{celularParaExibir(a.numero)}</span>
                   {a.extra && (
                     <>

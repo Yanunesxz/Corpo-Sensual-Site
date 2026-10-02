@@ -6,8 +6,12 @@ type Props = {
   itens: Passo[];
   /** Troca o numeral por um ponto. Obrigatório na página de representante (nenhum número). */
   semNumeros?: boolean;
-  /** coluna: pilha (padrão). linha: uma coluna por passo (duas ou três) a partir de 1024 px, com fio ligando os marcadores. */
-  layout?: "coluna" | "linha";
+  /**
+   * coluna: pilha (padrão). linha: uma coluna por passo (duas ou três) a partir de 1024 px,
+   * com fio ligando os marcadores. linha-xl: o mesmo, só a partir de 1280 px (para colunas
+   * de meia tela, onde três passos lado a lado ficam espremidos a 1024 px).
+   */
+  layout?: "coluna" | "linha" | "linha-xl";
   /** Textos claros sobre azul-noite. */
   escuro?: boolean;
   /** Tag do título de cada passo. "p" quando não há um h2 logo acima (a ordem dos títulos não pode pular). */
@@ -22,26 +26,44 @@ type Props = {
  */
 export function Passos({ itens, semNumeros = false, layout = "coluna", escuro = false, tituloTag = "h3", className = "" }: Props) {
   const Titulo = tituloTag;
-  const linha = layout === "linha";
+  // Classes por extenso, para o Tailwind encontrar: as da linha a partir de 1024 px e as de 1280 px.
+  const linha =
+    layout === "linha"
+      ? {
+          lista: `lg:gap-x-10 ${itens.length === 2 ? "lg:grid-cols-2" : "lg:grid-cols-3"}`,
+          item: "lg:flex-col lg:gap-5",
+          fio: "lg:-right-6 lg:bottom-auto lg:left-[3.75rem] lg:top-[21.5px] lg:h-px lg:w-auto",
+          fioPonto: "lg:-right-7 lg:bottom-auto lg:left-5 lg:top-[3.5px] lg:h-px lg:w-auto",
+          ponto: "lg:mt-0",
+        }
+      : layout === "linha-xl"
+        ? {
+            lista: `xl:gap-x-8 ${itens.length === 2 ? "xl:grid-cols-2" : "xl:grid-cols-3"}`,
+            item: "xl:flex-col xl:gap-5",
+            fio: "xl:-right-5 xl:bottom-auto xl:left-[3.75rem] xl:top-[21.5px] xl:h-px xl:w-auto",
+            fioPonto: "xl:-right-5 xl:bottom-auto xl:left-5 xl:top-[3.5px] xl:h-px xl:w-auto",
+            ponto: "xl:mt-0",
+          }
+        : null;
   const fio = escuro ? "bg-white/20" : "bg-line";
 
   return (
-    <ol className={`${linha ? `grid gap-y-8 lg:gap-x-10 ${itens.length === 2 ? "lg:grid-cols-2" : "lg:grid-cols-3"}` : "grid gap-y-8"} ${className}`}>
+    <ol className={`grid gap-y-8 ${linha?.lista ?? ""} ${className}`}>
       {itens.map((p, i) => {
         const ultimo = i === itens.length - 1;
         return (
-          <li key={p.titulo} className={`relative flex gap-4 ${linha ? "lg:flex-col lg:gap-5" : ""}`}>
+          <li key={p.titulo} className={`relative flex gap-4 ${linha?.item ?? ""}`}>
             {/* Fio que liga um marcador ao próximo: vertical na pilha, horizontal na linha do desktop. */}
             {!ultimo && (
               <span
                 aria-hidden
                 className={`absolute w-px ${fio} ${semNumeros ? "left-[3.5px] top-[1.4rem] -bottom-[1.6rem]" : "left-[21.5px] top-[3.25rem] -bottom-6"} ${
-                  linha ? (semNumeros ? "lg:-right-7 lg:bottom-auto lg:left-5 lg:top-[3.5px] lg:h-px lg:w-auto" : "lg:-right-6 lg:bottom-auto lg:left-[3.75rem] lg:top-[21.5px] lg:h-px lg:w-auto") : ""
+                  linha ? (semNumeros ? linha.fioPonto : linha.fio) : ""
                 }`}
               />
             )}
             {semNumeros ? (
-              <span aria-hidden className={`mt-[0.6rem] block h-2 w-2 flex-none rounded-full ${escuro ? "bg-white" : "bg-noite"} ${linha ? "lg:mt-0" : ""}`} />
+              <span aria-hidden className={`mt-[0.6rem] block h-2 w-2 flex-none rounded-full ${escuro ? "bg-white" : "bg-noite"} ${linha?.ponto ?? ""}`} />
             ) : (
               <span
                 aria-hidden

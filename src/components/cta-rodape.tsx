@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRota } from "@/lib/rota";
 import { site } from "@/lib/site";
 import { ArrowRight } from "./icons";
 
@@ -29,7 +29,7 @@ function temChamadaPropria(pathname: string): boolean {
  * e a página não encontrada. Leva ao cadastro do catálogo.
  */
 export function CtaRodape() {
-  const pathname = usePathname();
+  const pathname = useRota();
   if (temChamadaPropria(pathname)) return null;
 
   return (

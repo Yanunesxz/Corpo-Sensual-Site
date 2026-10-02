@@ -23,11 +23,14 @@ export const revalidate = 3600;
 /** Mãe e filha de frente, os dois rostos à vista (a foto de costas era uma mancha sob o degradê). */
 const FOTO_CAPA = "/images/colecoes/entrelacos-2.jpg";
 
-/** Campanha: duas fotos de cada coleção, alternando verão e inverno. */
+/**
+ * Campanha: duas fotos de cada coleção, alternando verão e inverno. Nenhuma repete as de
+ * "Uma fábrica, três linhas", logo acima (a delicias-2 é a mesma foto do cartão Feminino).
+ */
 const CAMPANHA = [
   "/images/colecoes/delicias-1.jpg",
   "/images/colecoes/entrelacos-3.jpg",
-  "/images/colecoes/delicias-2.jpg",
+  "/images/colecoes/delicias-4.jpg",
   "/images/colecoes/entrelacos-4.jpg",
 ];
 
@@ -53,19 +56,23 @@ export default async function SobrePage() {
               title="Fábrica própria em Muriaé, há mais de 25 anos"
               description="Pijamas, camisolas, robes, short dolls e moda íntima, feitos no polo nacional da moda íntima. Vendemos no atacado, por grade, para lojas de todo o Brasil, por representantes."
             />
-            <div className="mt-8 flex flex-col items-start gap-x-8 gap-y-4 [@media(max-width:767px)_and_(max-height:700px)]:mt-5 sm:flex-row sm:flex-wrap sm:items-center lg:mt-10">
-              <Link href="/catalogo" className="btn btn-primary btn-lg w-full sm:w-auto" data-ga-local="hero">
+            {/* Desktop: empilhados até 1439 px e lado a lado (sem quebra) a partir de 1440. Com
+                flex-wrap, perto de 1350 px os dois cabiam por um fio numa linha: com a fonte de
+                reserva quebravam, com a da marca não, e o bloco inteiro (centralizado na altura)
+                pulava 30 px quando a fonte chegava (CLS 0,06 no Lighthouse do desktop). */}
+            <div className="mt-8 flex flex-col items-start gap-x-8 gap-y-4 [@media(max-width:767px)_and_(max-height:700px)]:mt-5 sm:flex-row sm:flex-wrap sm:items-center lg:mt-10 lg:flex-col lg:flex-nowrap lg:items-start min-[90rem]:flex-row min-[90rem]:items-center min-[90rem]:gap-x-6">
+              <Link href="/catalogo" className="btn btn-primary btn-lg w-full whitespace-nowrap sm:w-auto" data-ga-local="hero">
                 Quero receber o catálogo
                 <ArrowRight width={18} height={18} className="seta" />
               </Link>
-              <Link href="/fabrica-de-pijamas" className="link-seta">
+              <Link href="/fabrica-de-pijamas" className="link-seta whitespace-nowrap">
                 Como comprar da fábrica
                 <ArrowRight width={18} height={18} />
               </Link>
             </div>
           </div>
         </div>
-        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] lg:order-none lg:h-auto lg:max-h-none lg:min-h-[80svh]">
+        <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] md:h-[min(56vw,58svh)] md:max-h-none lg:order-none lg:h-auto lg:max-h-none lg:min-h-[80svh]">
           {/* A única foto priority da página (LCP). Qualidade 75: no celular a diferença para
               80 não aparece e o arquivo cai uns 20 KB. (Testado: fetchPriority="high" junto
               com o priority piorou o LCP simulado do Lighthouse, de 3,6 s para 4,0 s.) */}
@@ -76,7 +83,8 @@ export default async function SobrePage() {
             priority
             quality={75}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="object-cover object-[center_35%]"
+            // No tablet a faixa é mais larga que alta: sobe um pouco, para as duas cabeças caberem.
+            className="object-cover object-[center_35%] md:max-lg:object-[center_30%]"
           />
         </div>
       </section>

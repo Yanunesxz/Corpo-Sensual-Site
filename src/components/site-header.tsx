@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRota } from "@/lib/rota";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import { ArrowRight, ChevronRight, Close, Menu } from "./icons";
@@ -39,6 +39,25 @@ function botaoDa(pathname: string): Botao | null {
   return { href: "/catalogo", curto: "Catálogo", longo: "Receber catálogo" };
 }
 
+/** Link da barra na tela larga: fio de 1 px que cresce da esquerda no hover e fica na página atual. */
+const linkBarra =
+  "relative h-11 items-center whitespace-nowrap font-[family-name:var(--font-button)] text-[14px] tracking-[0.01em] text-ink transition-colors hover:text-noite after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:bg-ink after:transition-transform after:duration-300 motion-reduce:after:transition-none";
+const fioBarra = (ativo: boolean) => (ativo ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100");
+
+/**
+ * Fecha o menu descendo: marca a folha (a animação está no CSS, [data-saindo]) e só
+ * depois avisa para tirar do DOM. Com "reduzir movimento", ou sem folha, avisa na hora.
+ */
+function sairDescendo(folha: HTMLElement | null, fim: () => void) {
+  if (!folha || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    fim();
+    return;
+  }
+  if (folha.dataset.saindo !== undefined) return;
+  folha.dataset.saindo = "";
+  window.setTimeout(fim, 190);
+}
+
 const contatoLink = "inline-flex min-h-11 items-center self-start text-ink underline decoration-line-strong underline-offset-[6px] hover:decoration-ink";
 const linkFaixa = "min-h-11 items-center whitespace-nowrap text-white underline decoration-white/45 underline-offset-4 transition-colors hover:decoration-white";
 
@@ -50,18 +69,20 @@ const linkFaixa = "min-h-11 items-center whitespace-nowrap text-white underline 
  * Abaixo de 1024 px o menu abre numa folha que sobe de baixo, perto do polegar:
  * trava a rolagem, deixa o resto da página inerte (o foco não sai da folha), fecha com
  * Esc, toque fora, escolha de link, troca de página ou largura de desktop, e devolve o
- * foco ao botão do menu.
+ * foco ao botão do menu. Ao fechar, a folha desce (0,2 s) antes de sair do DOM.
  */
 export function SiteHeader() {
-  const pathname = usePathname();
+  const pathname = useRota();
   // Guarda a rota em que o menu abriu: trocou de página, ele já nasce fechado
   // (sem setState dentro de efeito).
   const [abertoEm, setAbertoEm] = useState<string | null>(null);
   const open = abertoEm === pathname;
-  const fechar = () => setAbertoEm(null);
 
   const botaoMenu = useRef<HTMLButtonElement>(null);
   const botaoFechar = useRef<HTMLButtonElement>(null);
+  const folha = useRef<HTMLDivElement>(null);
+
+  const fechar = () => sairDescendo(folha.current, () => setAbertoEm(null));
   const faixa = useRef<HTMLDivElement>(null);
   const barra = useRef<HTMLDivElement>(null);
 
@@ -96,7 +117,7 @@ export function SiteHeader() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setAbertoEm(null);
+      if (e.key === "Escape") sairDescendo(folha.current, () => setAbertoEm(null));
     };
     const mq = window.matchMedia("(min-width: 1024px)");
     const onChange = (e: MediaQueryListEvent) => {
@@ -174,9 +195,7 @@ export function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   aria-current={ativo(item.href) ? "page" : undefined}
-                  className={`relative inline-flex h-11 items-center whitespace-nowrap font-[family-name:var(--font-button)] text-[14px] tracking-[0.01em] text-ink transition-colors hover:text-noite after:absolute after:inset-x-0 after:bottom-2 after:h-px after:origin-left after:bg-ink after:transition-transform after:duration-300 ${
-                    ativo(item.href) ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"
-                  }`}
+                  className={`inline-flex ${linkBarra} ${fioBarra(ativo(item.href))}`}
                 >
                   {item.label}
                 </Link>
@@ -207,7 +226,7 @@ export function SiteHeader() {
             <Link
               href="/contato"
               aria-current={ativo("/contato") ? "page" : undefined}
-              className="hidden h-11 items-center font-[family-name:var(--font-button)] text-[14px] tracking-[0.01em] text-ink underline-offset-[6px] transition-colors hover:text-noite hover:underline lg:inline-flex"
+              className={`hidden lg:inline-flex ${linkBarra} ${fioBarra(ativo("/contato"))}`}
             >
               Contato
             </Link>
@@ -215,7 +234,9 @@ export function SiteHeader() {
               <>
                 {/* Rótulo longo ("Quero a tabela de preços") só a partir de 1280 px: entre 1024 e 1279
                     ele quebrava em duas linhas na barra. "Receber catálogo" cabe desde 1024. */}
-                <BotaoBarra href={botao.href} className={`btn btn-primary btn-sm whitespace-nowrap px-4 ${botao.largo ? "xl:hidden" : "lg:hidden"}`}>
+                {/* botao-topo: abaixo de 1024 px some enquanto a barra fixa do polegar está à vista
+                    (a mesma ação duas vezes na tela), ver globals.css. */}
+                <BotaoBarra href={botao.href} className={`botao-topo btn btn-primary btn-sm whitespace-nowrap px-4 ${botao.largo ? "xl:hidden" : "lg:hidden"}`}>
                   {botao.curto}
                 </BotaoBarra>
                 <BotaoBarra href={botao.href} className={`btn btn-primary btn-sm hidden whitespace-nowrap ${botao.largo ? "xl:inline-flex" : "lg:inline-flex"}`}>
@@ -228,7 +249,7 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {open && <MenuFolha botaoFechar={botaoFechar} fechar={fechar} ativo={ativo} representante={representante} />}
+      {open && <MenuFolha folha={folha} botaoFechar={botaoFechar} fechar={fechar} ativo={ativo} representante={representante} />}
     </header>
   );
 }
@@ -247,11 +268,14 @@ function BotaoBarra({ href, className, children }: { href: string; className: st
 }
 
 function MenuFolha({
+  folha,
   botaoFechar,
   fechar,
   ativo,
   representante,
 }: {
+  /** O invólucro: recebe data-saindo enquanto a folha desce. */
+  folha: React.RefObject<HTMLDivElement | null>;
   botaoFechar: React.RefObject<HTMLButtonElement | null>;
   fechar: () => void;
   ativo: (href: string) => boolean;
@@ -261,7 +285,7 @@ function MenuFolha({
   const c = site.contact;
   const comNumeros = !representante;
   return (
-    <div className="fixed inset-0 z-[60] lg:hidden">
+    <div ref={folha} className="fixed inset-0 z-[60] lg:hidden">
       {/* Fundo: tocar fora fecha. Não recebe foco (o "Fechar menu" já faz isso). */}
       <div aria-hidden className="folha-fundo absolute inset-0" onClick={fechar} />
       <div
@@ -272,7 +296,6 @@ function MenuFolha({
         className="folha absolute inset-x-0 bottom-0 mx-auto max-h-[88svh] max-w-xl overflow-y-auto overscroll-contain"
       >
         <div className="sticky top-0 z-10 flex items-center justify-between bg-paper px-5 pb-1 pt-5">
-          <span aria-hidden className="absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-line" />
           <p id="menu-titulo" className="font-[family-name:var(--font-display)] text-[1.5rem] leading-none text-ink">
             Menu
           </p>
