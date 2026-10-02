@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { TOTAL_REFERENCIAS } from "@/lib/site";
+import { pecasDaVitrine } from "@/lib/vitrine";
+import { Condicoes } from "@/components/condicoes";
+import { ProductGrid } from "@/components/product-grid";
 import { SectionHeading } from "@/components/section-heading";
-import { ProductCard } from "@/components/product-card";
-import { HeroImage } from "@/components/hero-image";
+import { ColecoesVitrine } from "@/components/colecoes-vitrine";
+import { Linhas } from "@/components/linhas";
 import { ProducaoSection } from "@/components/producao-section";
-import { altCapa, altFoto } from "@/lib/content/alt-fotos";
+import { CapaHome } from "@/components/home/capa";
+import { FechoHome } from "@/components/home/fecho";
 
 // Revalida o catálogo a cada hora sem precisar de novo deploy.
 export const revalidate = 3600;
@@ -15,190 +17,73 @@ export const revalidate = 3600;
 // Título e description vêm do layout (title.default).
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
+/**
+ * Home: o lookbook de atacado em seis blocos, um único próximo passo (receber o
+ * catálogo com a tabela de preços).
+ * 1. Capa  2. Condições  3. Mais vendidas  4. Coleções e linhas  5. Dentro da fábrica
+ * 6. Fecho com o formulário. Sem FAQ: as objeções já estão na faixa de condições,
+ * no microtexto da capa e no formulário.
+ */
 export default async function HomePage() {
-  const [collections, categories, products] = await Promise.all([
-    getCollections(),
-    getCategories(),
-    getProducts({ limit: 10 }),
-  ]);
-  const current = collections[0] ?? null;
-  const currentHref = current ? `/colecoes/${current.slug}` : "/colecoes";
-  const outras = collections.filter((c) => c.id !== current?.id).slice(0, 2);
-  const { commercial } = site;
+  const [collections, categories, products] = await Promise.all([getCollections(), getCategories(), getProducts({})]);
+  const atual = collections[0] ?? null;
+  const hrefAtual = atual ? `/colecoes/${atual.slug}` : "/colecoes";
 
   return (
     <>
-      {/* Hero como no site atual: fundo azul-claro, título escuro, botão escuro e nota */}
-      <section className="bg-sky">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
-          <div className="max-w-2xl">
-            <p className="label">
-              {current ? `Nova coleção · ${seasonLabel(current.season, current.year)}` : "Moda íntima"}
-            </p>
-            <h1 className="h-hero mt-3 text-[2rem] md:text-[2.375rem]">
-              <span className="sr-only">Corpo Sensual, fábrica de pijamas e moda íntima. Nova coleção </span>
-              {current ? collectionShortName(current.name) : site.name}
-            </h1>
-            {current?.headline && <p className="mt-4 text-lg leading-[1.3] text-body">{current.headline}</p>}
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
-              <Link href="/catalogo" className="btn btn-dark w-full sm:w-auto">
-                Receber catálogo
-              </Link>
-              <Link href={currentHref} className="link self-start text-[15px] sm:self-auto">
-                Ver coleção
-              </Link>
-            </div>
-            <p className="mt-5 text-sm text-body">*{commercial.salesNote} {commercial.noCnpjNote}</p>
-          </div>
+      {/* 1. Capa: proposta, botão e a foto da linha família (LCP). Gatilho da barra fixa. */}
+      <CapaHome atual={atual} />
+
+      {/* 2. As quatro perguntas da lojista, logo abaixo da dobra. */}
+      <section aria-label="Condições para lojistas" className="border-b border-line">
+        <div className="wrap py-8 lg:py-11">
+          <Condicoes variante="faixa" />
         </div>
       </section>
 
-      {/* Foto de campanha em bloco cheio, logo abaixo do hero (sem cantos, como no site atual) */}
-      <div className="relative h-[70svh] max-h-[860px] min-h-[420px] bg-sky-soft md:h-[80svh]">
-        <HeroImage
-          desktop={current?.hero_image_url ?? "/images/colecoes/delicias-campanha.jpg"}
-          mobile={current?.hero_mobile_url}
-          alt={current ? altCapa(current.slug, current.name) : ""}
-          priority
-          desktopPosition="center 35%"
-          mobilePosition="center 25%"
-        />
-      </div>
-
-      {/* Quem somos, em uma linha, para quem chega pelo celular */}
-      <section className="bg-sky-soft">
-        <div className="mx-auto flex max-w-[1600px] flex-col gap-6 px-5 py-14 md:flex-row md:items-center md:justify-between md:gap-10 md:px-8 md:py-20">
-          <p className="max-w-2xl text-[1.125rem] leading-[1.6]">
-            <strong className="font-medium">Fábrica própria de pijamas e moda íntima</strong> em Muriaé, MG, há mais de 25 anos. Produção
-            verticalizada, do corte ao produto final. Vendemos no atacado para lojas de todo o Brasil.
-          </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2">
-            <Link href="/fabrica-de-pijamas" className="link text-[15px]">
-              Sou lojista
-            </Link>
-            <Link href="/contato" className="link text-[15px]">
-              Fale conosco
-            </Link>
-          </div>
+      {/* 3. Vitrine: as mais vendidas em cotas 6/6/3/3, com filtro por linha e o cartão "210". */}
+      {/* cv-auto: estilo, layout e pintura só quando a seção chega perto da tela (altura
+          reservada próxima da real, no celular e no desktop). */}
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_710px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
+        <div className="wrap">
+          <ProductGrid
+            variant="vitrine"
+            products={pecasDaVitrine(products)}
+            categories={categories}
+            eyebrow="Mais vendidas"
+            title="As mais pedidas pelos lojistas"
+            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo digital traz todas, com grade e tabela de preços.`}
+          />
         </div>
       </section>
 
-      {/* Categorias: foto de estúdio com o nome abaixo */}
-      {categories.length > 0 && (
-        <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
-          {/* As fotos levam à coleção já filtrada, que mostra só uma parte. Deixa isso claro. */}
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-3">
-            <p className="label max-w-xl">Aqui aparece uma parte de cada linha.</p>
-            <Link href="/colecoes" className="link text-[15px]">
-              Ver as coleções
-            </Link>
-          </div>
-          <ul className="grid grid-cols-2 gap-x-4 gap-y-8 lg:grid-cols-3">
-            {categories.map((c, i) => {
-              // Com três linhas, a última sobraria sozinha na grade de duas colunas
-              // do celular: ela ocupa a largura toda, numa faixa mais baixa.
-              const sozinha = categories.length % 2 === 1 && i === categories.length - 1;
-              return (
-              <li key={c.id} className={sozinha ? "col-span-2 lg:col-span-1" : undefined}>
-                <Link href={`${currentHref}?categoria=${c.slug}#pecas`} className="group block">
-                  <span className={`zoom-img relative block overflow-hidden rounded-media bg-sky-soft ${sozinha ? "aspect-[16/10] lg:aspect-[4/5]" : "aspect-[4/5]"}`}>
-                    {c.image_url && (
-                      <Image src={c.image_url} alt={altFoto(c.image_url, c.name)} fill sizes={sozinha ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 33vw, 50vw"} className="object-cover object-[center_30%]" />
-                    )}
-                  </span>
-                  <span className="h-display mt-3 block text-2xl transition-opacity group-hover:opacity-60 md:text-[1.75rem]">
-                    {c.name}
-                  </span>
-                </Link>
-              </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
-
-      {/* Mais vendidas: 4 no celular, 9 no tablet, 10 no desktop */}
-      {products.length > 0 && (
-        <section className="bg-sky-soft">
-          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
-            <SectionHeading
-              title="As que mais saem nas lojas"
-              link={{ href: currentHref, label: "Ver mais referências" }}
-              description={`Uma amostra do que mais sai. O mix tem ${TOTAL_REFERENCIAS} referências entre verão e inverno, e o catálogo digital traz todas, com grade e tabela de preços.`}
-            />
-            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-3 md:gap-x-4 lg:grid-cols-5 max-md:[&>*:nth-child(n+5)]:hidden md:max-lg:[&>*:nth-child(10)]:hidden">
-              {products.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
+      {/* 4. As duas coleções do ano (spread de revista) e o atalho por linha. */}
+      {collections.length > 0 && (
+        <section id="colecoes" className="cv-auto sec [contain-intrinsic-size:auto_1200px] md:[contain-intrinsic-size:auto_1450px] lg:[contain-intrinsic-size:auto_1800px] xl:[contain-intrinsic-size:auto_2150px]">
+          <div className="wrap">
+            <SectionHeading eyebrow="Coleções" title="Duas coleções por ano, para a família inteira" />
+            <div className="mt-8 lg:mt-14">
+              <ColecoesVitrine collections={collections.slice(0, 2)} variante="spread" />
             </div>
-            <div className="mt-8 md:hidden">
-              <Link href={currentHref} className="btn btn-outline w-full">
-                Ver mais peças da coleção
-              </Link>
-            </div>
+            {categories.length > 0 && (
+              <div className="mt-14 lg:mt-24">
+                <h3 className="t-sub" data-reveal>
+                  Compre por linha
+                </h3>
+                <div className="mt-4 lg:mt-8">
+                  <Linhas categories={categories} hrefBase={hrefAtual} />
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}
 
-      {/* Coleções: só as que ainda não apareceram no topo */}
-      {outras.length > 0 && (
-        <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
-          <ul className="grid gap-4 md:grid-cols-2 md:gap-6">
-            {outras.map((c) => {
-              const photo = c.hero_mobile_url || c.hero_image_url;
-              return (
-                <li key={c.id}>
-                  <Link
-                    href={`/colecoes/${c.slug}`}
-                    className="shade zoom-img relative block aspect-[4/5] overflow-hidden rounded-media bg-sky-soft md:aspect-square"
-                  >
-                    {photo && <Image src={photo} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[center_25%]" />}
-                    <div className="absolute inset-x-0 bottom-0 z-10 p-5 md:p-8">
-                      <p className="label text-white/85">{seasonLabel(c.season, c.year)}</p>
-                      <p className="h-display mt-2 text-3xl text-white md:text-[2.5rem]">{collectionShortName(c.name)}</p>
-                      {c.headline && <p className="mt-2 max-w-sm text-[15px] leading-[1.5] text-white/90">{c.headline}</p>}
-                      <span className="link mt-3 inline-block text-[15px] text-white">Ver coleção</span>
-                    </div>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-      )}
+      {/* 5. Prova de estrutura: vídeo real, as etapas, os números e o botão. */}
+      <ProducaoSection escuro numeros cta={{ href: "/catalogo", label: "Quero receber o catálogo" }} id="fabrica" />
 
-      {/* Vídeo real da produção: a peça sendo confeccionada, embalada e despachada */}
-      <ProducaoSection fundo="bg-paper" />
-
-      {/* Lojistas: seção de destaque, no azul-claro cheio */}
-      <section className="bg-sky">
-        <div className="mx-auto grid max-w-[1600px] gap-8 px-5 py-16 md:px-8 md:py-24 lg:grid-cols-2 lg:gap-16">
-          <h2 className="h-display text-3xl md:text-[3.125rem]">
-            Teste a marca sem<br />pedido mínimo
-          </h2>
-          <div className="max-w-md">
-            <p className="text-[1.125rem] leading-[1.6]">
-              Cadastre a sua loja e receba o catálogo digital e o contato do representante da região. 5% no Pix e troca em até 15 dias após receber, se a peça vier com defeito de fabricação.
-            </p>
-            {/* Divisória mais escura que a padrão para aparecer sobre o azul-claro */}
-            <ul className="mt-8 divide-y divide-ink/10 border-y border-ink/10 text-base leading-[1.5]">
-              <li className="py-3">{commercial.wholesaleNote}</li>
-              <li className="py-3">{commercial.pixDiscount}</li>
-              <li className="py-3">{commercial.installments}</li>
-              <li className="py-3">{commercial.freeShipping}*</li>
-            </ul>
-            <p className="mt-3 text-sm text-body">*{commercial.freeShippingNote}</p>
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-6">
-              <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
-                Receber catálogo
-              </Link>
-              <Link href="/fabrica-de-pijamas#perguntas" className="link self-start whitespace-nowrap text-[15px] sm:self-auto">
-                Perguntas frequentes
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 6. Fecho: o cadastro na própria home. */}
+      <FechoHome />
     </>
   );
 }

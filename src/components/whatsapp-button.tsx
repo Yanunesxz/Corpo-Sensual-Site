@@ -1,47 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { acaoDa } from "./barra-cta";
 import { site, whatsappLink } from "@/lib/site";
 import { WhatsApp } from "./icons";
 
 /**
- * Botão flutuante. Só aparece se NEXT_PUBLIC_WHATSAPP estiver configurado.
+ * Botão flutuante do WhatsApp. Só existe com NEXT_PUBLIC_WHATSAPP configurado.
  *
- * No celular ele some enquanto a pessoa digita num campo, para não cobrir o
- * formulário quando o teclado abre. Antes isso era feito em CSS com
- * `body:has(.field:focus)`, que obriga o navegador a reavaliar a página inteira a
- * cada mudança de foco. Aqui é um ouvinte só, e só existe quando o botão existe.
+ * Verde acessível (#0E7A3C, ícone branco a 5,43:1). Sobe acima do aviso de cookies
+ * (--aviso-cookies-h, publicado pelo aviso). Abaixo de 1024 px some quando a barra
+ * fixa está à vista, porque ela já traz o WhatsApp (html[data-cta-fixo], ver
+ * globals.css), e some no celular enquanto a pessoa digita, para não cobrir o campo.
+ * Abaixo de 1024 px, nas páginas com barra fixa ele nem aparece (.wa-com-barra): ali o
+ * WhatsApp mora na barra, e o flutuante caía em cima do botão ou do título da capa.
+ * Com o aviso de cookies aberto, também espera. Em /ajuda e /obrigado não existe: as
+ * duas páginas já são feitas de botões de WhatsApp, cada um para quem resolve.
+ * Tudo por atributo do DOM: nenhum estado do React.
  */
 export function WhatsAppButton() {
-  const [digitando, setDigitando] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
+  const pathname = usePathname();
+  const semFlutuante = pathname === "/ajuda" || pathname === "/obrigado";
+  const ativo = Boolean(site.contact.whatsappUrl) && !semFlutuante;
+  // Página com barra fixa: abaixo de 1024 px o WhatsApp mora na barra.
+  const comBarra = acaoDa(pathname) !== null;
 
   useEffect(() => {
-    const celular = window.matchMedia("(max-width: 767px)");
-    const ehCampo = (t: EventTarget | null) => t instanceof HTMLElement && t.classList.contains("field");
-    const entrou = (e: FocusEvent) => ehCampo(e.target) && celular.matches && setDigitando(true);
-    const saiu = (e: FocusEvent) => ehCampo(e.target) && setDigitando(false);
+    const botao = ref.current;
+    if (!botao) return;
+    const celular = window.matchMedia("(max-width: 1023px)");
+    const ehCampo = (t: EventTarget | null) => t instanceof HTMLElement && t.matches(".field, .seg input");
+    const entrou = (e: FocusEvent) => {
+      if (!ehCampo(e.target) || !celular.matches) return;
+      botao.dataset.digitando = "";
+      botao.tabIndex = -1;
+    };
+    const saiu = (e: FocusEvent) => {
+      if (!ehCampo(e.target)) return;
+      delete botao.dataset.digitando;
+      botao.removeAttribute("tabindex");
+    };
     document.addEventListener("focusin", entrou);
     document.addEventListener("focusout", saiu);
     return () => {
       document.removeEventListener("focusin", entrou);
       document.removeEventListener("focusout", saiu);
     };
-  }, []);
+  }, [ativo]);
 
-  if (!site.contact.whatsappUrl) return null;
-  const href = whatsappLink("Olá! Vim pelo site da Corpo Sensual e quero saber mais sobre o catálogo.");
+  if (!ativo) return null;
   return (
     <a
-      href={href}
+      ref={ref}
+      href={whatsappLink("Olá! Vim pelo site da Corpo Sensual e quero saber mais sobre o catálogo.")}
       target="_blank"
       rel="noreferrer"
       aria-label="Falar no WhatsApp"
       data-ga-local="flutuante"
-      aria-hidden={digitando || undefined}
-      tabIndex={digitando ? -1 : undefined}
-      className={`fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg shadow-black/20 transition hover:scale-105 md:bottom-5 md:right-5 md:h-14 md:w-14 ${
-        digitando ? "pointer-events-none opacity-0" : ""
-      }`}
+      className={`wa-flutuante ${comBarra ? "wa-com-barra" : ""}`}
     >
       <WhatsApp width={26} height={26} />
     </a>

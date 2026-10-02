@@ -15,12 +15,21 @@ const ALT_FOTO: Record<string, string> = {
   "/images/categorias/feminino.jpg": "Regata estampada e short listrado da linha feminina",
   "/images/categorias/masculino.jpg": "Pijama masculino de camiseta e short marrom",
   "/images/categorias/infantil.jpg": "Crianças com pijama curto azul brincando com bolhas de sabão",
+  "/images/home/hero-familia.jpg":
+    "Mãe, filha e filho com pijamas curtos azuis e shorts listrados, brincando com bolhas de sabão no gramado, coleção Delícias de Verão",
+  "/images/lojista/capa.jpg": "Modelo de short doll rosa numa espreguiçadeira listrada à beira da piscina, coleção Delícias de Verão",
+  "/images/editorial/riacho.jpg": "Modelo de regata branca e short azul-marinho sentada num deque de bambu sobre o riacho, coleção Delícias de Verão",
+  "/images/editorial/orquidea.jpg": "Orquídeas cor-de-rosa no jardim onde a campanha Delícias de Verão foi fotografada",
+  "/images/home/hero-familia-celular.jpg":
+    "Mãe, filha e filho com pijamas curtos azuis e shorts listrados, brincando com bolhas de sabão no gramado, coleção Delícias de Verão",
+  "/images/home/fechamento.jpg": "Modelo de regata e short brancos molhando o pé na piscina, de braços abertos, coleção Delícias de Verão",
 };
 
 /** Foto do topo de cada coleção. Vale para a versão larga e para a do celular. */
 const ALT_CAPA: Record<string, string> = {
   "delicias-de-verao": "Modelo de short doll rosa à beira da piscina, coleção Delícias de Verão",
-  entrelacos: "Mãe e filha com pijama listrado com corações e calça marrom, coleção Entrelaços",
+  // Vale para as duas fotos da capa (a larga e a do celular), que são diferentes.
+  entrelacos: "Mãe e filha com pijamas de inverno da coleção Entrelaços",
 };
 
 export const altFoto = (url: string, reserva: string) => ALT_FOTO[url] ?? reserva;

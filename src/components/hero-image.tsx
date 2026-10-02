@@ -62,17 +62,15 @@ export function HeroImage({
     ["--pos-tela" as string]: desktopPosition,
   } as React.CSSProperties;
 
-  if (mob === desktop) {
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img {...resto} srcSet={srcSetDesktop} className="hero-foto object-cover" style={{ ...estilo, objectPosition: desktopPosition }} alt={alt} />
-    );
-  }
-
+  // Mesmo com uma foto só (sem versão vertical), as duas fontes ficam: assim o celular
+  // recebe a qualidade de celular e o ponto de interesse do celular, como prometido acima.
+  // Antes, um <img> único servia a qualidade da tela larga (85) também no celular.
   return (
     <picture>
       <source media={`(min-width: ${corte}px)`} srcSet={srcSetDesktop} sizes={sizes} />
       <source media={`(max-width: ${corte - 1}px)`} srcSet={srcSetMobile} sizes={sizes} />
+      {/* Sem fetchPriority="high": medido no Lighthouse móvel (home e coleção, três rodadas
+          cada, em 01/10/2026), piorou o LCP simulado em vez de melhorar. */}
       <img {...resto} className={`hero-foto object-cover ${switchAt === "lg" ? "hero-foto-lg" : "hero-foto-md"}`} style={posicao} alt={alt} />
     </picture>
   );

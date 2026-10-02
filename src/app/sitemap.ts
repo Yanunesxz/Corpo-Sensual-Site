@@ -11,14 +11,14 @@ import { politicas } from "@/lib/content/politicas";
  * /obrigado fica de fora (é noindex).
  */
 const paginas = [
-  { path: "/", atualizada: "2026-09-29" },
-  { path: "/sobre", atualizada: "2026-09-29" },
-  { path: "/colecoes", atualizada: "2026-09-29" },
-  { path: "/catalogo", atualizada: "2026-09-29" },
-  { path: "/fabrica-de-pijamas", atualizada: "2026-09-29" },
-  { path: "/contato", atualizada: "2026-09-29" },
-  { path: "/ajuda", atualizada: "2026-09-29" },
-  { path: "/seja-representante", atualizada: "2026-09-29" },
+  { path: "/", atualizada: "2026-10-01" },
+  { path: "/sobre", atualizada: "2026-10-01" },
+  { path: "/colecoes", atualizada: "2026-10-01" },
+  { path: "/catalogo", atualizada: "2026-10-01" },
+  { path: "/fabrica-de-pijamas", atualizada: "2026-10-01" },
+  { path: "/contato", atualizada: "2026-10-01" },
+  { path: "/ajuda", atualizada: "2026-10-01" },
+  { path: "/seja-representante", atualizada: "2026-10-01" },
 ];
 
 /**
@@ -26,7 +26,7 @@ const paginas = [
  * ou fotos). Quando o catálogo vier do Supabase, use uma data que considere também os
  * produtos da coleção.
  */
-const COLECOES_ATUALIZADAS = "2026-09-29";
+const COLECOES_ATUALIZADAS = "2026-10-01";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const collections = await getCollections();

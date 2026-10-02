@@ -1,12 +1,23 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { LeadForm } from "@/components/lead-form";
-import { CommercialTerms } from "@/components/commercial-terms";
+import { BlocoCadastro } from "@/components/bloco-cadastro";
+import { Condicoes } from "@/components/condicoes";
 import { Faq } from "@/components/faq";
-import { HeroImage } from "@/components/hero-image";
-import { faqLojista } from "@/lib/content/faq";
-import { site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { Passos } from "@/components/passos";
 import { ProducaoSection } from "@/components/producao-section";
+import { ProductGrid } from "@/components/product-grid";
+import { SectionHeading } from "@/components/section-heading";
+import { ArrowRight } from "@/components/icons";
+import { FormularioPreso } from "@/components/lojista/formulario-preso";
+import { altFoto } from "@/lib/content/alt-fotos";
+import { faqLojista } from "@/lib/content/faq";
+import { getCategories, getProducts } from "@/lib/data";
+import { equipe, site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { pecasDaVitrine } from "@/lib/vitrine";
+
+// A vitrine usa as mais vendidas do catálogo: renova a cada hora, como a home.
+export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Fábrica de pijamas no atacado para lojistas",
@@ -15,111 +26,194 @@ export const metadata: Metadata = {
   alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
-/** Como a compra funciona. Fica só aqui: /sobre manda o lojista para esta página. */
-const passos = [
-  { title: "Cadastro", description: "Você informa os dados da sua loja no formulário." },
-  { title: "Representante", description: "Quem atende a sua região apresenta o catálogo, os preços e as condições." },
-  { title: "Primeiro pedido", description: "Você monta a grade e acompanha a produção e o envio." },
+const FOTO_CAPA = "/images/lojista/capa.jpg";
+/** Fecho, só no desktop: a modelo à beira da piscina, como a capa (no celular a foto não existe nem é baixada). */
+const FOTO_FECHO = "/images/home/fechamento.jpg";
+
+const [nicoli, simone] = equipe.vendedoras;
+
+/** Do cadastro ao primeiro pedido. Fica só aqui: a home e o /sobre mandam o lojista para esta página. */
+const PASSOS = [
+  { titulo: "Cadastro", texto: "Você informa os dados da sua loja. O CNPJ não é obrigatório." },
+  {
+    titulo: "Catálogo e atendimento",
+    texto: "Você escolhe com quem falar no WhatsApp e recebe o catálogo digital com grade e tabela de preços.",
+  },
+  { titulo: "Primeiro pedido", texto: "Você monta a grade, sem pedido mínimo. O pedido sai da fábrica em até 15 dias úteis." },
 ];
 
-const benefits = [
-  "Sem pedido mínimo: compre o valor que quiser",
-  "5% no Pix e parcelamento sem juros no cartão",
-  "Frete grátis: R$ 1.200 no Sudeste, R$ 2.000 nas demais",
-  "Sai em até 15 dias úteis; há peças a pronta entrega",
-  "Troca em até 15 dias por defeito de fabricação",
-  "Grade completa: feminino, masculino e infantil",
-];
+/*
+ * Na tela larga, a grade de 12 colunas ocupa a largura toda (a foto da capa sangra até
+ * a borda esquerda e o azul do formulário até a direita). O texto das colunas acompanha
+ * a margem do .wrap: o padding em % de um item de grade é medido sobre a largura da
+ * área dele (7/12 ou 5/12 da tela), então 85,7143% = 12/7 da área e 120% = 12/5.
+ * Até 1440 px fica 3rem; acima disso, cresce junto com a margem do .wrap.
+ */
+const MARGEM_ESQ = "lg:pl-[max(3rem,calc(85.7143%-720px+3rem))]";
+const MARGEM_DIR = "lg:pr-[max(3rem,calc(120%-720px+3rem))]";
 
-export default function FabricaPage() {
+/*
+ * Landing dos anúncios. Quem chega já veio decidido a ver preço, então toda chamada da
+ * página leva ao formulário (#formulario) e nenhum link do corpo sai dela.
+ * Celular: capa, formulário, condições, como funciona, vitrine, fábrica, perguntas, fecho.
+ * Desktop: o cartão do formulário fica preso à direita da capa, das condições e do
+ * "como funciona"; depois a página segue em largura total.
+ */
+export default async function FabricaPage() {
+  const [categories, products] = await Promise.all([getCategories(), getProducts({})]);
+  const { commercial } = site;
+
   return (
     <>
-      <section className="shade shade-hero relative h-[60svh] min-h-[420px] max-h-[720px] bg-sky-soft">
-        <HeroImage
-          desktop="/images/colecoes/fabrica-campanha.jpg"
-          mobile="/images/colecoes/fabrica-campanha-celular.jpg"
-          alt="Modelo de short doll rosa à beira da piscina, foto de campanha da Corpo Sensual"
-          priority
-          desktopPosition="center 35%"
-          mobilePosition="center 30%"
-          switchAt="lg"
-        />
-        <div className="absolute inset-x-0 bottom-0 z-10 mx-auto max-w-[1600px] px-5 pb-8 text-white md:px-8 md:pb-14">
-          {/* .h-hero e .link definem a cor escura do design system: sobre a foto forçamos o branco */}
-          {/* 28px no celular: o título é longo e o espaçamento entre letras do .h-hero alarga a linha */}
-          <h1 className="h-hero max-w-3xl text-[1.75rem] text-white md:text-[2.375rem]">Pijamas direto da fábrica, sem pedido mínimo</h1>
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-7">
-            <a href="#formulario" className="btn btn-light w-full sm:w-auto">
-              Quero ser lojista
-            </a>
-            <a href="#perguntas" className="link self-start text-sm text-white sm:self-auto">
-              Perguntas frequentes
+      <div className="lg:grid lg:grid-cols-12">
+        {/* A. Capa: foto da campanha com o H1 por cima. É o LCP. */}
+        <section
+          data-barra-depois
+          className="on-photo shade-capa relative h-[78svh] max-h-[760px] min-h-[520px] overflow-hidden bg-noite lg:col-span-7 lg:row-start-1 lg:h-[calc(100svh-7rem)] lg:max-h-none lg:min-h-[640px]"
+        >
+          {/* A mesma foto em todas as larguras (sem direção de arte), direto pelo next/image.
+              Única imagem com preload na página. Sem fetchPriority="high": no Lighthouse móvel
+              (três rodadas, 01/10/2026) o LCP simulado ficou melhor sem ele (3,0 s contra 3,2 s). */}
+          <Image
+            src={FOTO_CAPA}
+            alt={altFoto(FOTO_CAPA, "Modelo de short doll rosa à beira da piscina, coleção Delícias de Verão")}
+            fill
+            preload
+            quality={75}
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="object-cover object-[center_30%]"
+          />
+          <div className={`absolute inset-x-0 bottom-0 z-10 px-5 pb-7 md:px-8 md:pb-12 lg:pb-14 lg:pr-12 ${MARGEM_ESQ}`}>
+            <p className="tag">
+              <span className="h-1.5 w-1.5 rounded-full bg-noite" aria-hidden />
+              Atacado para lojistas · {site.legal.cidade}, {site.legal.uf}
+            </p>
+            <h1 className="t-hero mt-4 max-w-[13ch] text-white lg:mt-5">
+              Pijamas direto da fábrica, sem pedido mínimo
+            </h1>
+            <p className="lead mt-4 max-w-[34rem] text-white lg:mt-5">
+              Fábrica própria há mais de 25 anos. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.
+            </p>
+            <a href="#formulario" className="btn btn-light btn-lg mt-6 w-full md:w-auto lg:hidden" data-ga-local="hero">
+              Quero a tabela de preços
+              <ArrowRight width={18} height={18} className="seta" />
             </a>
           </div>
-          <p className="mt-4 text-sm text-white/85">*{site.commercial.wholesaleNote} {site.commercial.noCnpjNote}</p>
+        </section>
+
+        {/* B. Formulário. No celular vem logo depois da capa; no desktop é a coluna da direita.
+            A âncora #formulario (barra fixa, vitrine, fábrica, fecho, rodapé) fica no bloco e
+            não no cartão: o cartão é preso e, no desktop, a âncora nele cairia no meio dele.
+            Assim o salto mostra o cartão desde o título: no desktop volta ao topo da página
+            (o scroll-mt grande faz o salto parar em 0); no celular, logo abaixo da barra. */}
+        <aside
+          id="formulario"
+          aria-label="Cadastro de lojista"
+          className={`scroll-mt-0 bg-sky px-5 py-6 md:px-8 md:py-12 lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1 lg:scroll-mt-48 lg:py-10 lg:pl-6 xl:pl-8 ${MARGEM_DIR}`}
+        >
+          <FormularioPreso className="md:mx-auto md:max-w-[36rem] lg:mx-0 lg:max-w-[34rem]">
+            <BlocoCadastro
+              id="cadastro"
+              className="lg:p-6 xl:p-8"
+              eyebrow="Cadastro de lojista"
+              titulo="Receba o catálogo com a tabela de preços"
+              texto={`Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
+              condicoes
+              source="fabrica-de-pijamas"
+              submitLabel="Quero receber a tabela de preços"
+              nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
+            />
+          </FormularioPreso>
+        </aside>
+
+        {/* C. Condições por escrito, em ficha. */}
+        <section className={`wrap py-12 md:py-20 lg:col-span-7 lg:row-start-2 lg:max-w-none lg:pb-20 lg:pr-12 lg:pt-24 ${MARGEM_ESQ}`}>
+          <SectionHeading eyebrow="Condições" title="As condições, por escrito" />
+          {/* Duas colunas já no celular; três só na largura toda (container query). */}
+          <Condicoes variante="ficha" fundo="branco" className="mt-7 md:mt-10" />
+        </section>
+
+        {/* D. Como funciona. */}
+        <section className={`wrap lg:col-span-7 lg:row-start-3 lg:max-w-none lg:pr-12 ${MARGEM_ESQ}`}>
+          <div className="border-t border-line py-12 md:py-20 lg:pb-24">
+            <SectionHeading eyebrow="Como funciona" title="Do cadastro ao primeiro pedido" />
+            <Passos itens={PASSOS} className="mt-8 md:mt-10" />
+            <p className="mt-8 max-w-xl border-l border-line-strong pl-4 text-[15px] leading-[1.6] text-body md:mt-10" data-reveal>
+              Depois da compra, o atendimento continua pelo WhatsApp: o SAC cuida de pedido, entrega e troca; o financeiro, de
+              boleto e nota fiscal.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      {/* E. Vitrine: as mais vendidas, 6/6/3/3, com filtro. O cartão final volta ao formulário. */}
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_720px] md:[contain-intrinsic-size:auto_780px] lg:[contain-intrinsic-size:auto_960px]">
+        <div className="wrap">
+          <ProductGrid
+            variant="vitrine"
+            products={pecasDaVitrine(products)}
+            categories={categories}
+            eyebrow="O que vai para a sua arara"
+            title="As mais pedidas pelos lojistas"
+            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo completo chega depois do cadastro, com grade e preços.`}
+            fim={{ href: "#formulario", rotulo: "Quero a tabela de preços" }}
+          />
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1600px] gap-12 px-5 py-14 md:px-8 md:py-20 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <p className="max-w-xl text-[1.0625rem] leading-[1.6] text-body">
-            Fábrica própria em Muriaé, MG, há mais de 25 anos. Corte, costura e embalagem
-            aqui dentro. São {TOTAL_REFERENCIAS} referências nas duas coleções do ano e o site
-            publica só uma parte:{" "}
-            <Link href="/colecoes" className="underline">
-              veja as coleções
-            </Link>
-            .
-          </p>
-          <ul className="mt-8 divide-y divide-line border-y border-line">
-            {benefits.map((b) => (
-              <li key={b} className="py-3.5 text-[15px]">
-                {b}
-              </li>
-            ))}
-          </ul>
+      {/* F. Dentro da fábrica: o vídeo real da produção, as etapas e os números. */}
+      <ProducaoSection escuro numeros comLink={false} cta={{ href: "#formulario", label: "Quero a tabela de preços" }} />
 
-          {/* Único lugar do site que explica o processo de compra. /sobre aponta para cá. */}
-          <h2 className="h-display mt-10 text-2xl">Como funciona</h2>
-          <ol className="mt-4 space-y-3">
-            {passos.map((p, i) => (
-              <li key={p.title} className="flex gap-3 text-[15px] leading-[1.6]">
-                <span className="label shrink-0 tabular-nums opacity-85">{String(i + 1).padStart(2, "0")}</span>
-                <span>
-                  <strong className="font-medium text-ink">{p.title}.</strong> {p.description}
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        {/* Formulário dentro do bloco azul-claro: título, condições em linha e botão escuro no fim */}
-        <div id="formulario" className="scroll-mt-20 rounded-media bg-sky p-6 md:p-8">
-          <h2 className="h-display text-3xl md:text-[2.5rem]">Quero as peças que mais vendem</h2>
-          <p className="mt-3 text-[1.0625rem] leading-[1.6] text-body">Cadastre a sua loja. O representante da sua região manda a tabela de preços e a grade para você montar o primeiro pedido.</p>
-          <CommercialTerms className="mt-6" />
-          <div className="mt-7">
-            <LeadForm source="fabrica-de-pijamas" submitLabel="Quero ser lojista" withMessage />
+      {/* G. Perguntas (o rodapé e outras páginas apontam para cá). */}
+      <section id="perguntas" className="sec bg-sky-soft">
+        <div className="wrap lg:grid lg:grid-cols-12 lg:gap-x-10">
+          <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
+            <SectionHeading
+              eyebrow="Perguntas frequentes"
+              title="Tudo o que você precisa saber antes de comprar"
+              description={
+                <>
+                  Não achou a sua dúvida?{" "}
+                  <Link href="/contato" className="link">
+                    Fale com a gente
+                  </Link>
+                  .
+                </>
+              }
+            />
           </div>
-        </div>
-      </section>
-
-      {/* Vídeo real da produção, logo depois do formulário */}
-      <ProducaoSection fundo="bg-sky" comLink={false} />
-
-      <section id="perguntas" className="scroll-mt-20 bg-sky-soft">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
-          <div className="grid gap-8 lg:grid-cols-[1fr_2fr] lg:gap-16">
-            <div>
-              <h2 className="h-display text-3xl md:text-[2.5rem]">Perguntas frequentes</h2>
-              <p className="mt-4 text-[1.0625rem] leading-[1.6] text-body">
-                O que os lojistas mais perguntam antes do primeiro pedido. Não achou a sua dúvida?{" "}
-                <Link href="/contato" className="underline">
-                  Fale com a gente
-                </Link>
-                .
-              </p>
-            </div>
+          <div className="mt-8 md:mt-10 lg:col-span-7 lg:mt-0" data-reveal>
             <Faq items={faqLojista} />
+          </div>
+        </div>
+      </section>
+
+      {/* H. Fecho: a última chamada volta ao formulário do topo. Em areia (não em azul-noite):
+          o rodapé logo abaixo já é azul-noite, e os dois viravam um bloco escuro só.
+          No desktop, a foto da campanha ao lado do texto, como uma página dupla. */}
+      <section className="cv-auto bg-areia [contain-intrinsic-size:auto_440px] md:[contain-intrinsic-size:auto_460px] lg:[contain-intrinsic-size:auto_650px] xl:[contain-intrinsic-size:auto_820px]" data-sem-barra>
+        <div className="wrap sec lg:grid lg:grid-cols-12 lg:items-center lg:gap-x-10 lg:py-24">
+          <div className="relative hidden aspect-[4/5] overflow-hidden bg-sky-deep lg:col-span-5 lg:block" data-reveal>
+            <Image
+              src={FOTO_FECHO}
+              alt={altFoto(FOTO_FECHO, "Modelo de regata e short brancos à beira da piscina, coleção Delícias de Verão")}
+              fill
+              sizes="(min-width: 1440px) 540px, (min-width: 1024px) 38vw, 1px"
+              className="object-cover object-[center_35%]"
+            />
+          </div>
+          <div className="lg:col-span-6 lg:col-start-7">
+          <SectionHeading
+            eyebrow="Catálogo com tabela de preços"
+            title="Compre da fábrica, no valor que a sua loja precisa"
+            description={`${commercial.noMinOrder}. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.`}
+          />
+          <div className="mt-8 md:mt-10" data-reveal>
+            <a href="#formulario" className="btn btn-primary btn-lg w-full sm:w-auto">
+              Quero a tabela de preços
+              <ArrowRight width={18} height={18} className="seta" />
+            </a>
+          </div>
           </div>
         </div>
       </section>

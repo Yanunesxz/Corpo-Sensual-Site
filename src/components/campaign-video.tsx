@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Pause, Play } from "./icons";
 
 type Props = {
   /** Nome do arquivo em public/videos, sem extensão. Ex.: "campanha/piquenique". */
@@ -30,6 +31,8 @@ function limite(): number {
 const visiveis = new Set<HTMLVideoElement>();
 /** O vídeo em que a pessoa ligou o som tem prioridade sobre os outros. */
 let preferido: HTMLVideoElement | null = null;
+/** Vídeos que a pessoa pausou no botão: nada os faz tocar de novo, até ela pedir (WCAG 2.2.2). */
+const pausadosPeloUsuario = new WeakSet<HTMLVideoElement>();
 
 /**
  * Decide quem toca: entre os visíveis, primeiro o que está com som e depois a
@@ -43,10 +46,13 @@ function reorganizar() {
     return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
   });
   const n = limite();
-  lista.forEach((v, i) => {
-    if (i < n) void v.play().catch(() => {});
-    else v.pause();
-  });
+  let tocando = 0;
+  for (const v of lista) {
+    if (!pausadosPeloUsuario.has(v) && tocando < n) {
+      tocando++;
+      void v.play().catch(() => {});
+    } else v.pause();
+  }
 }
 
 function mostrar(v: HTMLVideoElement) {
@@ -77,6 +83,7 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
   const ref = useRef<HTMLVideoElement | null>(null);
   const [perto, setPerto] = useState(false);
   const [comSom, setComSom] = useState(false);
+  const [pausado, setPausado] = useState(false);
 
   // 1) Só dá o endereço do arquivo quando o vídeo chega a uma tela de distância.
   useEffect(() => {
@@ -148,13 +155,30 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
     }
   }
 
+  function alternarPausa() {
+    const v = ref.current;
+    if (!v) return;
+    if (pausadosPeloUsuario.has(v)) {
+      pausadosPeloUsuario.delete(v);
+      setPausado(false);
+      mostrar(v);
+    } else {
+      pausadosPeloUsuario.add(v);
+      setPausado(true);
+      v.pause();
+      reorganizar();
+    }
+  }
+
   return (
     <div className="relative h-full w-full">
       <video
         ref={ref}
         className={`h-full w-full object-cover ${className}`}
         style={{ aspectRatio: proporcao }}
-        poster={`/videos/${src}.jpg`}
+        // O pôster também espera o vídeo chegar perto: pedido no início, ele disputava
+        // banda com a foto do topo (LCP) em toda página com a seção da fábrica.
+        poster={perto ? `/videos/${src}.jpg` : undefined}
         src={perto ? `/videos/${src}.mp4` : undefined}
         preload="none"
         muted
@@ -163,11 +187,22 @@ export function CampaignVideo({ src, legenda, comAudio = true, className = "", p
         aria-label={legenda}
       />
 
+      {/* Pausa: todo vídeo em laço precisa de uma (WCAG 2.2.2). Com "reduzir movimento"
+          o vídeo não toca sozinho e mostra os controles do navegador. O rótulo diz a ação
+          (sem aria-pressed: "Reproduzir vídeo, pressionado" contradizia o estado). */}
+      <button
+        type="button"
+        onClick={alternarPausa}
+        aria-label={pausado ? "Reproduzir vídeo" : "Pausar vídeo"}
+        className="absolute bottom-2 left-2 flex h-11 w-11 items-center justify-center rounded-full bg-ink/70 text-white transition hover:bg-ink/85 motion-reduce:hidden md:bottom-3 md:left-3"
+      >
+        {pausado ? <Play width={18} height={18} /> : <Pause width={18} height={18} />}
+      </button>
+
       {comAudio && (
         <button
           type="button"
           onClick={alternarSom}
-          aria-pressed={comSom}
           aria-label={comSom ? "Desligar o som do vídeo" : "Ligar o som do vídeo"}
           // Fundo sólido em vez de desfoque: desfocar por cima de um vídeo tocando
           // obriga o celular a recompor a imagem a cada quadro.

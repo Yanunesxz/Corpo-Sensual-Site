@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { HeroImage } from "@/components/hero-image";
 import Link from "next/link";
-import { getCollections, getProducts } from "@/lib/data";
-import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
+import { getCategories, getCollections, getProducts } from "@/lib/data";
+import { TOTAL_REFERENCIAS } from "@/lib/site";
+import { ColecoesVitrine } from "@/components/colecoes-vitrine";
+import { Condicoes } from "@/components/condicoes";
+import { Linhas } from "@/components/linhas";
+import { ArrowRight } from "@/components/icons";
 
 export const revalidate = 3600;
 
@@ -12,79 +15,104 @@ export const metadata: Metadata = {
   alternates: { canonical: "/colecoes" },
 };
 
+/* Os cartões logo abaixo já dizem o nome, a estação e as referências de cada coleção. */
+const LEAD_CAPA = `Verão e inverno: ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
+
 export default async function ColecoesPage() {
-  const collections = await getCollections();
-  // Quantas peças e quais linhas cada coleção tem, para o card dizer algo concreto.
-  const counts = await Promise.all(
-    collections.map((c) =>
-      getProducts({ collectionId: c.id }).then((p) => ({
-        total: p.length,
-        linhas: [...new Set(p.map((x) => x.category?.name).filter(Boolean))] as string[],
-      })),
+  const [collections, categories] = await Promise.all([getCollections(), getCategories()]);
+
+  // Quais linhas cada coleção tem, para o cartão dizer algo concreto:
+  // "145 referências · feminino, masculino, infantil". Na ordem das categorias.
+  const linhasPorColecao: Record<string, string[]> = Object.fromEntries(
+    await Promise.all(
+      collections.map((c) =>
+        getProducts({ collectionId: c.id }).then((pecas) => {
+          const temLinha = new Set(pecas.map((p) => p.category?.slug).filter(Boolean));
+          return [c.slug, categories.filter((cat) => temLinha.has(cat.slug)).map((cat) => cat.name.toLowerCase())] as const;
+        }),
+      ),
     ),
   );
+
+  // "Compre por linha" leva à grade filtrada da coleção atual (a primeira da lista).
+  const atual = collections[0];
+
   return (
     <>
-      {/* Abertura no desenho do site atual: fundo azul-claro, título, apoio e botão */}
-      <section className="bg-sky">
-        <div className="mx-auto max-w-[1600px] px-5 py-16 md:px-8 md:py-24">
-          <h1 className="h-hero text-[2rem] md:text-[2.375rem]">Duas coleções por ano</h1>
-          <p className="mt-5 max-w-2xl text-[1.125rem] leading-[1.6] text-body">
-            Produzimos as duas do corte ao produto final, em Muriaé: Delícias de Verão (Primavera/Verão 2027) e
-            Entrelaços (Outono/Inverno 2026). Juntas somam {TOTAL_REFERENCIAS} referências. Aqui você vê uma seleção;
-            o catálogo digital traz todas, com grade e preços. {site.commercial.salesNote}
-          </p>
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-7">
-            <Link href="/catalogo" className="btn btn-dark w-full whitespace-nowrap sm:w-auto">
-              Receber catálogo e tabela
-            </Link>
-            <Link href="/fabrica-de-pijamas" className="link self-start whitespace-nowrap text-base sm:self-auto">
-              Como comprar
-            </Link>
+      {/* Capa: título à esquerda, apoio e chamada à direita no desktop. É o gatilho da barra fixa. */}
+      <section className="bg-sky" data-barra-depois>
+        <div className="wrap pb-14 pt-12 md:pb-20 md:pt-16 lg:grid lg:grid-cols-12 lg:items-end lg:gap-x-10 lg:pb-24 lg:pt-24">
+          <div className="lg:col-span-6">
+            <p className="eyebrow eyebrow-fio">Coleções</p>
+            <h1 className="t-hero mt-3 max-w-[12ch]">Duas coleções por ano</h1>
+          </div>
+          <div className="mt-6 max-w-2xl lg:col-span-6 lg:col-start-7 lg:mt-0 xl:col-span-5 xl:col-start-8">
+            {/* Um só nó de texto: com os números interpolados o React parte o parágrafo em
+                vários nós, e quando a Inter troca a fonte de reserva cada pedaço "pula" de linha
+                (CLS 0,22 medido). Inteiro, o parágrafo só se reacomoda por dentro.
+                Medida de 22,5rem no celular (~48 caracteres): entre 400 e 640 px a Inter e a
+                fonte de reserva quebram no mesmo número de linhas, e nada abaixo se mexe. */}
+            <p className="lead max-w-[22.5rem] sm:max-w-none">{LEAD_CAPA}</p>
+            <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
+              <Link href="/catalogo" className="btn btn-primary btn-lg w-full whitespace-nowrap sm:w-auto" data-ga-local="hero">
+                Quero receber o catálogo
+                <ArrowRight width={18} height={18} className="seta" />
+              </Link>
+              <Link href="/fabrica-de-pijamas" className="link-seta whitespace-nowrap">
+                Como comprar
+                <ArrowRight width={18} height={18} />
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-[1600px] px-5 py-14 md:px-8 md:py-20">
-        {collections.length === 0 ? (
-          <p className="text-base text-body">Nenhuma coleção publicada no momento.</p>
-        ) : (
-          <ul className="grid gap-4 md:gap-5">
-            {collections.map((c, i) => (
-              <li key={c.id}>
-                <Link
-                  href={`/colecoes/${c.slug}`}
-                  className="shade zoom-img relative block aspect-[4/5] overflow-hidden rounded-media bg-sky-soft md:aspect-[3/2] lg:aspect-[21/9]"
-                >
-                  {c.hero_image_url && (
-                    <HeroImage
-                      desktop={c.hero_image_url}
-                      mobile={c.hero_mobile_url}
-                      quality={85}
-                      desktopPosition="center 35%"
-                      mobilePosition="center 25%"
-                    />
-                  )}
-                  {/* Sobre a foto a cor precisa vir na própria classe: .label, .h-display e .link já definem cor. */}
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-5 md:p-10">
-                    <p className="label text-white/90">{seasonLabel(c.season, c.year)}</p>
-                    <p className="h-display mt-2 text-3xl text-white md:text-[2.5rem]">{collectionShortName(c.name)}</p>
-                    {c.headline && <p className="mt-3 hidden max-w-md text-[1.125rem] leading-[1.6] text-white/90 lg:block">{c.headline}</p>}
-                    {counts[i].total > 0 && (
-                      <p className="mt-2 text-sm text-white/85">
-                        {REFERENCIAS_POR_COLECAO[c.slug]
-                          ? `${REFERENCIAS_POR_COLECAO[c.slug]} referências`
-                          : `${counts[i].total} peças`}
-                        {counts[i].linhas.length > 0 && ` · ${counts[i].linhas.join(", ").toLowerCase()}`}
-                      </p>
-                    )}
-                    <span className="link mt-3 inline-block text-base text-white">Ver coleção</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* As coleções: cartões em largura total, texto branco sobre o degradê da capa. */}
+      <section aria-label="As coleções" className="pb-16 pt-5 md:pb-24 md:pt-8 lg:pb-32 lg:pt-10">
+        <div className="wrap">
+          {collections.length === 0 ? (
+            <p className="text-base text-body">Nenhuma coleção publicada no momento.</p>
+          ) : (
+            <ColecoesVitrine collections={collections} variante="grande" prioridade linhasPorColecao={linhasPorColecao} />
+          )}
+        </div>
+      </section>
+
+      {/* Compre por linha: cada linha abre a grade da coleção atual já filtrada. */}
+      {atual && categories.length > 0 && (
+        <section className="sec bg-areia">
+          <div className="wrap">
+            <h2 className="t-titulo" data-reveal>
+              Compre por linha
+            </h2>
+            <div className="mt-8 lg:mt-12">
+              <Linhas categories={categories} hrefBase={`/colecoes/${atual.slug}`} />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Condições: as quatro perguntas da lojista antes do fecho. */}
+      <section aria-label="Condições para lojistas" className="border-b border-line">
+        <div className="wrap py-8 lg:py-11" data-reveal>
+          <Condicoes variante="faixa" />
+        </div>
+      </section>
+
+      {/* Fecho: a barra fixa some aqui, o botão já está na tela. */}
+      <section className="sec bg-sky" data-sem-barra>
+        <div className="wrap lg:grid lg:grid-cols-12 lg:items-end lg:gap-x-10">
+          <h2 className="t-titulo max-w-[16ch] lg:col-span-6" data-reveal>
+            Quer essas peças na sua loja?
+          </h2>
+          <div className="mt-4 max-w-xl lg:col-span-6 lg:col-start-7 lg:mt-0 xl:col-span-5 xl:col-start-8" data-reveal style={{ ["--atraso" as string]: "80ms" }}>
+            <p className="lead">Cadastre a sua loja e receba o catálogo completo com a tabela de preços.</p>
+            <Link href="/catalogo" className="btn btn-primary btn-lg mt-7 w-full sm:w-auto">
+              Quero receber o catálogo
+              <ArrowRight width={18} height={18} className="seta" />
+            </Link>
+          </div>
+        </div>
       </section>
     </>
   );
