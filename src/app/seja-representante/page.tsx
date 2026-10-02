@@ -98,7 +98,7 @@ export default function RepresentantePage() {
           texto alinha com a margem do .wrap mesmo em tela mais larga que 1440 px, e a foto
           sangra até a borda direita. */}
       <section className="flex flex-col bg-sky lg:grid lg:grid-cols-2" data-barra-depois>
-        <div className="wrap pb-12 pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:pb-16 md:pt-12 lg:flex lg:items-center lg:py-20 lg:pl-[max(3rem,calc((100vw_-_1440px)/2_+_3rem))] lg:pr-14 xl:pr-20">
+        <div className="wrap pb-12 pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:pb-16 md:pt-12 lg:flex lg:items-center lg:py-20 lg:max-w-none lg:pl-[max(3rem,calc((100vw_-_1440px)/2_+_3rem))] lg:pr-14 xl:pr-20">
           <div className="max-w-[36rem]">
             <p className="eyebrow eyebrow-fio">Representação comercial</p>
             {/* O nome da marca nunca quebra no meio ("Corpo / Sensual") e, no celular, fica numa linha só dele. */}

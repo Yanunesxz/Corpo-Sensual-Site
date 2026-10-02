@@ -96,7 +96,9 @@ export function SiteHeader() {
     const fora = [
       faixa.current,
       barra.current,
-      ...document.querySelectorAll<HTMLElement>("main, footer, .cta-bar, .wa-flutuante, [aria-label='Aviso de cookies']"),
+      // O link "Pular para o conteúdo" entra na lista: com o menu aberto o Tab dava a volta
+      // e parava nele, por cima da folha, apontando para um <main> que está inerte.
+      ...document.querySelectorAll<HTMLElement>("body > a[href='#conteudo'], main, footer, .cta-bar, .wa-flutuante, [aria-label='Aviso de cookies']"),
     ].filter((el): el is HTMLElement => el !== null);
     const antes = fora.map((el) => el.inert);
     for (const el of fora) el.inert = true;

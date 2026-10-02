@@ -47,7 +47,7 @@ export default async function SobrePage() {
           foto vem antes, numa faixa (como na home): a primeira tela já mostra moda.
           É o gatilho da barra fixa: ela só aparece depois que a capa inteira sai da tela. */}
       <section className="flex flex-col bg-sky lg:grid lg:grid-cols-2" data-barra-depois>
-        <div className="wrap pb-12 pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:pb-16 md:pt-12 lg:flex lg:items-center lg:py-20 lg:pl-[max(3rem,calc((100vw-1440px)/2+3rem))] lg:pr-14">
+        <div className="wrap pb-12 pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:pb-16 md:pt-12 lg:flex lg:items-center lg:py-20 lg:max-w-none lg:pl-[max(3rem,calc((100vw-1440px)/2+3rem))] lg:pr-14">
           <div className="max-w-[36rem]">
             <SectionHeading
               level="h1"

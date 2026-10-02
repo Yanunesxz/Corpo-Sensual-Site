@@ -30,7 +30,9 @@ const ETIQUETA = "tag absolute right-4 top-4 md:right-6 md:top-6 lg:left-6 lg:ri
  * cabeças caberem. Desktop: meio a meio (como /sobre e /seja-representante), texto
  * centralizado na altura e a foto sangrando até a borda direita da tela. A sangria usa
  * a largura da própria seção (cqw), e não 100vw, para não contar a barra de rolagem e
- * não gerar rolagem lateral.
+ * não gerar rolagem lateral. Acima de 1920 px a capa cresce meio pixel por pixel de
+ * largura (o teto de 50rem vale até 1920): a sangria alarga a coluna da foto e, com a
+ * altura presa, a foto em pé (4:5) perdia as cabeças num monitor de 2560 px.
  *
  * Uma etiqueta só por cima da foto, e ela é o link para a coleção nova.
  *
@@ -39,7 +41,7 @@ const ETIQUETA = "tag absolute right-4 top-4 md:right-6 md:top-6 lg:left-6 lg:ri
 export function CapaHome({ atual }: Props) {
   return (
     <section id="capa" data-barra-depois className="@container overflow-x-clip bg-sky">
-      <div className="flex flex-col lg:mx-auto lg:grid lg:min-h-[max(36rem,min(calc(100svh-7rem),50rem))] lg:max-w-[1440px] lg:grid-cols-12 lg:gap-x-10 lg:px-12">
+      <div className="flex flex-col lg:mx-auto lg:grid lg:min-h-[max(36rem,min(calc(100svh-7rem),max(50rem,calc(50rem+(100cqw-1920px)/2))))] lg:max-w-[1440px] lg:grid-cols-12 lg:gap-x-10 lg:px-12">
         {/* Texto. No DOM vem antes da foto: o leitor de tela começa pelo título. Em celular
             baixo (375x667) o respiro aperta um pouco para o botão caber sem rolar. */}
         <div className="px-5 pb-10 pt-6 min-[400px]:pt-7 [@media(max-width:767px)_and_(max-height:700px)]:pt-5 md:px-8 md:pb-14 md:pt-10 lg:col-span-6 lg:self-center lg:px-0 lg:py-16">
