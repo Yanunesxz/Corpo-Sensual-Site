@@ -35,13 +35,14 @@ const CAMPANHA = [
 ];
 
 /**
- * A sede, vista de drone: em pé (3:5) e deitada (6:5), na proporção original de cada foto.
+ * A sede, vista de drone: em pé (3:5) e deitada (6:5). Lado a lado na mesma altura, a em pé
+ * ocupa 1/3 da largura e a deitada 2/3, e as duas proporções fecham sem corte.
  * As originais chegaram em 228 px de largura e foram ampliadas 4x com Real-ESRGAN (ver README):
  * servem até uns 450 px de largura na tela; não as use em bloco cheio.
  */
 const SEDE = [
-  { src: "/images/sobre/predio-alto.jpg", proporcao: "aspect-[3/5]", legenda: "Vista do alto: placas solares na cobertura" },
-  { src: "/images/sobre/predio-frente.jpg", proporcao: "aspect-[6/5]", legenda: "A fábrica no bairro Dornelas, em Muriaé" },
+  { src: "/images/sobre/predio-alto.jpg", sizes: "(min-width: 1024px) 17vw, 30vw" },
+  { src: "/images/sobre/predio-frente.jpg", sizes: "(min-width: 1024px) 35vw, 60vw" },
 ];
 
 
@@ -102,30 +103,38 @@ export default async function SobrePage() {
       {/* 2. Dentro da fábrica: vídeo real, etapas e os números. */}
       <ProducaoSection escuro numeros comLink={false} cta={{ href: "/catalogo", label: "Quero receber o catálogo" }} />
 
-      {/* 3. A sede: as duas fotos de drone do prédio, em escada (a deitada alinhada pela base
-          da em pé), com o endereço e o link para o mapa. Branca entre o azul-noite da produção
-          e a seção das linhas, que também é branca: o fio do fólio separa as duas. */}
+      {/* 3. A sede: as duas fotos de drone do prédio na mesma altura, sem legenda.
+          Desktop: texto e mapa à esquerda, fotos à direita. Celular: texto, fotos, mapa.
+          Branca entre o azul-noite da produção e a seção das linhas, também branca: o fio
+          do fólio separa as duas. */}
       <section className="sec">
-        <div className="wrap">
+        <div className="wrap grid gap-y-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-x-14 lg:gap-y-6">
           <SectionHeading
+            className="lg:col-start-1 lg:row-start-1 lg:self-end"
             eyebrow="A sede"
             title="Tudo sob o mesmo teto, na Rua São Geraldo"
             description={`Prédio próprio no bairro Dornelas, em Muriaé: corte, costura, acabamento, estoque e expedição no mesmo endereço, com energia solar na cobertura. ${site.address.line}.`}
           />
-          <ul className="mt-8 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-end gap-x-3 md:gap-x-5 lg:mt-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_minmax(0,1fr)] lg:gap-x-6">
+          {/* O quadro 9:5 com colunas 1:2 dá 3:5 à em pé e 6:5 à deitada (o vão some no cover). */}
+          <ul className="grid aspect-[9/5] grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-x-3 md:gap-x-5 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center lg:gap-x-6">
             {SEDE.map((foto, i) => (
-              <li key={foto.src} data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
+              <li key={foto.src} className="h-full" data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
                 <Figura
                   src={foto.src}
                   alt={altFoto(foto.src, "Prédio da fábrica Corpo Sensual em Muriaé")}
-                  proporcao={foto.proporcao}
-                  sizes={i === 0 ? "(min-width: 1024px) 30vw, 38vw" : "(min-width: 1024px) 44vw, 56vw"}
-                  legenda={foto.legenda}
+                  proporcao="h-full"
+                  className="h-full"
+                  sizes={foto.sizes}
                 />
               </li>
             ))}
           </ul>
-          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className="link-seta mt-8 lg:mt-4">
+          <a
+            href={site.address.mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="link-seta justify-self-start lg:col-start-1 lg:row-start-2 lg:self-start"
+          >
             Ver no mapa
             <span className="sr-only"> (abre em outra aba)</span>
             <ArrowRight width={18} height={18} />
