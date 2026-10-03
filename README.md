@@ -172,6 +172,7 @@ A chave pública usada no site só consegue **ler registros ativos** de catálog
 | Fotos por referência, Verão 2027 (`1035.pdf`...) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS VERÃO 2027` (PDF, converter para JPG) |
 | Fotos 2025 (RAW `.CR2`, precisam de revelação) | `\\192.168.0.2\#Corpo Sensual\CATALOGO\FOTOS\FOTOS 2025` |
 | Recortes com fundo transparente (`CS-040.png`...) | `\\192.168.0.2\#Corpo Sensual\FUNDO TRANSPARENTE (PNG)1` |
+| Prédio da fábrica, de drone (`public/images/sobre/`) | Chegaram como miniaturas de 228 px (sem o arquivo original do drone); ampliadas 4x com Real-ESRGAN (`realesrgan-ncnn-py`, modelo x4plus) para 912 px. Se aparecerem as fotos originais do drone, substitua: a ampliação segura até uns 450 px de largura na tela |
 
 Depois de copiar fotos novas para `public/images/`, rode `npm run imagens` para reduzir o tamanho. Fotos com fundo transparente só compensam em PNG se a transparência for usada; caso contrário, salve como JPG.
 

@@ -23,6 +23,9 @@ const ALT_FOTO: Record<string, string> = {
   "/images/home/hero-familia-celular.jpg":
     "Mãe, filha e filho com pijamas curtos azuis e shorts listrados, brincando com bolhas de sabão no gramado, coleção Delícias de Verão",
   "/images/home/fechamento.jpg": "Modelo de regata e short brancos molhando o pé na piscina, de braços abertos, coleção Delícias de Verão",
+  "/images/sobre/predio-alto.jpg":
+    "Prédio da fábrica Corpo Sensual visto de cima, de drone: fachada branca e cinza, placas solares na cobertura e o monograma CS na esquina",
+  "/images/sobre/predio-frente.jpg": "Prédio da fábrica Corpo Sensual entre as casas do bairro Dornelas, em Muriaé, com os morros ao fundo",
 };
 
 /** Foto do topo de cada coleção. Vale para a versão larga e para a do celular. */
