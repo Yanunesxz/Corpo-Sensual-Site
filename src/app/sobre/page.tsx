@@ -34,6 +34,16 @@ const CAMPANHA = [
   "/images/colecoes/entrelacos-4.jpg",
 ];
 
+/**
+ * A sede, vista de drone: em pé (3:5) e deitada (6:5), na proporção original de cada foto.
+ * As originais chegaram em 228 px de largura e foram ampliadas 4x com Real-ESRGAN (ver README):
+ * servem até uns 450 px de largura na tela; não as use em bloco cheio.
+ */
+const SEDE = [
+  { src: "/images/sobre/predio-alto.jpg", proporcao: "aspect-[3/5]", legenda: "Vista do alto: placas solares na cobertura" },
+  { src: "/images/sobre/predio-frente.jpg", proporcao: "aspect-[6/5]", legenda: "A fábrica no bairro Dornelas, em Muriaé" },
+];
+
 
 export default async function SobrePage() {
   const [collections, categories] = await Promise.all([getCollections(), getCategories()]);
@@ -92,7 +102,38 @@ export default async function SobrePage() {
       {/* 2. Dentro da fábrica: vídeo real, etapas e os números. */}
       <ProducaoSection escuro numeros comLink={false} cta={{ href: "/catalogo", label: "Quero receber o catálogo" }} />
 
-      {/* 3. Linhas: cada uma leva à grade da coleção atual, já filtrada. */}
+      {/* 3. A sede: as duas fotos de drone do prédio, em escada (a deitada alinhada pela base
+          da em pé), com o endereço e o link para o mapa. Branca entre o azul-noite da produção
+          e a seção das linhas, que também é branca: o fio do fólio separa as duas. */}
+      <section className="sec">
+        <div className="wrap">
+          <SectionHeading
+            eyebrow="A sede"
+            title="Tudo sob o mesmo teto, na Rua São Geraldo"
+            description={`Prédio próprio no bairro Dornelas, em Muriaé: corte, costura, acabamento, estoque e expedição no mesmo endereço, com energia solar na cobertura. ${site.address.line}.`}
+          />
+          <ul className="mt-8 grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-end gap-x-3 md:gap-x-5 lg:mt-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)_minmax(0,1fr)] lg:gap-x-6">
+            {SEDE.map((foto, i) => (
+              <li key={foto.src} data-reveal style={{ ["--atraso" as string]: `${i * 80}ms` }}>
+                <Figura
+                  src={foto.src}
+                  alt={altFoto(foto.src, "Prédio da fábrica Corpo Sensual em Muriaé")}
+                  proporcao={foto.proporcao}
+                  sizes={i === 0 ? "(min-width: 1024px) 30vw, 38vw" : "(min-width: 1024px) 44vw, 56vw"}
+                  legenda={foto.legenda}
+                />
+              </li>
+            ))}
+          </ul>
+          <a href={site.address.mapsUrl} target="_blank" rel="noreferrer" className="link-seta mt-8 lg:mt-4">
+            Ver no mapa
+            <span className="sr-only"> (abre em outra aba)</span>
+            <ArrowRight width={18} height={18} />
+          </a>
+        </div>
+      </section>
+
+      {/* 4. Linhas: cada uma leva à grade da coleção atual, já filtrada. */}
       <section className="sec">
         <div className="wrap">
           <SectionHeading
@@ -106,7 +147,7 @@ export default async function SobrePage() {
         </div>
       </section>
 
-      {/* 4. Campanha: quatro fotos em escada, como página de revista. */}
+      {/* 5. Campanha: quatro fotos em escada, como página de revista. */}
       {/* Em areia: o fecho logo abaixo é azul-claro (dois azuis seguidos liam como uma faixa só). */}
       <section className="sec bg-areia">
         <div className="wrap">
@@ -135,7 +176,7 @@ export default async function SobrePage() {
         </div>
       </section>
 
-      {/* 5. Fecho: a barra fixa some aqui (data-sem-barra), o botão já está na tela. */}
+      {/* 6. Fecho: a barra fixa some aqui (data-sem-barra), o botão já está na tela. */}
       <section className="sec bg-sky" data-sem-barra>
         <div className="wrap text-center" data-reveal>
           <h2 className="t-titulo mx-auto max-w-[16ch]">A Corpo Sensual na sua loja</h2>
