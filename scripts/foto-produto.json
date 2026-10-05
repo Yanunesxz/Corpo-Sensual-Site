@@ -6,7 +6,8 @@
       "verao: fotos de estúdio do Verão 2027, recortadas rente à figura sobre branco (corte na canela).",
       "inverno: fotos tratadas do catálogo de Inverno 2026, corpo inteiro sobre branco, 3648x5472.",
       "inverno-baixa: cópias pequenas (1066x1600) do mesmo ensaio, sem tratamento. Só para as três referências",
-      "que não têm arquivo com o nome da referência na pasta inverno (1007, 1020 e 1023)."
+      "que não têm arquivo com o nome da referência na pasta inverno (1020 e 1023). A 1007 usa 3X2A5401.jpg,",
+      "a mesma peça em outra pose, confirmada pelo dono em 05/10/2026."
   ],
   "pastas": {
       "verao": "//192.168.0.2/Comercial/MARKETER CORPO SENSUAL/CA_VERAO_2027/02_FOTOS EDITADAS/FOTOS ESTUDIO/JPG",
@@ -129,7 +130,7 @@
     "1003": { "pasta": "inverno", "arquivo": "1003.jpg" },
     "1004": { "pasta": "inverno", "arquivo": "1004.jpg" },
     "1005": { "pasta": "inverno", "arquivo": "1005.jpg" },
-    "1007": { "pasta": "inverno-baixa", "arquivo": "1007.jpeg", "nivelar": true },
+    "1007": { "pasta": "inverno", "arquivo": "3X2A5401.jpg" },
     "1008": { "pasta": "inverno", "arquivo": "1008.jpg" },
     "1009": { "pasta": "inverno", "arquivo": "1009.jpg" },
     "1010": { "pasta": "verao", "arquivo": "1010.jpg" },
