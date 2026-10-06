@@ -29,7 +29,7 @@ export const faqLojista: FaqItem[] = [
   cnpj,
   {
     q: "Quais linhas vocês fabricam?",
-    a: "Pijamas, camisolas, robes, short dolls e moda íntima nas linhas feminina, masculina e infantil, de menino e de menina, com peças que combinam para a família. São duas coleções por ano: Delícias de Verão (Primavera/Verão 2027) e Entrelaços (Outono/Inverno 2026).",
+    a: "Pijamas, camisolas, robes, short dolls e moda íntima nas linhas feminina, masculina e infantil, de menino e de menina, com peças que combinam para a família. Os catálogos são de verão e de inverno: Delícias de Verão (Primavera/Verão 2027) e Entrelaços (Outono/Inverno 2026).",
   },
   {
     q: "Como recebo o catálogo com os preços?",

@@ -11,12 +11,12 @@ export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: "Coleções de pijamas de verão e inverno",
-  description: "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual. Duas coleções por ano, venda no atacado para lojistas.",
+  description: "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual. Catálogos de verão e inverno, venda no atacado para lojistas.",
   alternates: { canonical: "/colecoes" },
 };
 
 /* Os cartões logo abaixo já dizem o nome, a estação e as referências de cada coleção. */
-const LEAD_CAPA = `Verão e inverno: ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
+const LEAD_CAPA = `São ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
 
 export default async function ColecoesPage() {
   const [collections, categories] = await Promise.all([getCollections(), getCategories()]);
@@ -46,7 +46,7 @@ export default async function ColecoesPage() {
         <div className="wrap pb-8 pt-8 md:pb-20 md:pt-16 lg:grid lg:grid-cols-12 lg:items-end lg:gap-x-10 lg:py-16">
           <div className="lg:col-span-6">
             <p className="eyebrow eyebrow-fio">Coleções</p>
-            <h1 className="t-hero mt-3 max-w-[12ch]">Duas coleções por ano</h1>
+            <h1 className="t-hero mt-3 max-w-[16ch]">Catálogos de verão e inverno</h1>
           </div>
           <div className="mt-6 max-w-2xl lg:col-span-6 lg:col-start-7 lg:mt-0 xl:col-span-5 xl:col-start-8">
             {/* Um só nó de texto: com os números interpolados o React parte o parágrafo em

@@ -63,7 +63,7 @@ export default async function HomePage() {
       {collections.length > 0 && (
         <section id="colecoes" className="cv-auto sec [contain-intrinsic-size:auto_922px] md:[contain-intrinsic-size:auto_1185px] lg:[contain-intrinsic-size:auto_1465px] xl:[contain-intrinsic-size:auto_1805px] min-[90rem]:[contain-intrinsic-size:auto_1895px]">
           <div className="wrap">
-            <SectionHeading eyebrow="Coleções" title="Duas coleções por ano, para a família inteira" />
+            <SectionHeading eyebrow="Coleções" title="Catálogos de verão e inverno, para a família inteira" />
             <div className="mt-8 lg:mt-14">
               <ColecoesVitrine collections={collections.slice(0, 2)} variante="spread" />
             </div>

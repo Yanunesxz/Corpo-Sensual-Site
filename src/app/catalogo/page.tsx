@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 const FOTO = "/images/colecoes/delicias-3.jpg";
 
 /* Sem repetir "com grade e tabela de preços", que o H1 logo acima já diz. */
-const LEAD = `As ${TOTAL_REFERENCIAS} referências das duas coleções do ano, Delícias de Verão e Entrelaços. ${site.commercial.noCnpjNote}`;
+const LEAD = `As ${TOTAL_REFERENCIAS} referências dos catálogos de verão e inverno, Delícias de Verão e Entrelaços. ${site.commercial.noCnpjNote}`;
 
 const [nicoli, simone] = equipe.vendedoras;
 
