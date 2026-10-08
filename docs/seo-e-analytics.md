@@ -13,7 +13,7 @@ Faça tudo com a **conta Google da empresa**, que deve ficar como administradora
 1. Em https://analytics.google.com, **Administrador > Criar > Propriedade**.
    - Fuso: (GMT-03:00) Horário de Brasília. Moeda: Real (BRL). Não dá para corrigir o fuso depois.
    - Objetivo da empresa: "Gerar leads".
-2. **Fluxo de dados > Web**, com a URL `https://www.pijamascorposensual.com.br`. O fluxo aceita dados de qualquer endereço, inclusive do `sitecs.vercel.app`.
+2. **Fluxo de dados > Web**, com a URL `https://www.corposensual.com.br`. O fluxo aceita dados de qualquer endereço, inclusive do `sitecs.vercel.app`.
 3. Copie o **ID de medição** (G-XXXXXXXXXX) e mande para quem cuida do site. Ele entra em `src/lib/analytics.ts`. Outra opção é a variável `NEXT_PUBLIC_GA_ID` na Vercel, só no ambiente Production, seguida de um novo deploy.
 
 ### Antes de o site começar a medir (obrigatório)
@@ -90,65 +90,50 @@ Só filtre por IP se a fábrica tiver IP fixo e exclusivo (confirme com o proved
 O site novo já publica o mesmo token de verificação que o Wix usa hoje (`google-site-verification`, em `src/app/layout.tsx`). A propriedade atual continua verificada quando o domínio vier para a Vercel, **desde que** ela pertença a uma conta da empresa.
 
 1. Em **Configurações > Usuários e permissões**, confira qual conta é proprietária. Se for de agência ou do Wix, acrescente a conta da empresa como **proprietária** antes da troca.
-2. Recomendado: use uma propriedade de **Domínio** (`pijamascorposensual.com.br`, o oficial), verificada pelo registro TXT `google-site-verification` que esse domínio já tem. Não apague esse TXT nem o do SPF na troca de DNS. Essa propriedade cobre www, sem www, http e https, e não depende da hospedagem.
+2. Recomendado: crie também uma propriedade de **Domínio** (`corposensual.com.br`), verificada por um registro TXT no DNS (HostGator > cPanel > Zone Editor). Não apague o TXT do SPF que já existe. Essa propriedade cobre www, sem www, http e https, e não depende da hospedagem.
 3. Vincule a propriedade ao GA4 (Administrador do GA4 > Vinculações do Search Console).
 
 ---
 
 ## 3. Dia da troca de domínio (Wix para Vercel)
 
-**Domínio oficial: `www.pijamascorposensual.com.br`** (decisão do dono em 08/10/2026). O
-`corposensual.com.br`, que era o do Wix, passa a redirecionar para ele mantendo o caminho e a
-query (`next.config.ts`): `corposensual.com.br/colecao-verao?gclid=...` cai em
-`www.pijamascorposensual.com.br/colecao-verao?gclid=...`.
-
-Os dois domínios ficam em lugares diferentes:
-
-| Domínio | Registro | DNS editado em | E-mail |
-| --- | --- | --- | --- |
-| `pijamascorposensual.com.br` (oficial) | HostGator, **no nome de uma pessoa física**, vence em 11/04/2027 | Wix (ns1/ns2.wix.com) até a troca | Google (5 registros MX) |
-| `corposensual.com.br` (redireciona) | Registro.br, no CNPJ da empresa, vence em 26/04/2027 | HostGator, cPanel > Zone Editor | HostGator (`mail.corposensual.com.br`) |
-
 **Antes do dia**
 
-- **Titularidade**: passe o `pijamascorposensual.com.br` para o CNPJ da empresa. Domínio oficial em nome de pessoa física é risco de perder o site.
-- **Plumene**: `/colecao-verao-plumene`, `/colecao-inverno-plumene`, `/surpreenda-plumene` e os dois obrigados vão para o site da Plumene (decisão do dono). No domínio da CS elas viram 404 na troca. Quando existirem no site da Plumene, dá para redirecionar os endereços antigos para lá.
-- **PDF do catálogo de inverno**: está no armazenamento do Wix (`CATALOGO_INVERNO`, em `src/lib/content/landing-colecoes.ts`). Suba no Google Drive e troque o link antes de excluir o site do Wix.
+- **Plumene**: decidir para onde vão `/colecao-verao-plumene`, `/colecao-inverno-plumene`, `/surpreenda-plumene` e as duas páginas de obrigado. Elas viram 404 no instante em que o www apontar para a Vercel. A Plumene precisa ter outra página de captação no ar, e os anúncios, a bio e os links de WhatsApp dela precisam ser trocados antes. Se essas páginas continuarem num site Wix, esse site não pode ser despublicado.
+- Opcional: um dia antes, baixar o TTL dos registros A e CNAME de www para 300 na HostGator.
 
 **No dia**
 
-1. Vercel > projeto > **Settings > Domains**: adicione `www.pijamascorposensual.com.br` como principal, `pijamascorposensual.com.br` com "Redirect to www", `loja.pijamascorposensual.com.br`, `www.corposensual.com.br` e `corposensual.com.br`. O código redireciona os quatro extras para o oficial.
-2. **pijamascorposensual.com.br**: na HostGator, "Configurar domínio" > **Sem hospedagem (apenas Zona de DNS)** (tira o DNS do Wix). Na zona, deixe só:
-   - A `@` e CNAME `www` e `loja`: os valores que a Vercel mostrar;
-   - MX `@`: `aspmx.l.google.com` (10), `alt1.aspmx.l.google.com` (20), `alt2` (30), `alt3` (40), `alt4` (50);
-   - TXT `@`: `v=spf1 include:_spf.google.com ~all` e `google-site-verification=AetnN-b2cLLfKkpF-3lPnxh8gQW_b6MujHwnIN4fa1Q`.
-   Sem os MX e o SPF, o e-mail do Google desse domínio para.
-3. **corposensual.com.br**: cPanel > Zone Editor. **Não troque os nameservers.** Mude só o **A** de `corposensual.com.br` (hoje 185.230.63.107, do Wix) e o **CNAME** de `www` (hoje pointing.wixdns.net) para os valores da Vercel. Não mexa em MX, mail nem SPF.
-4. Com os domínios válidos e com certificado, faça um **Redeploy** de produção. As imagens de prévia passam para o domínio oficial.
-5. Confira no CMD:
+1. Vercel > projeto > **Settings > Domains**: adicione `www.corposensual.com.br` como principal e `corposensual.com.br` com "Redirect to www.corposensual.com.br" (308).
+2. DNS na HostGator (cPanel > Zone Editor). **Não troque os nameservers**, porque isso derruba o e-mail. Mude só:
+   - o registro **A** de `corposensual.com.br` (hoje 185.230.63.107, do Wix);
+   - o **CNAME** de `www` (hoje pointing.wixdns.net).
+   Use o valor que a Vercel mostrar. Não mexa em MX, mail nem SPF.
+3. Com os dois domínios válidos e com certificado, faça um **Redeploy** de produção. As imagens de prévia passam para o domínio oficial.
+4. Confira no CMD:
 
 ```bash
-curl -sI https://www.pijamascorposensual.com.br/ | findstr /i "x-robots-tag"
+curl -sI https://www.corposensual.com.br/ | findstr /i "x-robots-tag"
 ```
 
 Não pode mostrar nada. Se aparecer `noindex`, o domínio oficial está bloqueado.
 
 ```bash
-curl -sI "https://www.corposensual.com.br/colecao-verao?gclid=teste" | findstr /i "HTTP location"
+curl -sI https://www.corposensual.com.br/fabrica-pijamas | findstr /i "HTTP location"
 ```
 
-Deve responder 308 para `https://www.pijamascorposensual.com.br/colecao-verao?gclid=teste`.
+Deve responder 308 para `/fabrica-de-pijamas`.
 
 ```bash
 nslookup -type=MX corposensual.com.br
-nslookup -type=MX pijamascorposensual.com.br
 ```
 
-O primeiro continua `mail.corposensual.com.br`; o segundo, os servidores do Google.
+Deve continuar `mail.corposensual.com.br`.
 
-6. Search Console: adicione a propriedade `https://www.pijamascorposensual.com.br` (ou a de Domínio, já verificada pelo TXT acima), envie o sitemap dela e, na propriedade antiga do `corposensual.com.br`, use **Configurações > Mudança de endereço** apontando para o domínio novo. Sem isso o Google demora muito mais para passar a relevância. Acompanhe Indexação > Páginas > "Não encontrada (404)" nas semanas seguintes.
-7. Só então despublique o site do Wix.
-8. GA4: em Fluxos de dados, troque a URL do fluxo para `https://www.pijamascorposensual.com.br`.
+5. Search Console: envie `https://www.corposensual.com.br/sitemap.xml`, remova o sitemap antigo do Wix e peça a indexação de `/`, `/fabrica-de-pijamas` e `/colecoes/delicias-de-verao`. Não use "Mudança de endereço", porque o domínio é o mesmo. Nas semanas seguintes, acompanhe Indexação > Páginas > "Não encontrada (404)".
+6. Só então despublique o site do Wix (respeitando a decisão sobre a Plumene).
+7. Avise quem cuida do site para ativar o redirecionamento `sitecs.vercel.app` → domínio oficial. Ele só pode entrar depois que o DNS estiver valendo.
+8. GA4: em Fluxos de dados, confira que a URL do fluxo é `https://www.corposensual.com.br`.
 
 ---
 
@@ -157,7 +142,7 @@ O primeiro continua `mail.corposensual.com.br`; o segundo, os servidores do Goog
 O Wix tem a conversão do Google Ads `AW-17034681970` (formulário da `/fabrica-pijamas`). O site novo já redireciona `/fabrica-pijamas` para `/fabrica-de-pijamas`, e o redirecionamento repassa o `gclid` e as UTMs.
 
 - Se houver campanha ativa, informe quem cuida do site. A variável `NEXT_PUBLIC_GOOGLE_ADS_CONVERSAO=AW-17034681970/B6Q_CILj3MgaEPK84ro_` liga a mesma conversão no site novo, só para os cadastros de compra e só com o aceite de cookies.
-- Até a troca de domínio, mantenha a URL final dos anúncios em `/fabrica-pijamas`, porque `/fabrica-de-pijamas` ainda dá 404 no Wix. Depois da troca, mude para `https://www.pijamascorposensual.com.br/fabrica-de-pijamas` (os endereços antigos redirecionam, mas o anúncio direto no endereço final evita um salto).
+- Até a troca de domínio, mantenha a URL final dos anúncios em `/fabrica-pijamas`, porque `/fabrica-de-pijamas` ainda dá 404 no Wix. Depois da troca, mude para `https://www.corposensual.com.br/fabrica-de-pijamas`.
 - Alternativa: vincular o GA4 ao Google Ads e importar o `generate_lead` como conversão.
 - Não instale o GTM do Wix (GTM-W73SWD79) no site novo: ele captura o e-mail do formulário.
 
@@ -171,7 +156,7 @@ O perfil já existe, com 33 avaliações. **Não crie outro**, porque seria dupl
 2. **Nome**: use o nome da fachada ("Corpo Sensual" ou "Pijamas Corpo Sensual"), sem " | Fábrica de Pijamas". Palavra-chave no nome é contra as regras do Google e pode suspender o perfil.
 3. **Categoria**: principal "Fabricante de roupas" (se não existir, mantenha "Fabricante"). Secundárias: "Atacadista de roupas". Não use categoria de loja.
 4. **Endereço, telefone e horário**: iguais aos do site. Quando o telefone e o horário estiverem definidos, preencha `NEXT_PUBLIC_TELEFONE` e `NEXT_PUBLIC_HORARIO` na Vercel para o site mostrar exatamente o mesmo.
-5. **Site do perfil**: `https://www.pijamascorposensual.com.br/?utm_source=google&utm_medium=organic&utm_campaign=perfil-empresa`, para o GA separar quem vem do Maps. Nunca use o `sitecs.vercel.app`.
+5. **Site do perfil**: `https://www.corposensual.com.br/?utm_source=google&utm_medium=organic&utm_campaign=perfil-empresa`, para o GA separar quem vem do Maps. Nunca use o `sitecs.vercel.app`.
 6. Há um segundo perfil, "PIJAMAS CORPO SENSUAL MURIAÉ" (R. Vicente Ferreira, 5). Se for endereço antigo, marque como "mudou-se" ou "duplicado". Se for uma unidade que recebe clientes, reivindique e corrija.
 7. **Avaliações**: as vendedoras mandam o link "Pedir avaliações" para todo lojista depois da entrega. Responda todas as avaliações.
 8. **Fotos**: fachada, costura, revisão, embalagem e expedição, com o arquivo original (não pelo WhatsApp).
@@ -181,5 +166,5 @@ O perfil já existe, com 33 avaliações. **Não crie outro**, porque seria dupl
 ## 6. Pendências de informação
 
 - **Telefone e horário**: qual número da empresa atende ligação e qual é o horário real. Sem isso, o site não mostra telefone nem horário.
-- **Instagram**: o site usa `@pijamascorposensual`. Se `@corposensual` também for da empresa, aponte a bio dele para o perfil principal. Coloque `https://www.pijamascorposensual.com.br` no link da bio depois da troca de domínio.
-- **Domínio oficial** `pijamascorposensual.com.br`: está no nome de uma pessoa física e vence em 11/04/2027. Passe para o CNPJ da empresa e renove. O site "10 melhores fábricas de pijamas de Muriaé" (sacoleiradesucesso.com.br) ainda aponta para `loja.pijamascorposensual.com.br`, que redireciona para a home: vale pedir a troca do link.
+- **Instagram**: o site usa `@pijamascorposensual`. Se `@corposensual` também for da empresa, aponte a bio dele para o perfil principal. Coloque `https://www.corposensual.com.br` no link da bio depois da troca de domínio.
+- **Domínio antigo** `pijamascorposensual.com.br`: está no nome de uma pessoa física e vence em 11/04/2027. Se for da empresa, renove e adicione `pijamascorposensual.com.br`, `www.` e `loja.` na Vercel. O redirecionamento para o site novo já está no código. O site "10 melhores fábricas de pijamas de Muriaé" (sacoleiradesucesso.com.br) ainda aponta para a loja antiga: vale pedir a troca do link.
