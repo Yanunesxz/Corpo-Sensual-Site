@@ -28,6 +28,8 @@ Sem bibliotecas de UI ou animação: o visual é todo Tailwind + CSS, o que mant
 | `/ajuda` | Preciso de ajuda | WhatsApp do SAC (pedido, entrega, troca) e do financeiro (boleto, pagamento, nota). Os números ficam em `equipe`, em `src/lib/site.ts` |
 | `/contato` | Contato | Formulário (`source = contato`) e, abaixo, endereço com mapa, canais e horário |
 | `/obrigado?origem=...` | Obrigado | Confirmação após o envio, com botão de WhatsApp |
+| `/colecao-verao`, `/colecao-inverno` | Landing pages dos anúncios | Cópias exatas das páginas do Wix (capturadas em 08/10/2026), fora do menu, do sitemap e do Google. Formulário de nome, e-mail e WhatsApp (`source = colecao`, a mensagem diz qual coleção). Textos, fotos e medidas em `src/lib/content/landing-colecoes.ts`; visual em `src/components/landing/` |
+| `/colecao-verao-obrigado`, `/colecao-inverno-obrigado` | Obrigado das landing pages | Botão "Baixar Catálogo" para o arquivo do catálogo. **O PDF de inverno ainda está no armazenamento do Wix**: antes de excluir o site do Wix, suba o PDF no Google Drive e troque `CATALOGO_INVERNO` |
 | `/politicas/[slug]` | Institucional | Privacidade, cookies, trocas, envio e termos (textos em `src/lib/content/politicas.ts`) |
 | `/sitemap.xml`, `/robots.txt` | SEO | Gerados automaticamente, sempre no domínio oficial |
 

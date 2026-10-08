@@ -8,6 +8,7 @@ import { BarraCta } from "@/components/barra-cta";
 import { Revelar } from "@/components/revelar";
 import { Analytics } from "@/components/analytics";
 import { JsonLd } from "@/components/json-ld";
+import { SemLanding } from "@/components/sem-landing";
 import { GA_ID } from "@/lib/analytics";
 import { organizacaoJsonLd, siteJsonLd } from "@/lib/schema";
 import { SITE_ORIGIN, site, urlImagem } from "@/lib/site";
@@ -87,15 +88,22 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Pular para o conteúdo
         </a>
-        <SiteHeader />
+        {/* As landing pages de coleção (cópias do Wix) não levam o cabeçalho nem o rodapé do site. */}
+        <SemLanding>
+          <SiteHeader />
+        </SemLanding>
         <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>
-        <SiteFooter />
+        <SemLanding>
+          <SiteFooter />
+        </SemLanding>
         {/* Base da tela: barra do polegar (só abaixo de 1024), WhatsApp flutuante e,
             com GA, o aviso de cookies. Uma coisa por vez (ver globals.css). */}
-        <BarraCta />
-        <WhatsAppButton />
+        <SemLanding>
+          <BarraCta />
+          <WhatsAppButton />
+        </SemLanding>
         <Revelar />
         {/* Sem ID do GA o componente nem entra na página: nenhum script do Google. */}
         {GA_ID ? <Analytics /> : null}

@@ -4,6 +4,12 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { ORIGENS_DE_COMPRA, consumirLead, depoisDaPageView, destinoWhatsApp, enviarConversaoAds, enviarEvento } from "@/lib/analytics";
 
+/** Obrigados das landing pages de coleção (cópias do Wix): o lead delas tem origem "colecao". */
+const OBRIGADO_DAS_LANDINGS: Record<string, string> = {
+  "/colecao-verao-obrigado": "colecao",
+  "/colecao-inverno-obrigado": "colecao",
+};
+
 /** De onde saiu o clique: cabeçalho, menu do celular, rodapé, botão flutuante ou corpo da página. */
 function localDoLink(a: Element): string {
   const marcado = a.closest("[data-ga-local]")?.getAttribute("data-ga-local");
@@ -25,13 +31,16 @@ export function AnalyticsEventos() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (pathname !== "/obrigado") return;
+    // O obrigado do site diz a origem no ?origem=; os das landing pages de coleção, na rota.
+    const origemDaPagina =
+      pathname === "/obrigado" ? (new URLSearchParams(window.location.search).get("origem") ?? "") : OBRIGADO_DAS_LANDINGS[pathname];
+    if (!origemDaPagina) return;
     // O efeito do componente pai, que manda o page_view, roda depois deste: o setTimeout
     // espera por ele, e depoisDaPageView garante que o lead sai depois da visita.
     const t = window.setTimeout(
       () =>
         depoisDaPageView(() => {
-          const origem = consumirLead(new URLSearchParams(window.location.search).get("origem") ?? "");
+          const origem = consumirLead(origemDaPagina);
           if (!origem) return;
           enviarEvento("generate_lead", { lead_source: origem });
           if (ORIGENS_DE_COMPRA.has(origem)) enviarConversaoAds();

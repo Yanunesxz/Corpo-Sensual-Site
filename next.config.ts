@@ -53,13 +53,11 @@ const nextConfig: NextConfig = {
       { source: "/catalogo-verao", destination: "/catalogo", permanent: true },
       // A coleção de verão passou a se chamar Delícias de Verão (catálogo Verão 2026/2027).
       { source: "/colecoes/frescor", destination: "/colecoes/delicias-de-verao", permanent: true },
-      { source: "/colecao-verao", destination: "/colecoes/delicias-de-verao", permanent: true },
-      { source: "/colecao-inverno", destination: "/colecoes/entrelacos", permanent: true },
+      // /colecao-verao, /colecao-inverno e os obrigados delas NÃO redirecionam: são as landing
+      // pages dos anúncios, copiadas do Wix (src/app/colecao-*).
       { source: "/lp-fabrica-pijamas", destination: "/fabrica-de-pijamas", permanent: true },
       // O Programa Cashback saiu do site em 29/09/2026. Quem tiver o link cai na página de lojistas.
       { source: "/programa-cashback", destination: "/fabrica-de-pijamas", permanent: true },
-      { source: "/colecao-verao-obrigado", destination: "/obrigado?origem=catalogo", permanent: true },
-      { source: "/colecao-inverno-obrigado", destination: "/obrigado?origem=catalogo", permanent: true },
       { source: "/obrigado-fabrica-pijamas", destination: "/obrigado?origem=fabrica-de-pijamas", permanent: true },
       { source: "/privacy-policy", destination: "/politicas/privacidade", permanent: true },
       { source: "/cookie-policy", destination: "/politicas/cookies", permanent: true },
