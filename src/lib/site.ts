@@ -29,13 +29,10 @@ export function formatPhone(digits: string): string {
  * Endereço oficial da marca. Canonical, sitemap, robots.txt e dados estruturados
  * usam SEMPRE este endereço, em qualquer deploy: o site pode estar sendo servido por
  * sitecs.vercel.app, mas quem aparece no Google é o domínio oficial.
- * É fixo de propósito.
- *
- * Desde 08/10/2026 o domínio oficial é o www.pijamascorposensual.com.br (decisão do dono).
- * O corposensual.com.br, que era o do Wix, redireciona para cá mantendo o caminho
- * (next.config.ts), então links e anúncios antigos continuam funcionando.
+ * É fixo de propósito. Quando o domínio for ligado à Vercel, a variável de produção
+ * dela pode virar "corposensual.com.br" (sem www), que redireciona.
  */
-export const SITE_ORIGIN = "https://www.pijamascorposensual.com.br";
+export const SITE_ORIGIN = "https://www.corposensual.com.br";
 
 /** Endereço absoluto e oficial de uma página: urlOficial("/sobre"). */
 export function urlOficial(caminho: string): string {
@@ -50,9 +47,7 @@ export function urlOficial(caminho: string): string {
  */
 const ORIGEM_DAS_IMAGENS = (() => {
   const prod = env(process.env.VERCEL_PROJECT_PRODUCTION_URL);
-  // Qualquer um dos dois domínios da marca vale: a Vercel pode escolher o mais curto
-  // (corposensual.com.br) como "produção", e ele só redireciona para o oficial.
-  return !prod || /(^|\.)(pijamas)?corposensual\.com\.br$/.test(prod) ? SITE_ORIGIN : `https://${prod}`;
+  return !prod || /(^|\.)corposensual\.com\.br$/.test(prod) ? SITE_ORIGIN : `https://${prod}`;
 })();
 
 /** Endereço absoluto de um arquivo de public/: urlImagem("/images/logo-cs.png"). */
