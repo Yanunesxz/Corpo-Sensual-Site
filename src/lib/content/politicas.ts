@@ -129,7 +129,7 @@ export const politicas: Politica[] = [
     slug: "envio",
     title: "Política de Envio",
     shortTitle: "Envio",
-    updatedAt: "2026-09-11",
+    updatedAt: "2026-10-09",
     intro: "Os pedidos são despachados da nossa fábrica em Muriaé, MG, para todo o Brasil.",
     sections: [
       {
@@ -150,7 +150,7 @@ export const politicas: Politica[] = [
     slug: "termos",
     title: "Termos e Condições",
     shortTitle: "Termos e condições",
-    updatedAt: "2026-09-29",
+    updatedAt: "2026-10-09",
     intro: `Ao utilizar este site você concorda com os termos abaixo. O site é mantido pela ${empresa}.`,
     sections: [
       {
