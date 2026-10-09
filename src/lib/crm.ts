@@ -40,6 +40,7 @@ const PAGINAS: Record<LeadSource, string> = {
   colecao: "Coleção",
   contato: "Contato",
   representante: "Quero ser representante",
+  varejo: "Varejo — onde comprar",
 };
 
 export type ResultadoCrm =

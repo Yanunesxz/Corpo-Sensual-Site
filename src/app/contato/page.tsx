@@ -17,11 +17,11 @@ export const metadata: Metadata = {
 /** Ao lado do formulário, só no desktop: conversa à mesa. */
 const FOTO_CONVERSA = "/images/colecoes/delicias-3.jpg";
 
-/** Cada assunto leva a quem resolve: cadastro, SAC/financeiro, gerente comercial ou o formulário. */
+/** Cada assunto leva a quem resolve: cadastro, SAC/financeiro, gestor comercial ou o formulário. */
 const ASSUNTOS = [
   { titulo: "Quero comprar", texto: "Cadastre a sua loja e receba o catálogo com a tabela de preços.", href: "/catalogo" },
   { titulo: "Já sou cliente", texto: "Pedido, entrega, troca, boleto e nota fiscal com o SAC e o financeiro.", href: "/ajuda" },
-  { titulo: "Quero representar", texto: "Cadastre a sua região e fale com o nosso gerente comercial.", href: "/seja-representante" },
+  { titulo: "Quero representar", texto: "Cadastre a sua região e fale com o nosso gestor comercial.", href: "/seja-representante" },
   { titulo: "Outro assunto", texto: "Escreva a sua mensagem no formulário abaixo.", href: "#formulario" },
 ];
 

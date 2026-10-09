@@ -4,9 +4,6 @@ import { Check } from "./icons";
 
 const { commercial } = site;
 
-/** "R$ 1.200" de "Frete grátis a partir de R$ 1.200 no Sudeste": um número digitado num lugar só. */
-const freteGratis = commercial.freeShippingSudeste.replace(/^Frete grátis /, "");
-
 /* CNPJ: o próprio formulário resolve ("Ainda não" + CPF). Antes havia um "Fale com a gente"
    que mandava a lojista sem CNPJ para o formulário de contato, fora da landing. */
 const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
@@ -14,8 +11,8 @@ const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
 /** Faixa logo abaixo da capa: as quatro perguntas da lojista, na ordem em que ela pergunta. */
 const FAIXA = [
   { rotulo: "Venda", valor: commercial.wholesale },
-  { rotulo: "Pagamento", valor: commercial.pixDiscount },
-  { rotulo: "Frete", valor: `Grátis ${freteGratis}*` },
+  { rotulo: "Pagamento", valor: commercial.payment },
+  { rotulo: "Frete", valor: "Grátis sob consulta" },
   { rotulo: "Envio", valor: "Sai da fábrica em até 15 dias úteis" },
 ];
 
@@ -30,8 +27,8 @@ const CELULA_FAIXA = [
 /** Ficha das condições por escrito: seis células, sem ícone. */
 const FICHA: { rotulo: string; valor: string; detalhe: ReactNode }[] = [
   { rotulo: "Venda", valor: commercial.wholesale, detalhe: "Você monta o pedido com a sua vendedora, pelo WhatsApp." },
-  { rotulo: "Pagamento", valor: commercial.pixDiscount, detalhe: "Também boleto e cartão com parcelamento sem juros." },
-  { rotulo: "Frete grátis", valor: `A partir de ${freteGratis.replace(/^a partir de /, "")}`, detalhe: `${commercial.freeShippingOutras}.` },
+  { rotulo: "Pagamento", valor: commercial.payment, detalhe: commercial.paymentNote },
+  { rotulo: "Frete grátis", valor: "Sob consulta", detalhe: commercial.freeShippingNote },
   {
     rotulo: "Prazo",
     valor: "Sai da fábrica em até 15 dias úteis",
@@ -41,8 +38,8 @@ const FICHA: { rotulo: string; valor: string; detalhe: ReactNode }[] = [
   { rotulo: "CNPJ", valor: "Não é obrigatório", detalhe: cnpj },
 ];
 
-/** Lista do topo do formulário. O asterisco do frete é explicado na nota do cartão. */
-const LISTA = [`${commercial.wholesale}, direto da fábrica`, commercial.pixDiscount, `${commercial.freeShippingSudeste}*`, "Sai da fábrica em até 15 dias úteis"];
+/** Lista do topo do formulário. */
+const LISTA = [`${commercial.wholesale}, direto da fábrica`, `${commercial.payment} (a consultar)`, commercial.freeShipping, "Sai da fábrica em até 15 dias úteis"];
 
 type Props = {
   /**
@@ -53,7 +50,7 @@ type Props = {
   variante: "faixa" | "ficha" | "lista";
   /** Fundo da seção em volta (só na ficha): sobre branco as células ficam azuladas; sobre azul, brancas. */
   fundo?: "branco" | "azul";
-  /** Esconde a nota de rodapé da faixa (frete nas demais regiões, pagamento, CNPJ). */
+  /** Esconde a nota de rodapé da faixa (pagamento e frete a consultar, CNPJ). */
   semNota?: boolean;
   className?: string;
 };
@@ -113,7 +110,7 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
       </ul>
       {!semNota && (
         <p className="legenda mt-5 max-w-4xl lg:mt-7">
-          *{commercial.freeShippingOutras}. Pix, boleto ou cartão com parcelamento sem juros. {commercial.noCnpjNote}
+          Pagamento e frete a consultar com a sua vendedora. {commercial.noCnpjNote}
         </p>
       )}
     </div>

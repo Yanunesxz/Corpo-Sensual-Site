@@ -13,7 +13,7 @@ const [nicoli, simone] = equipe.vendedoras;
 
 const PASSOS = [
   { titulo: "Cadastre a sua loja", texto: "CNPJ não é obrigatório." },
-  { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
+  { titulo: "Receba o catálogo", texto: "Com a tabela de preços." },
   { titulo: "Monte o seu pedido", texto: "Com a sua vendedora, pelo WhatsApp." },
 ];
 
@@ -46,7 +46,7 @@ export function FechoHome() {
           <SectionHeading
             eyebrow="Catálogo digital"
             title={`As ${TOTAL_REFERENCIAS} referências na sua mão`}
-            description={`Cadastre a sua loja e receba o catálogo com grade e tabela de preços. Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
+            description={`Cadastre a sua loja e receba o catálogo com a tabela de preços. Depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp.`}
           />
           <Passos itens={PASSOS} layout="linha-xl" className="mt-8 lg:mt-10" />
           <BlocoCadastro source="catalogo" submitLabel="Quero receber o catálogo" className="mt-8 lg:mt-12" />

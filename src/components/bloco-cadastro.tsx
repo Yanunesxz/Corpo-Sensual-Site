@@ -11,7 +11,7 @@ type Props = {
   titulo?: string;
   texto?: ReactNode;
   /**
-   * Lista ✓ das condições (atacado por grade, Pix, frete*, prazo). "topo": antes dos
+   * Lista ✓ das condições (atacado, pagamento, frete, prazo). "topo": antes dos
    * campos; "depois": abaixo do botão, para o primeiro campo subir na tela (/catalogo).
    */
   condicoes?: boolean | "topo" | "depois";

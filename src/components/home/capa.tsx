@@ -59,7 +59,7 @@ export function CapaHome({ atual }: Props) {
           {/* No desktop a medida é 30rem: com 34rem a frase dava duas linhas na Inter e três na fonte
               de reserva, e o bloco (centralizado na altura) pulava quando a fonte chegava (CLS). */}
           <p className="lead mt-3.5 max-w-[34rem] [@media(max-width:767px)_and_(max-height:700px)]:mt-3 md:mt-5 lg:mt-6 lg:max-w-[30rem]">
-            Pijamas, camisolas, robes e short dolls nas linhas feminina, masculina e infantil. Atacado por grade para lojas de todo o Brasil.
+            Pijamas e camisolas nas linhas infantil, juvenil, feminina, masculina, senhora e gestante. Atacado para lojas de todo o Brasil.
           </p>
           {/* Um botão cheio e, ao lado, um link com seta (como nas outras capas): o
               secundário não disputa com a ação principal. Entre 1024 e 1279 px a coluna do texto
@@ -75,7 +75,7 @@ export function CapaHome({ atual }: Props) {
               <ArrowRight width={18} height={18} />
             </a>
           </div>
-          <p className="legenda mt-3 max-w-[30rem] text-balance lg:mt-5">Catálogo digital com grade e tabela de preços.</p>
+          <p className="legenda mt-3 max-w-[30rem] text-balance lg:mt-5">Catálogo digital com a tabela de preços.</p>
         </div>
 
         {/* Foto: faixa no topo do celular; no desktop, metade da grade até a borda da tela. */}

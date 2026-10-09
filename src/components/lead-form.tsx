@@ -118,6 +118,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   const isContact = source === "contato";
   // Representante não tem loja: os rótulos de empresa e mensagem mudam de sentido.
   const ehRepresentante = source === "representante";
+  /** Representante e varejo: formulário curto, só nome, WhatsApp, e-mail, cidade e UF. */
+  const curto = ehRepresentante || source === "varejo";
   const c = site.contact;
   const escolhaCnpj = hasCnpj || v.has_cnpj || "";
 
@@ -257,7 +259,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             aria-invalid={Boolean(err.email)}
             aria-describedby={err.email ? "email-error" : undefined}
             defaultValue={v.email}
-            placeholder="compras@sualoja.com"
+            placeholder={curto ? "voce@email.com" : "compras@sualoja.com"}
             onChange={() => {
               if (avisos.email) setAvisos((a) => ({ ...a, email: undefined }));
             }}
@@ -269,9 +271,13 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </Field>
       </div>
 
+      {/* Representante e varejo: só nome, WhatsApp, e-mail e cidade, curto como o das landing
+          pages. CNPJ, empresa e região ficam para a conversa depois do cadastro. */}
+      {!curto && (
+      <>
       {/* CNPJ sim/não em dois botões: um toque, sem abrir lista no celular. */}
       <fieldset key={v.has_cnpj ?? ""} aria-describedby={err.has_cnpj ? "has_cnpj-error" : undefined}>
-        <legend className="mb-1.5 block text-sm font-medium text-ink">{ehRepresentante || isContact ? "Tem CNPJ?" : "A sua loja tem CNPJ?"}</legend>
+        <legend className="mb-1.5 block text-sm font-medium text-ink">{isContact ? "Tem CNPJ?" : "A sua loja tem CNPJ?"}</legend>
         <div className="seg" data-invalido={err.has_cnpj ? "" : undefined}>
           {[
             { valor: "sim", rotulo: "Sim, tenho CNPJ" },
@@ -302,10 +308,14 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         )}
       </fieldset>
 
-      {escolhaCnpj === "nao" && !isContact && !ehRepresentante && (
+      {escolhaCnpj === "nao" && !isContact && (
         <p className="rounded-field bg-areia px-4 py-3 text-sm leading-relaxed text-ink">
-          O CNPJ não é obrigatório. Informe o seu CPF: vendemos no atacado, por grade, e avaliamos o
-          seu caso. Se você é consumidor, diga a sua cidade e indicamos a loja mais perto de você.
+          O CNPJ não é obrigatório. Informe o seu CPF: vendemos no atacado e avaliamos o
+          seu caso. Se você é consumidor,{" "}
+          <Link href="/onde-comprar" className="underline underline-offset-2">
+            veja onde comprar
+          </Link>
+          .
         </p>
       )}
 
@@ -338,17 +348,19 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             maxLength={ehLojista ? 18 : 14}
           />
         </Field>
-        <Field label={ehRepresentante ? "Empresa de representação (opcional)" : "Nome da loja (opcional)"} name="company" error={err.company}>
+        <Field label="Nome da loja (opcional)" name="company" error={err.company}>
           <input
             id="company"
             className="field"
             name="company"
             autoComplete="organization"
             defaultValue={v.company}
-            placeholder={ehRepresentante ? "Ex: Silva Representações" : "Ex: Loja Bem Dormir"}
+            placeholder="Ex: Loja Bem Dormir"
           />
         </Field>
       </div>
+      </>
+      )}
 
       <div className="grid grid-cols-[1fr_5.5rem] gap-4">
         <Field label="Cidade" name="city" error={err.city}>
@@ -383,7 +395,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 
       {withMessage && (
         <Field
-          label={ehRepresentante ? "Região e experiência" : isContact ? "Mensagem" : "Mensagem (opcional)"}
+          label={isContact ? "Mensagem" : "Mensagem (opcional)"}
           name="message"
           error={err.message}
         >
@@ -391,17 +403,11 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             id="message"
             className="field min-h-28 resize-y"
             name="message"
-            required={isContact || ehRepresentante}
+            required={isContact}
             aria-invalid={Boolean(err.message)}
             aria-describedby={err.message ? "message-error" : undefined}
             defaultValue={v.message}
-            placeholder={
-              ehRepresentante
-                ? "As cidades que você atende, há quanto tempo representa e quais marcas leva hoje."
-                : isContact
-                  ? "Como podemos ajudar?"
-                  : "Conte um pouco sobre a sua loja ou o que você procura."
-            }
+            placeholder={isContact ? "Como podemos ajudar?" : "Conte um pouco sobre a sua loja ou o que você procura."}
           />
         </Field>
       )}
@@ -446,10 +452,10 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         </span>
       </p>
       {/* Fora do contato (que já é o canal) e do representante: lá o caminho é o cadastro
-          e o Fabian, e o telefone poria dígitos numa página que não pode ter número. */}
+          e o gestor comercial, e o telefone poria dígitos numa página que não pode ter número. */}
       {/* Sem WhatsApp nem e-mail configurados a linha some: mandar para /contato, que
           também é um formulário, era um laço sem saída. */}
-      {!isContact && !ehRepresentante && (c.whatsappUrl || c.email) && (
+      {!isContact && !curto && (c.whatsappUrl || c.email) && (
         <p className="text-[13px] text-muted">
           Prefere falar direto?{" "}
           {c.whatsappUrl ? (

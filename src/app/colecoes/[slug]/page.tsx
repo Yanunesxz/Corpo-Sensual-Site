@@ -172,7 +172,7 @@ export default async function ColecaoPage({ params }: Props) {
               Ver as peças
             </a>
           </div>
-          <p className="mt-4 text-[13px] leading-snug text-white md:mt-5">Atacado por grade, direto da fábrica.</p>
+          <p className="mt-4 text-[13px] leading-snug text-white md:mt-5">Atacado para lojistas, direto da fábrica.</p>
         </div>
       </section>
 
@@ -212,7 +212,7 @@ export default async function ColecaoPage({ params }: Props) {
               title={showingBestSellers ? "As mais pedidas pelos lojistas" : "As mais vendidas"}
               description={
                 referenciasDaColecao
-                  ? `Uma amostra das ${referenciasDaColecao} referências desta coleção. O catálogo digital traz todas, com grade e preços.`
+                  ? `Uma amostra das ${referenciasDaColecao} referências desta coleção. O catálogo digital traz todas, com os preços.`
                   : `Uma amostra. São ${TOTAL_REFERENCIAS} referências no ano, e o catálogo digital traz todas.`
               }
             />
