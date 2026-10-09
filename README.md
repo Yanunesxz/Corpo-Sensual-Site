@@ -1,6 +1,6 @@
 # Corpo Sensual — site institucional
 
-Site da **Corpo Sensual** (https://www.corposensual.com.br), confecção de moda íntima de Muriaé, MG.
+Site da **Corpo Sensual** (https://www.pijamascorposensual.com.br), confecção de moda íntima de Muriaé, MG.
 Reconstruído do zero em código para que **layout, fotos e conteúdo fiquem versionados neste repositório**, substituindo o site anterior no Wix.
 
 | Camada | Tecnologia |
@@ -37,7 +37,7 @@ As URLs do site antigo (`/catalogo-verao`, `/fabrica-pijamas`, `/privacy-policy`
 
 ### SEO e Google Analytics
 
-- Canonical, sitemap, robots.txt e dados estruturados usam sempre `https://www.corposensual.com.br` (`SITE_ORIGIN`, em `src/lib/site.ts`). Qualquer outro endereço (`sitecs.vercel.app`, prévias) sai com `X-Robots-Tag: noindex` (`next.config.ts`), então o Google só indexa o domínio oficial.
+- Canonical, sitemap, robots.txt e dados estruturados usam sempre `https://www.pijamascorposensual.com.br` (`SITE_ORIGIN`, em `src/lib/site.ts`). O `corposensual.com.br` (domínio do Wix até 10/2026) redireciona para ele mantendo o caminho. Qualquer outro endereço (`sitecs.vercel.app`, prévias) sai com `X-Robots-Tag: noindex` (`next.config.ts`), então o Google só indexa o domínio oficial.
 - Dados estruturados (empresa, site e trilha das coleções) ficam em `src/lib/schema.ts`.
 - Título, description e prévia de cada coleção: `SEO_COLECAO`, em `src/app/colecoes/[slug]/page.tsx`. Texto alternativo das fotos: `src/lib/content/alt-fotos.ts`.
 - Datas do sitemap: `src/app/sitemap.ts`. Troque a data da página quando mudar o conteúdo dela.
@@ -204,7 +204,7 @@ O site atualiza o catálogo a cada 1 hora (ISR). Para forçar na hora, faça um 
 2. Framework detectado: Next.js. Não precisa alterar build ou output.
 3. Em **Environment Variables**, cadastre as variáveis do `.env.example` (pelo menos `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`). Para os leads chegarem ao CRM, cadastre também `LEAD_SITE_CHAVE` (sem o prefixo `NEXT_PUBLIC`).
 4. Deploy. A cada push na `main` o Vercel publica uma nova versão; pull requests ganham URL de preview.
-5. Em **Settings > Domains**, adicione `www.corposensual.com.br` (principal) e `corposensual.com.br` (redirecionando para o www) e siga as instruções de DNS. Só aponte o domínio quando o conteúdo estiver revisado; até lá o site do Wix continua no ar. O roteiro completo do dia da troca está em [`docs/seo-e-analytics.md`](docs/seo-e-analytics.md).
+5. Em **Settings > Domains**, adicione `www.pijamascorposensual.com.br` (principal), `pijamascorposensual.com.br` (redirecionando para o www), `loja.pijamascorposensual.com.br`, `www.corposensual.com.br` e `corposensual.com.br` e siga as instruções de DNS. Só aponte o domínio quando o conteúdo estiver revisado; até lá o site do Wix continua no ar. O roteiro completo do dia da troca está em [`docs/seo-e-analytics.md`](docs/seo-e-analytics.md).
 
 ---
 
