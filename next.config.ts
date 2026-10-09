@@ -30,10 +30,10 @@ const nextConfig: NextConfig = {
       {
         // Tudo o que não for o domínio oficial (sitecs.vercel.app, prévias, localhost)
         // sai com noindex, para o Google não indexar uma cópia do site da marca.
-        // Quando www.pijamascorposensual.com.br apontar para cá, ele fica indexável sozinho.
+        // Quando www.corposensual.com.br apontar para cá, ele fica indexável sozinho.
         // NÃO ponha Disallow no robots.txt: o Google precisa abrir a página para ler o noindex.
         source: "/:path*",
-        missing: [{ type: "host", value: "www\\.pijamascorposensual\\.com\\.br" }],
+        missing: [{ type: "host", value: "(www\\.)?corposensual\\.com\\.br" }],
         headers: [{ key: "X-Robots-Tag", value: "noindex" }],
       },
     ];
@@ -41,31 +41,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     // URLs antigas do site no Wix -> URLs novas
     return [
-      // Domínio oficial: www.pijamascorposensual.com.br (src/lib/site.ts). Os outros
-      // endereços da marca redirecionam para ele. Só funcionam depois de adicionados ao
-      // projeto na Vercel (Settings > Domains) e com o DNS apontando para cá.
-      //
-      // corposensual.com.br (o domínio do Wix até 10/2026): mantém o caminho e a query,
-      // então /colecao-verao?gclid=... dos anúncios cai na mesma página no domínio novo.
+      // Domínio e loja antigos da marca. A lista "10 melhores fábricas de pijamas de
+      // Muriaé" ainda aponta para loja.pijamascorposensual.com.br. Só funciona depois
+      // que esse domínio for adicionado ao projeto na Vercel.
       {
         source: "/:path*",
-        has: [{ type: "host", value: "(www\\.)?corposensual\\.com\\.br" }],
-        destination: "https://www.pijamascorposensual.com.br/:path*",
-        permanent: true,
-      },
-      // Sem www: vai para o www (reserva caso o redirecionamento da Vercel não esteja ligado).
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "pijamascorposensual\\.com\\.br" }],
-        destination: "https://www.pijamascorposensual.com.br/:path*",
-        permanent: true,
-      },
-      // Loja antiga (VTEX, desativada). A lista "10 melhores fábricas de pijamas de Muriaé"
-      // ainda aponta para loja.pijamascorposensual.com.br: cai na home.
-      {
-        source: "/:path*",
-        has: [{ type: "host", value: "loja\\.pijamascorposensual\\.com\\.br" }],
-        destination: "https://www.pijamascorposensual.com.br/",
+        has: [{ type: "host", value: "(www\\.|loja\\.)?pijamascorposensual\\.com\\.br" }],
+        destination: "https://www.corposensual.com.br/",
         permanent: true,
       },
       { source: "/catalogo-verao", destination: "/catalogo", permanent: true },
