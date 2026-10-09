@@ -137,10 +137,10 @@ export function SiteHeader() {
   // Na página de representante o dono pediu zero números: a faixa fala da estrutura.
   const representante = pathname.startsWith("/seja-representante");
   const botao = botaoDa(pathname);
-  const faixaCurta = representante ? "Fábrica própria em Muriaé, MG" : `Atacado ${site.commercial.noMinOrder.toLowerCase()}`;
+  const faixaCurta = representante ? "Fábrica própria em Muriaé, MG" : "Atacado para lojistas";
   const faixaLonga = representante
     ? ["Fábrica própria em Muriaé, MG", "Coleção nova no verão e no inverno", "Feminino, masculino e infantil"]
-    : ["Atacado para lojistas de todo o Brasil", site.commercial.noMinOrder, site.commercial.pixDiscount, site.commercial.freeShippingSudeste];
+    : ["Atacado para lojistas de todo o Brasil", "Fábrica própria em Muriaé, MG", site.commercial.pixDiscount, site.commercial.freeShippingSudeste];
 
   return (
     <header className="sticky top-[-2.75rem] z-50">
@@ -334,7 +334,7 @@ function MenuFolha({
               <ArrowRight width={18} height={18} className="seta" />
             </Link>
             <p className="legenda mt-3 text-center">
-              {site.commercial.noMinOrder}. {site.commercial.noCnpjNote}
+              {site.commercial.wholesale}. {site.commercial.noCnpjNote}
             </p>
           </nav>
 

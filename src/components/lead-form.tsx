@@ -304,7 +304,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 
       {escolhaCnpj === "nao" && !isContact && !ehRepresentante && (
         <p className="rounded-field bg-areia px-4 py-3 text-sm leading-relaxed text-ink">
-          O CNPJ não é obrigatório. Informe o seu CPF: vendemos no atacado, por grade e sem pedido mínimo, e avaliamos o
+          O CNPJ não é obrigatório. Informe o seu CPF: vendemos no atacado, por grade, e avaliamos o
           seu caso. Se você é consumidor, diga a sua cidade e indicamos a loja mais perto de você.
         </p>
       )}

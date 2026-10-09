@@ -39,7 +39,7 @@ export function CtaRodape() {
         <ArrowRight width={18} height={18} className="seta" />
       </Link>
       <p className="mt-3 max-w-xs text-[13px] leading-[1.5] text-noite-texto">
-        {site.commercial.noMinOrder}. {site.commercial.noCnpjNote}
+        {site.commercial.wholesale}. {site.commercial.noCnpjNote}
       </p>
     </div>
   );

@@ -198,7 +198,7 @@ export default async function SobrePage() {
               Falar com a gente
             </Link>
           </div>
-          <p className="legenda mt-5">Atacado por grade, sem pedido mínimo. {site.commercial.noCnpjNote}</p>
+          <p className="legenda mt-5">Atacado por grade, direto da fábrica. {site.commercial.noCnpjNote}</p>
         </div>
       </section>
     </>

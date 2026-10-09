@@ -22,7 +22,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Fábrica de pijamas no atacado para lojistas",
   description:
-    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Sem pedido mínimo, 5% no Pix e frete grátis desde R$ 1.200 no Sudeste.",
+    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Atacado por grade, 5% no Pix e frete grátis desde R$ 1.200 no Sudeste.",
   alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
@@ -40,7 +40,7 @@ const PASSOS = [
     // O nome das vendedoras fica aqui (saiu do cartão do formulário, que começa direto pelos campos).
     texto: `Você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp e recebe o catálogo digital com grade e tabela de preços.`,
   },
-  { titulo: "Primeiro pedido", texto: "Você monta a grade, sem pedido mínimo. O pedido sai da fábrica em até 15 dias úteis." },
+  { titulo: "Primeiro pedido", texto: "Você monta a grade com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
 ];
 
 /*
@@ -95,7 +95,7 @@ export default async function FabricaPage() {
               Atacado para lojistas · {site.legal.cidade}, {site.legal.uf}
             </p>
             <h1 className="t-hero mt-4 max-w-[13ch] text-white lg:mt-5">
-              Pijamas direto da fábrica, sem pedido mínimo
+              Pijamas no atacado, direto da fábrica
             </h1>
             <p className="lead mt-4 max-w-[34rem] text-white lg:mt-5">
               Fábrica própria há mais de 25 anos. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.
@@ -218,8 +218,8 @@ export default async function FabricaPage() {
           <div className="lg:col-span-6 lg:col-start-7">
           <SectionHeading
             eyebrow="Catálogo com tabela de preços"
-            title="Compre da fábrica, no valor que a sua loja precisa"
-            description={`${commercial.noMinOrder}. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.`}
+            title="Compre direto da fábrica"
+            description={`${commercial.wholesale}. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.`}
           />
           <div className="mt-8 md:mt-10" data-reveal>
             <a href="#formulario" className="btn btn-primary btn-lg w-full sm:w-auto">

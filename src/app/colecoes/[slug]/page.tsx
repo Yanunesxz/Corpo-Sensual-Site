@@ -36,12 +36,12 @@ export async function generateStaticParams() {
 const SEO_COLECAO: Record<string, { title: string; description: string; og: string }> = {
   "delicias-de-verao": {
     title: "Pijamas Delícias de Verão 2027 no atacado",
-    description: `Primavera/Verão 2027: ${REFERENCIAS_POR_COLECAO["delicias-de-verao"]} referências de pijamas, short dolls, camisolas e robes feitos em Muriaé, MG. Atacado para lojistas, sem pedido mínimo.`,
+    description: `Primavera/Verão 2027: ${REFERENCIAS_POR_COLECAO["delicias-de-verao"]} referências de pijamas, short dolls, camisolas e robes feitos em Muriaé, MG. Atacado para lojistas, direto da fábrica.`,
     og: "/images/og/delicias-de-verao.jpg",
   },
   entrelacos: {
     title: "Pijamas Entrelaços Inverno 2026 no atacado",
-    description: `Outono/Inverno 2026: ${REFERENCIAS_POR_COLECAO.entrelacos} referências de pijamas, camisolas e robes nas linhas feminina, masculina e infantil. Atacado para lojistas, sem pedido mínimo.`,
+    description: `Outono/Inverno 2026: ${REFERENCIAS_POR_COLECAO.entrelacos} referências de pijamas, camisolas e robes nas linhas feminina, masculina e infantil. Atacado para lojistas, direto da fábrica.`,
     og: "/images/og/entrelacos.jpg",
   },
 };
@@ -172,7 +172,7 @@ export default async function ColecaoPage({ params }: Props) {
               Ver as peças
             </a>
           </div>
-          <p className="mt-4 text-[13px] leading-snug text-white md:mt-5">Atacado por grade, sem pedido mínimo.</p>
+          <p className="mt-4 text-[13px] leading-snug text-white md:mt-5">Atacado por grade, direto da fábrica.</p>
         </div>
       </section>
 

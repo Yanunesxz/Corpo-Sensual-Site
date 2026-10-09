@@ -34,8 +34,8 @@ const motivos = [
     texto: "Fábrica própria em Muriaé, MG, polo nacional da moda íntima. Você apresenta ao lojista a marca de quem produz.",
   },
   {
-    titulo: "Sem pedido mínimo para o lojista",
-    texto: "O lojista compra o valor que quiser. Fica mais fácil abrir cliente novo e voltar para repor.",
+    titulo: "Marca com mais de 25 anos",
+    texto: "Uma fábrica com história no polo de Muriaé. Fica mais fácil abrir cliente novo e voltar para repor.",
   },
   {
     titulo: "Uma linha para a família inteira",
@@ -78,10 +78,6 @@ const perguntas: FaqItem[] = [
   {
     q: "A minha região está disponível?",
     a: "O Fabian confere a cobertura que a fábrica já tem no seu estado e combina a região de atuação com você.",
-  },
-  {
-    q: "O lojista precisa fazer pedido mínimo?",
-    a: "Não. O lojista compra o valor que quiser, com desconto no Pix, parcelamento sem juros no cartão e frete grátis a partir de um valor que varia conforme a região.",
   },
   {
     q: "Preciso ter CNPJ para representar?",

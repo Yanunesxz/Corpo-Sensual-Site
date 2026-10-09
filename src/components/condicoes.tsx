@@ -13,7 +13,7 @@ const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
 
 /** Faixa logo abaixo da capa: as quatro perguntas da lojista, na ordem em que ela pergunta. */
 const FAIXA = [
-  { rotulo: "Pedido", valor: commercial.noMinOrder },
+  { rotulo: "Venda", valor: commercial.wholesale },
   { rotulo: "Pagamento", valor: commercial.pixDiscount },
   { rotulo: "Frete", valor: `Grátis ${freteGratis}*` },
   { rotulo: "Envio", valor: "Sai da fábrica em até 15 dias úteis" },
@@ -29,7 +29,7 @@ const CELULA_FAIXA = [
 
 /** Ficha das condições por escrito: seis células, sem ícone. */
 const FICHA: { rotulo: string; valor: string; detalhe: ReactNode }[] = [
-  { rotulo: "Pedido mínimo", valor: "Não há", detalhe: "Você compra o valor que quiser, por grade." },
+  { rotulo: "Venda", valor: commercial.wholesale, detalhe: "Você monta o pedido com a sua vendedora, pelo WhatsApp." },
   { rotulo: "Pagamento", valor: commercial.pixDiscount, detalhe: "Também boleto e cartão com parcelamento sem juros." },
   { rotulo: "Frete grátis", valor: `A partir de ${freteGratis.replace(/^a partir de /, "")}`, detalhe: `${commercial.freeShippingOutras}.` },
   {
@@ -42,12 +42,12 @@ const FICHA: { rotulo: string; valor: string; detalhe: ReactNode }[] = [
 ];
 
 /** Lista do topo do formulário. O asterisco do frete é explicado na nota do cartão. */
-const LISTA = [commercial.noMinOrder, commercial.pixDiscount, `${commercial.freeShippingSudeste}*`, "Sai da fábrica em até 15 dias úteis"];
+const LISTA = [`${commercial.wholesale}, direto da fábrica`, commercial.pixDiscount, `${commercial.freeShippingSudeste}*`, "Sai da fábrica em até 15 dias úteis"];
 
 type Props = {
   /**
    * faixa: quatro células com fio, logo abaixo da capa (2x2 no celular).
-   * ficha: seis células (pedido, pagamento, frete, prazo, troca, CNPJ), para a landing.
+   * ficha: seis células (venda, pagamento, frete, prazo, troca, CNPJ), para a landing.
    * lista: marcadores com ✓ no topo do formulário.
    */
   variante: "faixa" | "ficha" | "lista";
