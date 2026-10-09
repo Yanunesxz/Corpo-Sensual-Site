@@ -13,11 +13,11 @@ const link = "text-ink underline underline-offset-4 hover:decoration-2";
 
 const cnpj: FaqItem = {
   q: "Preciso ter CNPJ para comprar?",
-  a: "Não. O CNPJ não é obrigatório. A venda é no atacado, por grade. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, marque “Ainda não”.",
+  a: "Não. O CNPJ não é obrigatório. A venda é no atacado. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, marque “Ainda não”.",
 };
 const pagamento: FaqItem = {
   q: "Quais são as formas de pagamento?",
-  a: "Pix, com 5% de desconto, boleto e cartão com parcelamento sem juros.",
+  a: "Pix, boleto ou cartão. As condições de pagamento são a consultar com a sua vendedora.",
 };
 
 /**
@@ -28,15 +28,15 @@ export const faqLojista: FaqItem[] = [
   cnpj,
   {
     q: "Quais linhas vocês fabricam?",
-    a: "Pijamas, camisolas, robes, short dolls e moda íntima nas linhas feminina, masculina e infantil, de menino e de menina, com peças que combinam para a família. Os catálogos são de verão e de inverno: Delícias de Verão (Primavera/Verão 2027) e Entrelaços (Outono/Inverno 2026).",
+    a: "Pijamas, camisolas, robes, short dolls e moda íntima nas linhas infantil, juvenil, feminina, masculina, senhora e gestante. Infantil e juvenil de menino e de menina, com peças que combinam para a família. Os catálogos são de verão e de inverno: Delícias de Verão (Primavera/Verão 2027) e Entrelaços (Outono/Inverno 2026).",
   },
   {
     q: "Como recebo o catálogo com os preços?",
-    a: "Faça o cadastro da sua loja. Depois do envio você escolhe com quem falar no WhatsApp, e a nossa equipe envia o catálogo digital completo, com grade e tabela de preços.",
+    a: "Faça o cadastro da sua loja. Depois do envio você escolhe com quem falar no WhatsApp, e a nossa equipe envia o catálogo digital completo, com a tabela de preços.",
   },
   {
     q: "Vocês atendem a minha região?",
-    a: "Vendemos no atacado para lojas de todo o Brasil. Depois do cadastro, você escolhe com quem falar no WhatsApp e a nossa equipe comercial atende você.",
+    a: "Vendemos no atacado para lojas de todo o Brasil. Depois do cadastro, uma de nossas vendedoras atende você pelo WhatsApp, ou encaminhamos um representante para a sua região.",
   },
   {
     q: "E se a peça vier com defeito?",
@@ -55,10 +55,10 @@ export const faqLojista: FaqItem[] = [
     a: (
       <>
         As nossas peças são vendidas em lojas de moda íntima e pijamas.{" "}
-        <Link href="/contato" className={link}>
-          Fale com a gente pela página de contato
+        <Link href="/onde-comprar" className={link}>
+          Deixe o seu contato e a sua cidade
         </Link>{" "}
-        que indicamos um ponto de venda na sua cidade.
+        que indicamos a loja mais perto de você.
       </>
     ),
   },
@@ -71,5 +71,5 @@ export const faqLojista: FaqItem[] = [
 export const faqCurto: FaqItem[] = [
   cnpj,
   pagamento,
-  { q: "Como funciona o frete?", a: `${commercial.freeShipping}. ${commercial.freeShippingNote}` },
+  { q: "Como funciona o frete?", a: `O frete grátis é sob consulta. ${commercial.freeShippingNote}` },
 ];

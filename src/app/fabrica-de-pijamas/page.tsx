@@ -22,7 +22,7 @@ export const revalidate = 3600;
 export const metadata: Metadata = {
   title: "Fábrica de pijamas no atacado para lojistas",
   description:
-    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Atacado por grade, 5% no Pix e frete grátis desde R$ 1.200 no Sudeste.",
+    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Atacado para lojas de todo o Brasil, com Pix, boleto ou cartão e frete grátis sob consulta.",
   alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
@@ -38,9 +38,9 @@ const PASSOS = [
   {
     titulo: "Catálogo e atendimento",
     // O nome das vendedoras fica aqui (saiu do cartão do formulário, que começa direto pelos campos).
-    texto: `Você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp e recebe o catálogo digital com grade e tabela de preços.`,
+    texto: `Você fala com a ${nicoli.nome} ou a ${simone.nome}, nossas vendedoras, pelo WhatsApp e recebe o catálogo digital com a tabela de preços.`,
   },
-  { titulo: "Primeiro pedido", texto: "Você monta a grade com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
+  { titulo: "Primeiro pedido", texto: "Você monta o pedido com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
 ];
 
 /*
@@ -98,7 +98,7 @@ export default async function FabricaPage() {
               Pijamas no atacado, direto da fábrica
             </h1>
             <p className="lead mt-4 max-w-[34rem] text-white lg:mt-5">
-              Fábrica própria há mais de 25 anos. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.
+              Fábrica própria há mais de 25 anos. Cadastre a sua loja e receba o catálogo com a tabela de preços.
             </p>
             <a href="#formulario" className="btn btn-light btn-lg mt-6 w-full md:w-auto lg:hidden" data-ga-local="hero">
               Quero a tabela de preços
@@ -133,7 +133,6 @@ export default async function FabricaPage() {
               classeCondicoes="max-lg:hidden"
               source="fabrica-de-pijamas"
               submitLabel="Quero receber a tabela de preços"
-              nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
             />
           </FormularioPreso>
         </aside>
@@ -168,7 +167,7 @@ export default async function FabricaPage() {
             categories={categories}
             eyebrow="O que vai para a sua arara"
             title="As mais pedidas pelos lojistas"
-            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo completo chega depois do cadastro, com grade e preços.`}
+            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo completo chega depois do cadastro, com os preços.`}
             fim={{ href: "#formulario", rotulo: "Quero a tabela de preços" }}
           />
         </div>
@@ -219,7 +218,7 @@ export default async function FabricaPage() {
           <SectionHeading
             eyebrow="Catálogo com tabela de preços"
             title="Compre direto da fábrica"
-            description={`${commercial.wholesale}. Cadastre a sua loja e receba o catálogo com grade e tabela de preços.`}
+            description={`${commercial.wholesale}. Cadastre a sua loja e receba o catálogo com a tabela de preços.`}
           />
           <div className="mt-8 md:mt-10" data-reveal>
             <a href="#formulario" className="btn btn-primary btn-lg w-full sm:w-auto">

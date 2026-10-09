@@ -48,7 +48,7 @@ const caminhos = [
   },
   {
     titulo: "Quero ser representante",
-    texto: "Conte a sua região e experiência. Depois do cadastro você fala direto com o Fabian, nosso gerente comercial.",
+    texto: "Conte a sua região e experiência. Depois do cadastro você fala direto com o nosso gestor comercial.",
     href: "/seja-representante",
     rotulo: "Seja representante",
   },

@@ -101,26 +101,23 @@ export const site = {
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
   commercial: {
     /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
-    salesNote: "Venda no atacado, por grade.",
+    salesNote: "Venda no atacado para lojistas.",
     /** Para quem ainda não tem CNPJ: o formulário já resolve ("Ainda não" + CPF). Antes era
         "Ainda não tem CNPJ? Fale com a gente.", um convite sem link no meio da página. */
     noCnpjNote: "CNPJ não é obrigatório.",
     /** Como vendemos. O site não fala de pedido mínimo, nem que tem nem que não tem: isso é com a vendedora. */
-    wholesale: "Atacado por grade",
-    installments: "Parcelamento sem juros no cartão",
-    pixDiscount: "5% de desconto no Pix",
-    freeShipping: "Frete grátis a partir de R$ 1.200,00 no Sudeste",
-    /** O piso do frete grátis muda por região. Complementa `freeShipping`. */
-    freeShippingNote: "Nas demais regiões, o frete grátis vale a partir de R$ 2.000,00.",
+    wholesale: "Atacado para lojistas",
+    /** Formas de pagamento. Desconto e parcelamento não aparecem no site: são a consultar. */
+    payment: "Pix, boleto ou cartão",
+    paymentNote: "Condições de pagamento a consultar com a sua vendedora.",
+    /** Frete grátis só com consulta: o site não diz valor nenhum. */
+    freeShipping: "Frete grátis sob consulta",
+    freeShippingNote: "A sua vendedora informa as condições de frete para o seu pedido e a sua região.",
     paymentMethods: "Aceitamos Pix, boleto e cartão.",
     leadTime: "O pedido sai da fábrica em até 15 dias úteis. Temos referências a pronta entrega e, conforme o pedido, o envio pode sair no mesmo dia.",
     /** Prazo para pedir troca de peça com defeito, em dias corridos após o recebimento. */
     exchangeDays: 15,
-    /* Frases curtas do redesenho (out/2026). Condições, FAQ e faixa do topo leem daqui.
-       Depois do "R$" vai um espaço que não quebra (U+00A0): o valor nunca fica sozinho
-       na linha de baixo. Ao reescrever, mantenha (no VS Code ele aparece realçado). */
-    freeShippingSudeste: "Frete grátis a partir de R$ 1.200 no Sudeste",
-    freeShippingOutras: "Nas demais regiões, a partir de R$ 2.000",
+    /* Frases curtas do redesenho (out/2026). Condições, FAQ e faixa do topo leem daqui. */
     prazo: "O pedido sai da fábrica em até 15 dias úteis.",
     /** Pronta entrega sempre com "conforme o pedido, podem": não é promessa. */
     prontaEntrega: "Há referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",
@@ -163,8 +160,9 @@ export function whatsappLink(message: string): string {
  * São números públicos, feitos para aparecer no site. Não são segredo.
  */
 export const equipe = {
-  /** Fabian, gerente comercial. Só para quem vai começar como representante: aparece depois desse cadastro. */
-  gerenteComercial: { nome: "Fabian", numero: "553285119260" },
+  /** Gestor comercial. Só para quem vai começar como representante: aparece depois desse cadastro.
+      O site não diz o nome dele: o botão fala "o gestor comercial" e a mensagem abre com "Olá!". */
+  gerenteComercial: { nome: "gestor comercial", rotulo: "o gestor comercial", numero: "553285119260" },
   /** Pedido, entrega, troca e peça com defeito. */
   sac: { nome: "SAC", numero: "553299430394" },
   /** Boleto, pagamento e nota fiscal. */

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
  * do <main> não pode ter dígito nenhum (nem anos, referências, valores, porcentagens,
  * prazos, nem numeração de passos). Por isso aqui não entram Condicoes nem
  * NumerosFabrica. Nada de comissão ou ganho: isso é conversa
- * do gerente comercial, e o CRM tem regra expressa de não prometer território.
+ * do gestor comercial, e o CRM tem regra expressa de não prometer território.
  */
 
 /** Por que representar. Só o que a empresa sustenta. */
@@ -39,7 +39,7 @@ const motivos = [
   },
   {
     titulo: "Uma linha para a família inteira",
-    texto: "Feminino, masculino e infantil na mesma coleção: um pedido abastece a seção de pijamas da loja.",
+    texto: "Infantil, juvenil, feminino, masculino, senhora e gestante: um pedido abastece a seção de pijamas da loja.",
   },
   {
     titulo: "Coleção nova no verão e no inverno",
@@ -48,7 +48,35 @@ const motivos = [
   {
     titulo: "Condições que ajudam a fechar pedido",
     texto:
-      "Desconto no Pix, parcelamento sem juros no cartão, frete grátis conforme a região e referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",
+      "Pix, boleto ou cartão, frete grátis sob consulta e referências a pronta entrega que, conforme o pedido, podem sair no mesmo dia.",
+  },
+];
+
+/** A estrutura da fábrica por trás do representante: o que ele não precisa fazer sozinho. */
+const estrutura = [
+  {
+    titulo: "Gestor comercial",
+    texto: "Acompanha a sua região, combina as condições de representação e está a um WhatsApp de distância.",
+  },
+  {
+    titulo: "Time comercial de suporte",
+    texto: "Uma equipe que tira dúvidas, acompanha as negociações e ajuda a abrir cliente novo no dia a dia.",
+  },
+  {
+    titulo: "Analista de carteira",
+    texto: "Acompanha os seus clientes, mostra quem está na hora de repor e ajuda a manter a carteira ativa.",
+  },
+  {
+    titulo: "SAC para o lojista",
+    texto: "Pedido, entrega e troca ficam com o nosso SAC. Você cuida da venda; o pós-venda do cliente é com a fábrica.",
+  },
+  {
+    titulo: "Aplicativo próprio de pedidos",
+    texto: "Monte o pedido na loja, na frente do cliente, pelo nosso aplicativo: rápido, sem papel e sem retrabalho.",
+  },
+  {
+    titulo: "Mostruário da coleção",
+    texto: "Você apresenta as peças de verdade: o lojista vê o tecido, o caimento e o acabamento antes de comprar.",
   },
 ];
 
@@ -61,27 +89,27 @@ const campanha = [
 ];
 
 const passos = [
-  { titulo: "Cadastro", texto: "Conte a sua região, há quanto tempo representa e quais marcas leva hoje." },
+  { titulo: "Cadastro", texto: "Deixe o seu nome, o WhatsApp e a cidade onde você atua." },
   {
-    titulo: "Conversa com o Fabian",
-    texto: "Nosso gerente comercial fala com você pelo WhatsApp e apresenta as coleções, a tabela de preços e as condições de representação.",
+    titulo: "Conversa com o gestor comercial",
+    texto: "Ele fala com você pelo WhatsApp e apresenta as coleções, a tabela de preços, as condições de representação e a estrutura de apoio.",
   },
   { titulo: "Região combinada", texto: "Com a região acertada, você apresenta as coleções aos lojistas." },
 ];
 
-/** As dúvidas que travam o cadastro. Respostas sem promessa: o resto é com o gerente comercial. */
+/** As dúvidas que travam o cadastro. Respostas sem promessa: o resto é com o gestor comercial. */
 const perguntas: FaqItem[] = [
   {
     q: "Como é a comissão?",
-    a: "A comissão e as condições de representação são apresentadas pelo Fabian, nosso gerente comercial, na conversa depois do cadastro.",
+    a: "A comissão e as condições de representação são apresentadas pelo nosso gestor comercial, na conversa depois do cadastro.",
   },
   {
     q: "A minha região está disponível?",
-    a: "O Fabian confere a cobertura que a fábrica já tem no seu estado e combina a região de atuação com você.",
+    a: "O gestor comercial confere a cobertura que a fábrica já tem no seu estado e combina a região de atuação com você.",
   },
   {
     q: "Preciso ter CNPJ para representar?",
-    a: "Informe no cadastro se tem CNPJ. Se ainda não tiver, cadastre-se com o CPF: o gerente comercial avalia cada caso.",
+    a: "Não para fazer o cadastro. Se ainda não tiver CNPJ, conte na conversa com o gestor comercial: ele avalia cada caso.",
   },
 ];
 
@@ -114,7 +142,7 @@ export default function RepresentantePage() {
                 <ArrowRight width={18} height={18} />
               </a>
             </div>
-            <p className="legenda mt-6 max-w-[22rem]">Depois do cadastro você fala direto com o Fabian, nosso gerente comercial.</p>
+            <p className="legenda mt-6 max-w-[22rem]">Depois do cadastro você fala direto com o nosso gestor comercial.</p>
           </div>
         </div>
         <div className="relative order-first h-[36svh] max-h-[380px] min-h-[240px] bg-sky-deep [@media(max-width:767px)_and_(max-height:700px)]:h-[20svh] [@media(max-width:767px)_and_(max-height:700px)]:min-h-[128px] md:h-[min(56vw,58svh)] md:max-h-none lg:order-none lg:h-auto lg:max-h-none lg:min-h-[max(36rem,min(calc(100svh_-_7rem),50rem))]">
@@ -157,13 +185,32 @@ export default function RepresentantePage() {
         </div>
       </section>
 
+      {/* 3. A estrutura por trás do representante: seis células, 3 + 3 no desktop. */}
+      <section className="sec bg-areia">
+        <div className="wrap">
+          <SectionHeading
+            eyebrow="Você não vende sozinho"
+            title="Uma estrutura inteira trabalhando com você"
+            description="Você cuida da venda. A fábrica dá o suporte, do primeiro pedido à reposição."
+          />
+          <ul className="mt-8 grid gap-x-10 gap-y-7 sm:grid-cols-2 sm:gap-y-10 lg:mt-14 lg:grid-cols-3 lg:gap-y-14">
+            {estrutura.map((m, i) => (
+              <li key={m.titulo} className="border-t border-line pt-4 md:pt-5" data-reveal style={{ ["--atraso" as string]: `${(i % 3) * 80}ms` }}>
+                <h3 className="t-sub">{m.titulo}</h3>
+                <p className="mt-2 max-w-[26rem] text-[15px] leading-[1.6] text-body md:mt-2.5">{m.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* 4. A marca que ele vai apresentar: campanha a cada coleção */}
       <section className="sec bg-sky-soft">
         <div className="wrap">
           <SectionHeading
             eyebrow="A marca na sua pasta"
             title="A campanha vai junto na sua pasta"
-            description="Cada coleção ganha campanha fotografada e filmada e catálogo digital completo. Você chega na loja com a coleção apresentada, do catálogo ao pedido."
+            description="Cada coleção ganha campanha fotografada e filmada, catálogo digital completo e mostruário. Você chega na loja com a coleção apresentada e monta o pedido no nosso aplicativo."
             link={{ href: "/colecoes", label: "Ver as coleções" }}
           />
           {/* Celular: um trilho de uma linha. Desktop: quatro colunas, as pares descidas, como num lookbook. */}
@@ -210,7 +257,7 @@ export default function RepresentantePage() {
         <div className="wrap grid gap-y-10 lg:grid-cols-12 lg:items-center lg:gap-x-10">
           <div className="lg:col-span-5">
             <h2 className="t-titulo">Cadastre a sua região</h2>
-            <p className="lead mt-4 max-w-xl">O Fabian, nosso gerente comercial, avalia o cadastro e fala com você pelo WhatsApp.</p>
+            <p className="lead mt-4 max-w-xl">O nosso gestor comercial avalia o cadastro e fala com você pelo WhatsApp.</p>
 
             <p className="mt-6 text-[15px] leading-[1.6] text-body">
               É lojista e não representante?{" "}
@@ -225,7 +272,6 @@ export default function RepresentantePage() {
             id="cadastro-rep"
             source="representante"
             submitLabel="Quero ser representante"
-            withMessage
             className="lg:col-span-7 lg:col-start-6 xl:col-span-6 xl:col-start-7"
           />
         </div>

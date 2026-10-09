@@ -18,7 +18,8 @@ const paginas = [
   { path: "/fabrica-de-pijamas", atualizada: "2026-10-01" },
   { path: "/contato", atualizada: "2026-10-01" },
   { path: "/ajuda", atualizada: "2026-10-01" },
-  { path: "/seja-representante", atualizada: "2026-10-01" },
+  { path: "/seja-representante", atualizada: "2026-10-09" },
+  { path: "/onde-comprar", atualizada: "2026-10-09" },
 ];
 
 /**

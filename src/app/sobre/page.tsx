@@ -13,7 +13,7 @@ import { altFoto } from "@/lib/content/alt-fotos";
 export const metadata: Metadata = {
   title: "Sobre a fábrica de pijamas em Muriaé, MG",
   description:
-    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do corte ao pijama pronto, nas linhas feminina, masculina e infantil.",
+    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do corte ao pijama pronto, nas linhas infantil, juvenil, feminina, masculina, senhora e gestante.",
   alternates: { canonical: "/sobre" },
 };
 
@@ -25,7 +25,7 @@ const FOTO_CAPA = "/images/colecoes/entrelacos-2.jpg";
 
 /**
  * Campanha: duas fotos de cada coleção, alternando verão e inverno. Nenhuma repete as de
- * "Uma fábrica, três linhas", logo acima (a delicias-2 é a mesma foto do cartão Feminino).
+ * "Linhas para a família inteira", logo acima (a delicias-2 é a mesma foto do cartão Feminino).
  */
 const CAMPANHA = [
   "/images/colecoes/delicias-1.jpg",
@@ -65,7 +65,7 @@ export default async function SobrePage() {
               revelar={false}
               eyebrow="Sobre a fábrica"
               title="Fábrica própria em Muriaé, há mais de 25 anos"
-              description="Pijamas, camisolas, robes, short dolls e moda íntima, feitos no polo nacional da moda íntima. Vendemos no atacado, por grade, para lojas de todo o Brasil, por representantes."
+              description="Pijamas, camisolas, robes, short dolls e moda íntima, feitos no polo nacional da moda íntima. Vendemos no atacado para lojas de todo o Brasil, por representantes."
             />
             {/* Desktop: empilhados até 1439 px e lado a lado (sem quebra) a partir de 1440. Com
                 flex-wrap, perto de 1350 px os dois cabiam por um fio numa linha: com a fonte de
@@ -147,8 +147,8 @@ export default async function SobrePage() {
         <div className="wrap">
           <SectionHeading
             eyebrow="Linhas"
-            title="Uma fábrica, três linhas"
-            description="Pijamas, camisolas, robes, short dolls e moda íntima nas linhas feminina, masculina e infantil, de menino e de menina, com peças que combinam para a família."
+            title="Linhas para a família inteira"
+            description="Pijamas, camisolas, robes, short dolls e moda íntima nas linhas infantil, juvenil, feminina, masculina, senhora e gestante. Infantil e juvenil de menino e de menina, com peças que combinam para a família."
           />
           <div className="mt-8 lg:mt-12">
             <Linhas categories={categories} hrefBase={hrefColecao} />
@@ -198,7 +198,7 @@ export default async function SobrePage() {
               Falar com a gente
             </Link>
           </div>
-          <p className="legenda mt-5">Atacado por grade, direto da fábrica. {site.commercial.noCnpjNote}</p>
+          <p className="legenda mt-5">Atacado para lojistas, direto da fábrica. {site.commercial.noCnpjNote}</p>
         </div>
       </section>
     </>

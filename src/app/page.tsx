@@ -54,7 +54,7 @@ export default async function HomePage() {
             categories={categories}
             eyebrow="Mais vendidas"
             title="As mais pedidas pelos lojistas"
-            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo digital traz todas, com grade e tabela de preços.`}
+            description={`Uma amostra das ${TOTAL_REFERENCIAS} referências do ano. O catálogo digital traz todas, com a tabela de preços.`}
           />
         </div>
       </section>

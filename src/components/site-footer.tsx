@@ -22,6 +22,7 @@ const empresa: Item[] = [
   { href: "/contato", label: "Contato" },
   { href: "/ajuda", label: "Já sou cliente" },
   { href: "/seja-representante", label: "Seja representante" },
+  { href: "/onde-comprar", label: "Onde comprar" },
 ];
 
 const grupos: { titulo: string; links: Item[] }[] = [

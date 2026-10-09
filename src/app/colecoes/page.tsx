@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 /* Os cartões logo abaixo já dizem o nome, a estação e as referências de cada coleção. */
-const LEAD_CAPA = `São ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com grade e tabela de preços.`;
+const LEAD_CAPA = `São ${TOTAL_REFERENCIAS} referências feitas na nossa fábrica, em Muriaé, MG. Aqui você vê uma seleção; o catálogo digital traz todas, com a tabela de preços.`;
 
 export default async function ColecoesPage() {
   const [collections, categories] = await Promise.all([getCollections(), getCategories()]);

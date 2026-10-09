@@ -26,7 +26,11 @@ const messages: Record<string, { title: string; text: string }> = {
   },
   representante: {
     title: "Cadastro de representante recebido",
-    text: "O Fabian, nosso gerente comercial, vai avaliar a sua região e falar com você.",
+    text: "O nosso gestor comercial vai avaliar a sua região e falar com você.",
+  },
+  varejo: {
+    title: "Recebemos o seu contato",
+    text: "Vamos ver qual loja vende Corpo Sensual mais perto de você e responder pelo WhatsApp.",
   },
   contato: {
     title: "Mensagem recebida",
@@ -89,14 +93,14 @@ const passosPorOrigem: Record<string, { itens: { titulo: string; texto: string }
     semNumeros: false,
     itens: [
       { titulo: "Fale com a vendedora", texto: `Pelo WhatsApp, com a ${equipe.vendedoras[0].nome} ou a ${equipe.vendedoras[1].nome}.` },
-      { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
+      { titulo: "Receba o catálogo", texto: "Com a tabela de preços." },
       { titulo: "Monte o seu pedido", texto: "Com a sua vendedora, pelo WhatsApp." },
     ],
   },
   representante: {
     semNumeros: true,
     itens: [
-      { titulo: "O Fabian avalia a sua região", texto: "Ele confere a cobertura no seu estado." },
+      { titulo: "O gestor comercial avalia a sua região", texto: "Ele confere a cobertura no seu estado." },
       { titulo: "Conversa pelo WhatsApp", texto: "Ele apresenta as coleções e as condições de representação." },
     ],
   },
@@ -178,7 +182,7 @@ export default async function ObrigadoPage({ searchParams }: PageProps<"/obrigad
               {ehRepresentante && (
                 <ContatoWhatsApp
                   contatos={[equipe.gerenteComercial]}
-                  chamada="Para adiantar, fale agora direto com o Fabian, nosso gerente comercial:"
+                  chamada="Para adiantar, fale agora direto com o nosso gestor comercial:"
                   abertura="Acabei de me cadastrar no site da Corpo Sensual para ser representante."
                   empresa="representacao"
                 />

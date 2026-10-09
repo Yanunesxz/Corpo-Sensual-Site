@@ -34,7 +34,7 @@ const leadSchema = z.object({
     .transform((v) => v.toUpperCase())
     .refine((v) => UFS.includes(v), "Informe a UF."),
   message: optionalText(1000),
-  source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante"]),
+  source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante", "varejo"]),
   page_url: optionalText(600),
   referrer: optionalText(600),
   utm_source: optionalText(200),
@@ -43,18 +43,17 @@ const leadSchema = z.object({
   utm_term: optionalText(200),
   utm_content: optionalText(200),
 }).superRefine((d, ctx) => {
+  // Representante e varejo (consumidor que procura uma loja): formulário curto (nome,
+  // WhatsApp, e-mail, cidade e UF), como o das landing pages. Sem CNPJ nem mensagem.
+  if (d.source === "representante" || d.source === "varejo") return;
+
   if (d.has_cnpj !== "sim" && d.has_cnpj !== "nao") {
     ctx.addIssue({ code: "custom", path: ["has_cnpj"], message: "Escolha uma opção." });
   }
 
-  // Mensagem: obrigatória onde o formulário não diz "(opcional)". No contato é o
-  // assunto; no cadastro de representante é a região, que o comercial precisa.
-  if ((d.source === "contato" || d.source === "representante") && d.message.length < 3) {
-    ctx.addIssue({
-      code: "custom",
-      path: ["message"],
-      message: d.source === "representante" ? "Conte a sua região e experiência." : "Escreva a sua mensagem.",
-    });
+  // Mensagem: obrigatória onde o formulário não diz "(opcional)": no contato é o assunto.
+  if (d.source === "contato" && d.message.length < 3) {
+    ctx.addIssue({ code: "custom", path: ["message"], message: "Escreva a sua mensagem." });
   }
 
   // Documento obrigatório em todos os formulários, inclusive no de contato: o CRM
@@ -172,6 +171,9 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
   const { error } = await supabase.from("leads").insert(linha);
   if (error) {
     console.error("[leads] erro ao gravar lead:", error.message);
+    // O lead já está no CRM, que é o destino principal: a cópia local falhar não pode
+    // mostrar erro para quem se cadastrou (nem levar a pessoa a enviar de novo).
+    if (crm.status === "enviado") redirect(`/obrigado?origem=${source}`);
     return {
       ok: false,
       message: "Não conseguimos enviar seu cadastro. Tente novamente ou use outro canal.",

@@ -180,7 +180,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
         <span>
           <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
           <span className="mt-3 block max-w-[16rem] text-[15px] leading-snug text-noite-texto">
-            referências no catálogo, com grade de tamanhos e tabela de preços
+            referências no catálogo, com tamanhos e tabela de preços
           </span>
         </span>
         <span className="inline-flex items-center gap-2 font-[family-name:var(--font-button)] text-[15px] text-white">
@@ -309,7 +309,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
                 <span>
                   <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
                   <span className="mt-3 block max-w-[17rem] text-[15px] leading-snug text-noite-texto">
-                    referências no catálogo, com grade de tamanhos e tabela de preços
+                    referências no catálogo, com tamanhos e tabela de preços
                   </span>
                 </span>
               </span>

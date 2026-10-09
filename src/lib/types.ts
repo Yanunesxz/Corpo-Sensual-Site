@@ -61,7 +61,8 @@ export type LeadSource =
   | "fabrica-de-pijamas"
   | "colecao"
   | "contato"
-  | "representante";
+  | "representante"
+  | "varejo";
 
 export type LeadInsert = {
   name: string;

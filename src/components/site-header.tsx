@@ -33,7 +33,8 @@ const MENU = [
  */
 type Botao = { href: string; curto: string; longo: string; largo?: boolean };
 function botaoDa(pathname: string): Botao | null {
-  if (pathname === "/catalogo" || pathname === "/obrigado") return null;
+  // /onde-comprar é do consumidor final: o botão de catálogo (para lojista) não serve ali.
+  if (pathname === "/catalogo" || pathname === "/obrigado" || pathname === "/onde-comprar") return null;
   if (pathname === "/fabrica-de-pijamas") return { href: "#formulario", curto: "Preços", longo: "Quero a tabela de preços", largo: true };
   if (pathname === "/seja-representante") return { href: "#formulario", curto: "Cadastro", longo: "Quero ser representante", largo: true };
   return { href: "/catalogo", curto: "Catálogo", longo: "Receber catálogo" };
@@ -63,7 +64,7 @@ const linkFaixa = "min-h-11 items-center whitespace-nowrap text-white underline 
 
 /**
  * Cabeçalho em duas partes. A faixa azul-noite (44 px) responde em 5 segundos o que a
- * lojista pergunta (atacado, mínimo, Pix, frete) e rola junto com a página; a barra
+ * lojista pergunta (atacado, fábrica, pagamento, frete) e rola junto com a página; a barra
  * branca, com a assinatura no centro, fica presa no topo (sticky com top negativo).
  *
  * Abaixo de 1024 px o menu abre numa folha que sobe de baixo, perto do polegar:
@@ -139,8 +140,8 @@ export function SiteHeader() {
   const botao = botaoDa(pathname);
   const faixaCurta = representante ? "Fábrica própria em Muriaé, MG" : "Atacado para lojistas";
   const faixaLonga = representante
-    ? ["Fábrica própria em Muriaé, MG", "Coleção nova no verão e no inverno", "Feminino, masculino e infantil"]
-    : ["Atacado para lojistas de todo o Brasil", "Fábrica própria em Muriaé, MG", site.commercial.pixDiscount, site.commercial.freeShippingSudeste];
+    ? ["Fábrica própria em Muriaé, MG", "Coleção nova no verão e no inverno", "Linhas para a família inteira"]
+    : ["Atacado para lojistas de todo o Brasil", "Fábrica própria em Muriaé, MG", site.commercial.payment, site.commercial.freeShipping];
 
   return (
     <header className="sticky top-[-2.75rem] z-50">

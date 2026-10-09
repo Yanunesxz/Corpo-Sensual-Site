@@ -141,7 +141,7 @@ export const politicas: Politica[] = [
       {
         heading: "Frete e acompanhamento",
         paragraphs: [
-          "O frete é grátis a partir de R$ 1.200,00 para a região Sudeste e a partir de R$ 2.000,00 para as demais regiões. Abaixo desses valores, o frete é calculado por pedido, de acordo com o peso e o destino. Após o despacho, enviamos o código de rastreamento para acompanhamento.",
+          "O frete é calculado por pedido, de acordo com o peso e o destino, e o frete grátis é sob consulta: a equipe comercial informa as condições para cada pedido. Após o despacho, enviamos o código de rastreamento para acompanhamento.",
         ],
       },
     ],
@@ -163,7 +163,7 @@ export const politicas: Politica[] = [
       {
         heading: "Relação comercial",
         paragraphs: [
-          "As vendas são realizadas no atacado, por meio de representantes comerciais. Aceitamos Pix, boleto e cartão; no Pix há 5% de desconto e no cartão o parcelamento é sem juros. Não há valor mínimo de pedido. Preços e demais condições são informados pelo representante.",
+          "As vendas são realizadas no atacado, por meio de representantes comerciais. Aceitamos Pix, boleto e cartão. Preços, condições de pagamento, frete e demais condições são informados pelo representante ou pela equipe comercial.",
         ],
       },
       {

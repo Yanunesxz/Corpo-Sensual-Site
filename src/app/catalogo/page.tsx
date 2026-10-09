@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 const FOTO = "/images/colecoes/delicias-3.jpg";
 
-/* Sem repetir "com grade e tabela de preços", que o H1 logo acima já diz. */
+/* Sem repetir "com a tabela de preços", que o H1 logo acima já diz. */
 const LEAD = `As ${TOTAL_REFERENCIAS} referências dos catálogos de verão e inverno, Delícias de Verão e Entrelaços. ${site.commercial.noCnpjNote}`;
 
 const [nicoli, simone] = equipe.vendedoras;
@@ -28,8 +28,8 @@ const DEPOIS = [
     titulo: "Você escolhe a vendedora",
     texto: `Logo depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome} pelo WhatsApp.`,
   },
-  { titulo: "Recebe o catálogo", texto: `As ${TOTAL_REFERENCIAS} referências, com grade de tamanhos e tabela de preços.` },
-  { titulo: "Monta o pedido", texto: "Por grade, com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
+  { titulo: "Recebe o catálogo", texto: `As ${TOTAL_REFERENCIAS} referências, com tamanhos e tabela de preços.` },
+  { titulo: "Monta o pedido", texto: "Com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
 ];
 
 /**
@@ -68,7 +68,7 @@ export default function CatalogoPage() {
             <h1>
               <span className="eyebrow">Catálogo digital de atacado</span>{" "}
               <span className="t-hero mt-3 block max-w-[16ch] max-[379px]:text-[1.875rem] lg:max-w-[20ch] lg:text-[clamp(2.125rem,1rem+1.6vw,2.625rem)]">
-                Receba o catálogo com grade e tabela de preços
+                Receba o catálogo com a tabela de preços
               </span>
             </h1>
             {/* Um nó de texto só: quando a Inter chega, as linhas quebram em outro lugar. Com
@@ -82,7 +82,6 @@ export default function CatalogoPage() {
               condicoes="depois"
               source="catalogo"
               submitLabel="Quero receber o catálogo"
-              nota={"*Nas demais regiões, o frete grátis vale a partir de R$ 2.000."}
               className="mt-6 lg:mt-4 lg:p-6"
             />
           </div>
