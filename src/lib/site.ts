@@ -68,7 +68,7 @@ export const site = {
   name: "Corpo Sensual",
   tagline: "Fábrica de pijamas e moda íntima em Muriaé, MG. Venda no atacado para lojas de todo o Brasil.",
   description:
-    "Fábrica própria de pijamas, camisolas, robes e moda íntima em Muriaé, MG, há mais de 25 anos. Atacado para lojistas de todo o Brasil, sem pedido mínimo.",
+    "Fábrica própria de pijamas, camisolas, robes e moda íntima em Muriaé, MG, há mais de 25 anos. Atacado para lojistas de todo o Brasil.",
   url: SITE_ORIGIN,
   legal,
   /** Endereço em uma linha e link para o mapa. */
@@ -101,14 +101,12 @@ export const site = {
   /** Condições comerciais exibidas para lojistas. Atualize aqui quando mudarem. */
   commercial: {
     /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
-    salesNote: "Venda no atacado, por grade, sem pedido mínimo.",
-    /** Para onde o título ao lado já diz que não há mínimo, e repetir soaria estranho. */
-    wholesaleNote: "Venda no atacado, por grade.",
+    salesNote: "Venda no atacado, por grade.",
     /** Para quem ainda não tem CNPJ: o formulário já resolve ("Ainda não" + CPF). Antes era
         "Ainda não tem CNPJ? Fale com a gente.", um convite sem link no meio da página. */
     noCnpjNote: "CNPJ não é obrigatório.",
-    /** Não há valor mínimo de pedido. É argumento de venda, não ressalva. */
-    noMinOrder: "Sem pedido mínimo",
+    /** Como vendemos. O site não fala de pedido mínimo, nem que tem nem que não tem: isso é com a vendedora. */
+    wholesale: "Atacado por grade",
     installments: "Parcelamento sem juros no cartão",
     pixDiscount: "5% de desconto no Pix",
     freeShipping: "Frete grátis a partir de R$ 1.200,00 no Sudeste",

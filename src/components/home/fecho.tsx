@@ -14,7 +14,7 @@ const [nicoli, simone] = equipe.vendedoras;
 const PASSOS = [
   { titulo: "Cadastre a sua loja", texto: "CNPJ não é obrigatório." },
   { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
-  { titulo: "Monte o seu pedido", texto: "Sem pedido mínimo, com a sua vendedora no WhatsApp." },
+  { titulo: "Monte o seu pedido", texto: "Com a sua vendedora, pelo WhatsApp." },
 ];
 
 /**

@@ -59,7 +59,7 @@ export function CapaHome({ atual }: Props) {
           {/* No desktop a medida é 30rem: com 34rem a frase dava duas linhas na Inter e três na fonte
               de reserva, e o bloco (centralizado na altura) pulava quando a fonte chegava (CLS). */}
           <p className="lead mt-3.5 max-w-[34rem] [@media(max-width:767px)_and_(max-height:700px)]:mt-3 md:mt-5 lg:mt-6 lg:max-w-[30rem]">
-            Pijamas, camisolas, robes e short dolls nas linhas feminina, masculina e infantil. Atacado por grade, sem pedido mínimo.
+            Pijamas, camisolas, robes e short dolls nas linhas feminina, masculina e infantil. Atacado por grade, direto da fábrica.
           </p>
           {/* Um botão cheio e, ao lado, um link com seta (como nas outras capas): o
               secundário não disputa com a ação principal. Entre 1024 e 1279 px a coluna do texto

@@ -13,16 +13,15 @@ const link = "text-ink underline underline-offset-4 hover:decoration-2";
 
 const cnpj: FaqItem = {
   q: "Preciso ter CNPJ para comprar?",
-  a: "Não. O CNPJ não é obrigatório. A venda é no atacado, por grade e sem pedido mínimo. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, marque “Ainda não”.",
+  a: "Não. O CNPJ não é obrigatório. A venda é no atacado, por grade. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, marque “Ainda não”.",
 };
-const minimo: FaqItem = { q: "Tem pedido mínimo?", a: "Não. Você compra o valor que quiser, por grade." };
 const pagamento: FaqItem = {
   q: "Quais são as formas de pagamento?",
   a: "Pix, com 5% de desconto, boleto e cartão com parcelamento sem juros.",
 };
 
 /**
- * Landing /fabrica-de-pijamas, nesta ordem. Pedido mínimo, pagamento, frete e prazo
+ * Landing /fabrica-de-pijamas, nesta ordem. Pagamento, frete e prazo
  * ficam de fora: a ficha de condições, logo acima na mesma página, já responde.
  */
 export const faqLojista: FaqItem[] = [
@@ -65,5 +64,12 @@ export const faqLojista: FaqItem[] = [
   },
 ];
 
-/** As três dúvidas que mais seguram o cadastro (CNPJ, mínimo, pagamento), para /catalogo. */
-export const faqCurto: FaqItem[] = [cnpj, minimo, pagamento];
+/**
+ * As três dúvidas que mais seguram o cadastro (CNPJ, pagamento, frete), para /catalogo.
+ * Pedido mínimo não entra: o site não fala disso, nem que tem nem que não tem.
+ */
+export const faqCurto: FaqItem[] = [
+  cnpj,
+  pagamento,
+  { q: "Como funciona o frete?", a: `${commercial.freeShipping}. ${commercial.freeShippingNote}` },
+];

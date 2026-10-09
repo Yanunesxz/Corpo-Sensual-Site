@@ -90,7 +90,7 @@ const passosPorOrigem: Record<string, { itens: { titulo: string; texto: string }
     itens: [
       { titulo: "Fale com a vendedora", texto: `Pelo WhatsApp, com a ${equipe.vendedoras[0].nome} ou a ${equipe.vendedoras[1].nome}.` },
       { titulo: "Receba o catálogo", texto: "Com grade e tabela de preços." },
-      { titulo: "Monte o seu pedido", texto: "Sem pedido mínimo." },
+      { titulo: "Monte o seu pedido", texto: "Com a sua vendedora, pelo WhatsApp." },
     ],
   },
   representante: {

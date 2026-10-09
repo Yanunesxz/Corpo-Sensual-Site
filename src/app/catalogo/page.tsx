@@ -29,7 +29,7 @@ const DEPOIS = [
     texto: `Logo depois do envio, você fala com a ${nicoli.nome} ou a ${simone.nome} pelo WhatsApp.`,
   },
   { titulo: "Recebe o catálogo", texto: `As ${TOTAL_REFERENCIAS} referências, com grade de tamanhos e tabela de preços.` },
-  { titulo: "Monta o pedido", texto: "Sem pedido mínimo. O pedido sai da fábrica em até 15 dias úteis." },
+  { titulo: "Monta o pedido", texto: "Por grade, com a sua vendedora. O pedido sai da fábrica em até 15 dias úteis." },
 ];
 
 /**
