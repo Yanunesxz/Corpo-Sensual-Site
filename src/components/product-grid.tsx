@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useSyncExternalStore, type ReactNode } from "react";
+import { useRef, useSyncExternalStore, type ReactNode } from "react";
 import { TOTAL_REFERENCIAS } from "@/lib/site";
 import type { Category, Product } from "@/lib/types";
-import { COTAS, daCota, intercalar } from "@/lib/vitrine";
+import { COTAS, ESPIADAS, daCota, intercalar } from "@/lib/vitrine";
+import { PecaEspiada } from "./peca-espiada";
 import { ProductCard } from "./product-card";
 import { Trilho } from "./trilho";
 import { ArrowRight } from "./icons";
@@ -40,13 +41,12 @@ type Props = {
   description?: ReactNode;
   /** Cartão final da vitrine. Padrão: "/catalogo" e "Receber o catálogo". Na landing: "#formulario". */
   fim?: { href: string; rotulo: string };
+  /** Quantas referências existem (para o "Você está vendo 8 de 210"). Padrão: as do ano. */
+  total?: number;
 };
 
 // Cartões inteiros no desktop: cinco por tela a partir de 1280 px (253 px no .wrap cheio), quatro de 1024 a 1279.
 const SIZES_VITRINE = "(min-width: 1440px) 253px, (min-width: 1280px) 18vw, (min-width: 1024px) 22vw, (min-width: 768px) 30vw, 46vw";
-
-/** Grade do celular: quantas peças aparecem antes do "Ver mais peças" (quatro linhas de duas). */
-const NO_CELULAR = 8;
 
 /** Onde a lista começa quando os chips estão presos (celular e tablet): cabeçalho + chips + respiro. */
 const CHIPS_PRESOS = 142;
@@ -87,15 +87,13 @@ const DESENHO = {
 /**
  * Peças mais vendidas, com filtro por linha no navegador.
  *
- * Mostra uma cota fixa de cada grupo, as mais vendidas primeiro: seis masculinas,
- * seis femininas, três infantis de menino e três de menina (lib/vitrine.ts). Com
- * filtro, só as cotas daquela linha. O restante do mix fica no catálogo digital,
- * que a lojista recebe depois do cadastro.
+ * Mostra poucas peças de propósito, as mais vendidas de cada grupo (lib/vitrine.ts),
+ * e logo depois três "espiadas": a foto embaçada das próximas, "só no catálogo". Com
+ * o contador ("Você está vendo 8 de 210 referências") e o cartão "210" no fim, fica à
+ * vista que há muito mais no catálogo digital, que a lojista recebe depois do cadastro.
  */
-export function ProductGrid({ products, categories, title = "Peças", variant = "grade", eyebrow, description, fim }: Props) {
+export function ProductGrid({ products, categories, title = "Peças", variant = "grade", eyebrow, description, fim, total = TOTAL_REFERENCIAS }: Props) {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  // Grade do celular: começa com oito peças; "Ver mais peças" mostra o resto.
-  const [todas, setTodas] = useState(false);
   const lista = useRef<HTMLUListElement>(null);
 
   const activeName = categories.find((c) => c.slug === active)?.name;
@@ -103,7 +101,17 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
   const disponiveis = categories.filter((c) => products.some((p) => p.category?.slug === c.slug));
   const cotas = COTAS.filter((c) => !active || c.categoria === active);
   const shown = intercalar(cotas.map((c) => daCota(products, c)));
+  const espiadas = intercalar(cotas.map((c) => daCota(products, c, ESPIADAS))).slice(0, ESPIADAS);
   const vitrine = variant === "vitrine";
+  const destino = fim ?? { href: "/catalogo", rotulo: "Receber o catálogo" };
+
+  // Sempre à vista que a vitrine é só uma parte: quantas aparecem e quantas existem.
+  const contador = shown.length > 0 && (
+    <p className="mt-3 text-[14px] leading-snug text-muted">
+      Você está vendo <strong className="font-medium text-ink">{shown.length}</strong> de{" "}
+      <strong className="font-medium text-ink">{total}</strong> referências. As outras estão no catálogo.
+    </p>
+  );
 
   function select(slug: string) {
     const url = new URL(window.location.href);
@@ -173,12 +181,11 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
   );
 
   if (vitrine) {
-    const destino = fim ?? { href: "/catalogo", rotulo: "Receber o catálogo" };
     const conteudoFim = (
       <>
         <span className="eyebrow">Catálogo completo</span>
         <span>
-          <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
+          <span className="t-numeral block">{total}</span>
           <span className="mt-3 block max-w-[16rem] text-[15px] leading-snug text-noite-texto">
             referências no catálogo, com tamanhos e tabela de preços
           </span>
@@ -202,6 +209,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
                 saíam de baixo do cursor. O chip ativo e o aviso (aria-live) já dizem a linha. */}
             <h2 className={`t-titulo ${eyebrow ? "mt-3" : ""}`}>{title}</h2>
             {description && <p className="lead mt-4">{description}</p>}
+            {contador}
             {aviso}
           </div>
         }
@@ -219,6 +227,11 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
             </li>
           ))
         )}
+        {espiadas.map((p) => (
+          <li key={`espiada-${p.id}`}>
+            <PecaEspiada product={p} destino={destino} sobre="areia" />
+          </li>
+        ))}
         <li>
           {destino.href.startsWith("#") ? (
             <a href={destino.href} data-ga-local="vitrine" className={classeFim}>
@@ -236,10 +249,9 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
 
   // Grade: o cartão "210" fecha a última linha, ocupando as colunas que sobram (a linha
   // inteira quando ela já está cheia). Sozinho na linha, vira faixa, com o texto ao lado.
-  const n = shown.length;
-  const recolhida = !todas && n > NO_CELULAR;
-  const naTelaDoCelular = recolhida ? NO_CELULAR : n;
-  const spanBase = sobra(naTelaDoCelular, 2);
+  // As espiadas contam como peças na conta das colunas.
+  const n = shown.length === 0 ? 0 : shown.length + espiadas.length;
+  const spanBase = sobra(n, 2);
   const spanMd = sobra(n, 3);
   const spanLg = sobra(n, 4);
   const spanXl = sobra(n, 5);
@@ -249,12 +261,6 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
     spanLg === 4 ? DESENHO.lg.faixa : DESENHO.lg.pe,
     spanXl === 5 ? DESENHO.xl.faixa : DESENHO.xl.pe,
   ].join(" ");
-
-  function verMais() {
-    setTodas(true);
-    // O botão some: o foco vai para a lista, que o leitor de tela anuncia com as peças novas.
-    requestAnimationFrame(() => lista.current?.focus({ preventScroll: true }));
-  }
 
   return (
     <div>
@@ -272,6 +278,7 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
             </>
           )}
         </p>
+        {contador}
         {aviso}
       </div>
 
@@ -286,28 +293,25 @@ export function ProductGrid({ products, categories, title = "Peças", variant = 
           aria-label={activeName ? `Peças da linha ${activeName}` : "Peças da coleção"}
           className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6 outline-none md:grid-cols-3 md:gap-x-5 md:gap-y-8 lg:mt-10 lg:grid-cols-4 xl:grid-cols-5"
         >
-          {shown.map((p, i) => (
-            // As oito primeiras já trazem as três linhas (a ordem é intercalada).
-            <li key={p.id} className={recolhida && i >= NO_CELULAR ? "max-md:hidden" : undefined}>
-              <ProductCard product={p} chamada={{ href: "/catalogo", rotulo: "Receber o catálogo" }} />
+          {shown.map((p) => (
+            <li key={p.id}>
+              <ProductCard product={p} chamada={destino} />
             </li>
           ))}
-          {recolhida && (
-            <li className="col-span-2 md:hidden">
-              <button type="button" className="btn btn-outline w-full" onClick={verMais}>
-                Ver mais peças
-              </button>
+          {espiadas.map((p) => (
+            <li key={`espiada-${p.id}`}>
+              <PecaEspiada product={p} destino={destino} />
             </li>
-          )}
+          ))}
           <li className={`${SPAN_BASE[spanBase]} ${SPAN_MD[spanMd]} ${SPAN_LG[spanLg]} ${SPAN_XL[spanXl]}`}>
             <Link
-              href="/catalogo"
+              href={destino.href}
               className={`on-dark group flex h-full bg-noite p-5 transition-colors hover:bg-noite-hover md:p-6 lg:p-8 ${desenhoFim}`}
             >
               <span className="flex min-w-0 flex-col gap-4">
                 <span className="eyebrow">Catálogo completo</span>
                 <span>
-                  <span className="t-numeral block">{TOTAL_REFERENCIAS}</span>
+                  <span className="t-numeral block">{total}</span>
                   <span className="mt-3 block max-w-[17rem] text-[15px] leading-snug text-noite-texto">
                     referências no catálogo, com tamanhos e tabela de preços
                   </span>

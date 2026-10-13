@@ -9,9 +9,9 @@ const { commercial } = site;
 const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
 
 /** Faixa logo abaixo da capa: as quatro perguntas da lojista, na ordem em que ela pergunta. */
-const FAIXA = [
+const FAIXA: { rotulo: string; valor: string; detalhe?: string }[] = [
   { rotulo: "Venda", valor: commercial.wholesale },
-  { rotulo: "Pagamento", valor: commercial.payment },
+  { rotulo: "Pagamento", valor: commercial.payment, detalhe: "Consulte as condições" },
   { rotulo: "Frete", valor: "Grátis sob consulta" },
   { rotulo: "Envio", valor: "Sai da fábrica em até 15 dias úteis" },
 ];
@@ -105,6 +105,8 @@ export function Condicoes({ variante, fundo, semNota = false, className = "" }: 
           <li key={f.rotulo} className={`flex flex-col gap-2 border-line lg:border-b-0 lg:py-1 ${CELULA_FAIXA[i]}`}>
             <span className="eyebrow">{f.rotulo}</span>
             <span className="t-sub text-[1.125rem] min-[400px]:text-[1.25rem] lg:text-[clamp(1.25rem,0.2rem+1.2vw,1.5rem)]">{f.valor}</span>
+            {/* Letra menor: a condição é conversa com a vendedora, não promessa do site. */}
+            {f.detalhe && <span className="-mt-1 text-[13px] leading-snug text-muted">{f.detalhe}</span>}
           </li>
         ))}
       </ul>

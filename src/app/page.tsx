@@ -41,12 +41,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3. Vitrine: as mais vendidas em cotas 6/6/3/3, com filtro por linha e o cartão "210". */}
+      {/* 3. Vitrine: poucas mais vendidas (3/3/1/1), três espiadas "só no catálogo" e o cartão "210". */}
       {/* cv-auto: estilo, layout e pintura só quando a seção chega perto da tela. A altura
           reservada (a do conteúdo, sem o padding do .sec; ver .cv-auto no globals.css) fica
           perto da real em cada largura, medida em 390, 768, 1024, 1280, 1440 e 1680 px: com a
           reserva errada, o Voltar do navegador devolvia a página fora do lugar. */}
-      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_573px] md:[contain-intrinsic-size:auto_605px] lg:[contain-intrinsic-size:auto_648px] xl:[contain-intrinsic-size:auto_705px] min-[90rem]:[contain-intrinsic-size:auto_751px]">
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_623px] md:[contain-intrinsic-size:auto_636px] lg:[contain-intrinsic-size:auto_679px] xl:[contain-intrinsic-size:auto_690px] min-[90rem]:[contain-intrinsic-size:auto_784px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"

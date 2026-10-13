@@ -157,9 +157,9 @@ export default async function FabricaPage() {
         </section>
       </div>
 
-      {/* E. Vitrine: as mais vendidas, 6/6/3/3, com filtro. O cartão final volta ao formulário. */}
+      {/* E. Vitrine: poucas mais vendidas (3/3/1/1) e três espiadas, com filtro. O cartão final volta ao formulário. */}
       {/* Reserva: a altura do conteúdo, sem o padding do .sec (ver .cv-auto no globals.css). */}
-      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_592px] md:[contain-intrinsic-size:auto_605px] lg:[contain-intrinsic-size:auto_648px] xl:[contain-intrinsic-size:auto_705px] min-[90rem]:[contain-intrinsic-size:auto_751px]">
+      <section id="pecas" className="cv-auto sec bg-areia [contain-intrinsic-size:auto_623px] md:[contain-intrinsic-size:auto_636px] lg:[contain-intrinsic-size:auto_679px] xl:[contain-intrinsic-size:auto_690px] min-[90rem]:[contain-intrinsic-size:auto_784px]">
         <div className="wrap">
           <ProductGrid
             variant="vitrine"
