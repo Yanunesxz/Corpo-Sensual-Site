@@ -12,7 +12,7 @@ import { politicas } from "@/lib/content/politicas";
  */
 const paginas = [
   { path: "/", atualizada: "2026-10-09" },
-  { path: "/sobre", atualizada: "2026-10-09" },
+  { path: "/sobre", atualizada: "2026-10-14" },
   { path: "/colecoes", atualizada: "2026-10-09" },
   { path: "/catalogo", atualizada: "2026-10-09" },
   { path: "/fabrica-de-pijamas", atualizada: "2026-10-09" },

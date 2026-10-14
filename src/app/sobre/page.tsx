@@ -113,7 +113,7 @@ export default async function SobrePage() {
             className="lg:col-start-1 lg:row-start-1 lg:self-end"
             eyebrow="A sede"
             title="Tudo sob o mesmo teto, na Rua São Geraldo"
-            description={`Prédio próprio no bairro Dornelas, em Muriaé: corte, costura, acabamento, estoque e expedição no mesmo endereço, com energia solar na cobertura. ${site.address.line}.`}
+            description={`Prédio próprio no bairro Dornelas, em Muriaé: corte, costura, acabamento, estoque e expedição no mesmo endereço. ${site.address.line}.`}
           />
           {/* O quadro 9:5 com colunas 1:2 dá 3:5 à em pé e 6:5 à deitada (o vão some no cover). */}
           <ul className="grid aspect-[9/5] grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-x-3 md:gap-x-5 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center lg:gap-x-6">
