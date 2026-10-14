@@ -199,15 +199,16 @@ export default async function ColecaoPage({ params }: Props) {
         {/* cv-auto: a grade só é montada quando chega perto da tela (os chips presos continuam presos). */}
         {/* Reserva: a altura do conteúdo, sem o padding do .sec (ver .cv-auto no globals.css); entre
             as duas coleções a grade difere até 120 px no tablet, e a reserva é a média. */}
-        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_1798px] md:[contain-intrinsic-size:auto_2594px] lg:[contain-intrinsic-size:auto_2030px] xl:[contain-intrinsic-size:auto_1760px] min-[90rem]:[contain-intrinsic-size:auto_1915px]">
+        <section id="pecas" className="cv-auto sec [contain-intrinsic-size:auto_2150px] md:[contain-intrinsic-size:auto_1760px] lg:[contain-intrinsic-size:auto_1396px] xl:[contain-intrinsic-size:auto_1400px] min-[90rem]:[contain-intrinsic-size:auto_1513px]">
           {/* Os chips da grade ficam presos sob o cabeçalho no celular (top-16). */}
           <div className="wrap">
             <ProductGrid
-              // Só as peças que a grade pode mostrar, com ou sem filtro (6/6/3/3): o resultado
+              // Só as peças que a grade pode mostrar, com ou sem filtro (3/3/1/1 e as espiadas): o resultado
               // na tela é o mesmo e o HTML não leva a coleção inteira ao navegador.
               products={pecasDaVitrine(products)}
               categories={categories}
               variant="grade"
+              total={referenciasDaColecao || undefined}
               eyebrow={showingBestSellers ? "Mais vendidas" : "Peças da coleção"}
               title={showingBestSellers ? "As mais pedidas pelos lojistas" : "As mais vendidas"}
               description={
