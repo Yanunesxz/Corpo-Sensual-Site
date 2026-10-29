@@ -4,6 +4,7 @@ import Link from "next/link";
 import { BlocoCadastro } from "@/components/bloco-cadastro";
 import { Condicoes } from "@/components/condicoes";
 import { Faq } from "@/components/faq";
+import { SeoPagina } from "@/components/seo-pagina";
 import { Passos } from "@/components/passos";
 import { ProducaoSection } from "@/components/producao-section";
 import { ProductGrid } from "@/components/product-grid";
@@ -19,10 +20,13 @@ import { pecasDaVitrine } from "@/lib/vitrine";
 // A vitrine usa as mais vendidas do catálogo: renova a cada hora, como a home.
 export const revalidate = 3600;
 
+const TITULO = "Fábrica de pijamas no atacado para lojistas";
+const DESCRICAO =
+  "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Atacado para lojas de todo o Brasil, com Pix, boleto ou cartão e frete grátis sob consulta.";
+
 export const metadata: Metadata = {
-  title: "Fábrica de pijamas no atacado para lojistas",
-  description:
-    "Fornecedor de pijamas e camisolas para lojas, direto da fábrica em Muriaé, MG. Atacado para lojas de todo o Brasil, com Pix, boleto ou cartão e frete grátis sob consulta.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/fabrica-de-pijamas" },
 };
 
@@ -71,6 +75,7 @@ export default async function FabricaPage() {
 
   return (
     <>
+      <SeoPagina caminho="/fabrica-de-pijamas" titulo={TITULO} descricao={DESCRICAO} faq={faqLojista} />
       <div className="lg:grid lg:grid-cols-12">
         {/* A. Capa: foto da campanha com o H1 por cima. É o LCP. */}
         <section

@@ -168,3 +168,24 @@ O perfil já existe, com 33 avaliações. **Não crie outro**, porque seria dupl
 - **Telefone e horário**: qual número da empresa atende ligação e qual é o horário real. Sem isso, o site não mostra telefone nem horário.
 - **Instagram**: o site usa `@pijamascorposensual`. Se `@corposensual` também for da empresa, aponte a bio dele para o perfil principal. Coloque `https://www.corposensual.com.br` no link da bio depois da troca de domínio.
 - **Domínio antigo** `pijamascorposensual.com.br`: está no nome de uma pessoa física e vence em 11/04/2027. Se for da empresa, renove e adicione `pijamascorposensual.com.br`, `www.` e `loja.` na Vercel. O redirecionamento para o site novo já está no código. O site "10 melhores fábricas de pijamas de Muriaé" (sacoleiradesucesso.com.br) ainda aponta para a loja antiga: vale pedir a troca do link.
+
+---
+
+## 7. SEO e GEO: o que o site já faz sozinho
+
+GEO é a otimização para os assistentes de IA (ChatGPT, Claude, Gemini, Perplexity, Copilot): quando um lojista pergunta "fábrica de pijamas no atacado em Minas", a resposta vem do que eles leram no site. Tudo abaixo sai do código e se refaz a cada deploy.
+
+- **`/llms.txt` e `/llms-full.txt`**: o site em texto, no padrão que os assistentes leem (llmstxt.org): o que a fábrica é, as linhas, as coleções, como comprar, pagamento, frete, prazo, troca, representantes, consumidor final, atendimento, as páginas e as políticas. A versão completa traz as perguntas e respostas e as políticas por extenso. Lê de `src/lib/site.ts`, `faq.tsx`, `politicas.ts` e `paginas.ts`: mudou o texto do site, mudou ali.
+- **`robots.txt`**: libera por nome os robôs de IA (GPTBot, ClaudeBot, PerplexityBot, Google-Extended, Applebot, Meta etc.), além do `*`.
+- **Dados estruturados (schema.org, JSON-LD)** em todas as páginas: `Organization` (razão social, CNPJ, endereço, mapa, Instagram, SAC e financeiro, as seis linhas) e `WebSite` pelo layout; `WebPage`/`AboutPage`/`ContactPage`/`CollectionPage` com trilha de navegação, data de atualização e imagem em cada página; `FAQPage` em /fabrica-de-pijamas, /catalogo e /seja-representante; `ItemList` em /colecoes e nas páginas de coleção. Fonte: `src/lib/schema.ts` e o componente `SeoPagina`.
+- **Metadados**: título e descrição próprios em cada página, canonical, Open Graph com imagem de 1200x630, cartão grande no X/Twitter, `max-image-preview:large` e snippet sem limite para o Google.
+- **Sitemap** com data de atualização, frequência, prioridade e a imagem principal de cada página (`src/lib/content/paginas.ts`). Quem muda o conteúdo de uma página troca a data lá.
+
+### O que depende do dono
+
+1. **Search Console**: depois de cada mudança grande, Inspeção de URL > Solicitar indexação na página mudada. Conferir em Melhorias se os dados estruturados aparecem sem erro (FAQ, Breadcrumb).
+2. **Bing Webmaster Tools** (https://www.bing.com/webmasters): importe a propriedade do Search Console com um clique. O Copilot e o ChatGPT (busca) usam o índice do Bing; sem isso, metade dos assistentes não vê o site.
+3. **Perfil da Empresa no Google**: site, telefone, horário e categoria iguais aos do site (item 5). É o que confirma, para o Google e para as IAs, que a fábrica existe e fica em Muriaé.
+4. **Instagram**: bio com o link do site. Os assistentes cruzam o perfil com o `sameAs` do site.
+5. **Menções fora do site** (listas de "fábricas de pijamas de Muriaé", diretórios do polo, Sindvest, associações): peça que o link aponte para `https://www.corposensual.com.br`. Para as IAs, citação de terceiros pesa mais que qualquer tag.
+6. **Telefone e horário**: sem `NEXT_PUBLIC_TELEFONE` e `NEXT_PUBLIC_HORARIO` na Vercel, o site e os dados estruturados saem sem telefone e sem horário.

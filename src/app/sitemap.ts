@@ -1,39 +1,37 @@
 import type { MetadataRoute } from "next";
-import { urlOficial } from "@/lib/site";
+import { urlImagem, urlOficial } from "@/lib/site";
 import { getCollections } from "@/lib/data";
 import { politicas } from "@/lib/content/politicas";
+import { COLECOES_ATUALIZADAS, PAGINAS } from "@/lib/content/paginas";
 
 /**
- * lastmod = data da última mudança de CONTEÚDO da página (AAAA-MM-DD): texto, fotos,
- * produtos, perguntas do FAQ, campos do formulário. Layout, cor e desempenho não contam.
- * Quem mudar o conteúdo de uma página troca a data dela aqui, no mesmo commit.
- * Não use new Date(): o Google aprende a ignorar data que muda a cada build.
- * /obrigado fica de fora (é noindex).
+ * As páginas fixas e as datas vêm de src/lib/content/paginas.ts (quem muda o conteúdo
+ * de uma página troca a data lá). /obrigado e as landing pages de coleção ficam de fora
+ * (são noindex). As imagens entram no sitemap para o Google Imagens ligar cada foto à
+ * página certa.
  */
-const paginas = [
-  { path: "/", atualizada: "2026-10-09" },
-  { path: "/sobre", atualizada: "2026-10-14" },
-  { path: "/colecoes", atualizada: "2026-10-09" },
-  { path: "/catalogo", atualizada: "2026-10-09" },
-  { path: "/fabrica-de-pijamas", atualizada: "2026-10-09" },
-  { path: "/contato", atualizada: "2026-10-09" },
-  { path: "/ajuda", atualizada: "2026-10-09" },
-  { path: "/seja-representante", atualizada: "2026-10-09" },
-  { path: "/onde-comprar", atualizada: "2026-10-09" },
-];
-
-/**
- * Última mudança de conteúdo das páginas /colecoes/[slug] (página, src/data/catalogo.json
- * ou fotos). Quando o catálogo vier do Supabase, use uma data que considere também os
- * produtos da coleção.
- */
-const COLECOES_ATUALIZADAS = "2026-10-09";
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const collections = await getCollections();
   return [
-    ...paginas.map((p) => ({ url: urlOficial(p.path), lastModified: p.atualizada })),
-    ...collections.map((c) => ({ url: urlOficial(`/colecoes/${c.slug}`), lastModified: COLECOES_ATUALIZADAS })),
-    ...politicas.map((p) => ({ url: urlOficial(`/politicas/${p.slug}`), lastModified: p.updatedAt })),
+    ...Object.entries(PAGINAS).map(([caminho, p]) => ({
+      url: urlOficial(caminho),
+      lastModified: p.atualizada,
+      changeFrequency: p.frequencia,
+      priority: p.prioridade,
+      ...(p.imagem ? { images: [urlImagem(p.imagem)] } : {}),
+    })),
+    ...collections.map((c) => ({
+      url: urlOficial(`/colecoes/${c.slug}`),
+      lastModified: COLECOES_ATUALIZADAS,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      ...(c.hero_image_url ? { images: [urlImagem(c.hero_image_url)] } : {}),
+    })),
+    ...politicas.map((p) => ({
+      url: urlOficial(`/politicas/${p.slug}`),
+      lastModified: p.updatedAt,
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    })),
   ];
 }

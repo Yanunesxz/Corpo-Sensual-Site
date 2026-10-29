@@ -64,6 +64,22 @@ export const faqLojista: FaqItem[] = [
   },
 ];
 
+/** As dúvidas que travam o cadastro de representante. Respostas sem promessa: o resto é com o gestor comercial. */
+export const faqRepresentante: FaqItem[] = [
+  {
+    q: "Como é a comissão?",
+    a: "A comissão e as condições de representação são apresentadas pelo nosso gestor comercial, na conversa depois do cadastro.",
+  },
+  {
+    q: "A minha região está disponível?",
+    a: "O gestor comercial confere a cobertura que a fábrica já tem no seu estado e combina a região de atuação com você.",
+  },
+  {
+    q: "Preciso ter CNPJ para representar?",
+    a: "Não para fazer o cadastro. Se ainda não tiver CNPJ, conte na conversa com o gestor comercial: ele avalia cada caso.",
+  },
+];
+
 /**
  * As três dúvidas que mais seguram o cadastro (CNPJ, pagamento, frete), para /catalogo.
  * Pedido mínimo não entra: o site não fala disso, nem que tem nem que não tem.

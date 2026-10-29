@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { getCategories, getCollections, getProducts } from "@/lib/data";
-import { TOTAL_REFERENCIAS } from "@/lib/site";
+import { site, TOTAL_REFERENCIAS } from "@/lib/site";
 import { pecasDaVitrine } from "@/lib/vitrine";
 import { Condicoes } from "@/components/condicoes";
 import { ProductGrid } from "@/components/product-grid";
+import { SeoPagina } from "@/components/seo-pagina";
 import { SectionHeading } from "@/components/section-heading";
 import { ColecoesVitrine } from "@/components/colecoes-vitrine";
 import { Linhas } from "@/components/linhas";
@@ -15,7 +16,16 @@ import { FechoHome } from "@/components/home/fecho";
 export const revalidate = 3600;
 
 // Título e description vêm do layout (title.default).
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+/** Título e descrição da home: os mesmos no <title>, no Open Graph e nos dados estruturados. */
+const TITULO = `${site.name}: fábrica de pijamas no atacado em Muriaé, MG`;
+const DESCRICAO =
+  "Fábrica própria de pijamas, camisolas, robes, short dolls e moda íntima há mais de 25 anos, nas linhas infantil, juvenil, feminina, masculina, senhora e gestante. Atacado para lojas de todo o Brasil, direto da fábrica.";
+
+export const metadata: Metadata = {
+  title: { absolute: TITULO },
+  description: DESCRICAO,
+  alternates: { canonical: "/" },
+};
 
 /**
  * Home: o lookbook de atacado em seis blocos, um único próximo passo (receber o
@@ -31,6 +41,8 @@ export default async function HomePage() {
 
   return (
     <>
+      <SeoPagina caminho="/" titulo={TITULO} descricao={DESCRICAO} />
+
       {/* 1. Capa: proposta, botão e a foto da linha família (LCP). Gatilho da barra fixa. */}
       <CapaHome atual={atual} />
 

@@ -5,13 +5,18 @@ import { TOTAL_REFERENCIAS } from "@/lib/site";
 import { ColecoesVitrine } from "@/components/colecoes-vitrine";
 import { Condicoes } from "@/components/condicoes";
 import { Linhas } from "@/components/linhas";
+import { SeoPagina } from "@/components/seo-pagina";
+import { listaDeColecoesJsonLd } from "@/lib/schema";
 import { ArrowRight } from "@/components/icons";
 
 export const revalidate = 3600;
 
+const TITULO = "Coleções de pijamas de verão e inverno";
+const DESCRICAO = "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual. Catálogos de verão e inverno, venda no atacado para lojistas.";
+
 export const metadata: Metadata = {
-  title: "Coleções de pijamas de verão e inverno",
-  description: "Conheça as coleções de pijamas, camisolas, robes e moda íntima da Corpo Sensual. Catálogos de verão e inverno, venda no atacado para lojistas.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/colecoes" },
 };
 
@@ -39,6 +44,8 @@ export default async function ColecoesPage() {
 
   return (
     <>
+      <SeoPagina caminho="/colecoes" tipo="CollectionPage" titulo={TITULO} descricao={DESCRICAO} lista={listaDeColecoesJsonLd(collections)} />
+
       {/* Capa: título à esquerda, apoio e chamada à direita no desktop. É o gatilho da barra fixa. */}
       <section className="bg-sky" data-barra-depois>
         {/* Capa baixa: quem chega quer ver roupa. No celular o primeiro cartão de coleção já

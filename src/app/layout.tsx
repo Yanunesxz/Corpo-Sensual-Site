@@ -48,6 +48,31 @@ export const metadata: Metadata = {
     template: `%s | ${site.name}`,
   },
   description: site.description,
+  applicationName: site.name,
+  // Google ignora keywords; os assistentes de IA e outros buscadores leem.
+  keywords: [
+    "fábrica de pijamas",
+    "pijamas no atacado",
+    "fornecedor de pijamas para lojistas",
+    "atacado de pijamas Muriaé",
+    "camisolas e robes no atacado",
+    "moda íntima atacado",
+    "pijama infantil atacado",
+    "pijama masculino atacado",
+    "Corpo Sensual pijamas",
+  ],
+  category: "Pijamas e moda íntima no atacado",
+  authors: [{ name: site.name, url: SITE_ORIGIN }],
+  creator: site.name,
+  publisher: site.legal.razaoSocial,
+  // Snippet, imagem e vídeo sem limite no resultado do Google (o padrão deixa a imagem pequena).
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  // O cartão grande no X/Twitter, com a mesma imagem do Open Graph.
+  twitter: { card: "summary_large_image" },
   openGraph: {
     type: "website",
     locale: "pt_BR",

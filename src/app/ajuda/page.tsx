@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, WhatsApp } from "@/components/icons";
+import { SeoPagina } from "@/components/seo-pagina";
 import { celularParaExibir, equipe, linkWhatsApp, site } from "@/lib/site";
 
+const TITULO = "Ajuda: SAC e financeiro pelo WhatsApp";
+const DESCRICAO = "Atendimento da Corpo Sensual pelo WhatsApp: SAC para pedido, entrega e troca, e financeiro para boleto, pagamento e nota fiscal.";
+
 export const metadata: Metadata = {
-  title: "Ajuda: SAC e financeiro pelo WhatsApp",
-  description:
-    "Atendimento da Corpo Sensual pelo WhatsApp: SAC para pedido, entrega e troca, e financeiro para boleto, pagamento e nota fiscal.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/ajuda" },
 };
 
@@ -65,6 +68,8 @@ export default function AjudaPage() {
 
   return (
     <>
+      <SeoPagina caminho="/ajuda" tipo="ContactPage" titulo={TITULO} descricao={DESCRICAO} />
+
       {/* 1. Capa + atendimento: o assunto e o botão do WhatsApp já na primeira tela. */}
       <section className="bg-sky">
         <div className="wrap pb-16 pt-10 md:pb-20 md:pt-16 lg:pb-24 lg:pt-20">
