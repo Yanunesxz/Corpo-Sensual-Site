@@ -5,12 +5,16 @@ import { BlocoCadastro } from "@/components/bloco-cadastro";
 import { ContactBlock } from "@/components/contact-block";
 import { ArrowRight } from "@/components/icons";
 import { SectionHeading } from "@/components/section-heading";
+import { SeoPagina } from "@/components/seo-pagina";
 import { site } from "@/lib/site";
 import { altFoto } from "@/lib/content/alt-fotos";
 
+const TITULO = "Contato e endereço da fábrica em Muriaé, MG";
+const DESCRICAO = "Fale com a Corpo Sensual: endereço da fábrica em Muriaé, MG, canais de atendimento e formulário de contato para lojistas, consumidores e representantes.";
+
 export const metadata: Metadata = {
-  title: "Contato e endereço da fábrica em Muriaé, MG",
-  description: `Fale com a Corpo Sensual: endereço da fábrica em Muriaé, MG, canais de atendimento e formulário de contato para lojistas, consumidores e representantes.`,
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/contato" },
 };
 
@@ -30,6 +34,8 @@ export default function ContatoPage() {
 
   return (
     <>
+      <SeoPagina caminho="/contato" tipo="ContactPage" titulo={TITULO} descricao={DESCRICAO} />
+
       {/* 1. Capa: título e os quatro assuntos. O cartão inteiro é o link. */}
       <section className="bg-sky">
         <div className="wrap pb-14 pt-10 md:pb-20 md:pt-14 lg:pb-24 lg:pt-20">

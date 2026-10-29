@@ -5,9 +5,9 @@ import { getCategories, getCollectionBySlug, getCollections, getProducts } from 
 import { collectionShortName, REFERENCIAS_POR_COLECAO, seasonLabel, site, TOTAL_REFERENCIAS, urlImagem } from "@/lib/site";
 import { altCapa } from "@/lib/content/alt-fotos";
 import { capaVertical } from "@/lib/content/capas";
-import { trilhaJsonLd } from "@/lib/schema";
+import { listaJsonLd } from "@/lib/schema";
 import { pecasDaVitrine } from "@/lib/vitrine";
-import { JsonLd } from "@/components/json-ld";
+import { SeoPagina } from "@/components/seo-pagina";
 import { HeroImage } from "@/components/hero-image";
 import { Condicoes } from "@/components/condicoes";
 import { ProductGrid } from "@/components/product-grid";
@@ -121,11 +121,28 @@ export default async function ColecaoPage({ params }: Props) {
   const referenciasDaColecao = !showingBestSellers && Object.hasOwn(REFERENCIAS_POR_COLECAO, collection.slug) ? REFERENCIAS_POR_COLECAO[collection.slug] : null;
   const foco = Object.hasOwn(FOCO_CAPA, collection.slug) ? FOCO_CAPA[collection.slug] : { tela: "center 35%", celular: "center 25%" };
   const metade = foco.metade === true;
+  // Dados estruturados: o mesmo título e descrição do metadata e as peças que a página mostra.
+  const seo = Object.hasOwn(SEO_COLECAO, collection.slug) ? SEO_COLECAO[collection.slug] : null;
+  const pecas = pecasDaVitrine(products).slice(0, 8);
 
   return (
     // Efeito do site atual: a foto de campanha fica presa e o conteúdo sobe por cima dela.
     <div className="relative">
-      <JsonLd data={trilhaJsonLd([["Coleções", "/colecoes"], [collectionShortName(collection.name), `/colecoes/${collection.slug}`]])} />
+      <SeoPagina
+        caminho={`/colecoes/${collection.slug}`}
+        tipo="CollectionPage"
+        titulo={seo?.title ?? `${nome}: pijamas no atacado`}
+        descricao={seo?.description ?? collection.description ?? collection.headline ?? site.description}
+        imagem={seo?.og ?? collection.hero_image_url}
+        trilha={[
+          ["Coleções", "/colecoes"],
+          [nome, `/colecoes/${collection.slug}`],
+        ]}
+        lista={listaJsonLd(
+          `Peças em destaque da coleção ${nome}`,
+          pecas.map((p) => ({ nome: p.name, imagem: p.images[0]?.url ?? null, descricao: p.description ?? undefined })),
+        )}
+      />
 
       {/* 1. Capa presa. A altura fica sempre dentro da tela: um bloco preso mais alto
           que a janela esconderia o botão. No tablet e no desktop desconta o cabeçalho

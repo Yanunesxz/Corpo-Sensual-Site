@@ -2,16 +2,20 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { BlocoCadastro } from "@/components/bloco-cadastro";
 import { Faq } from "@/components/faq";
+import { SeoPagina } from "@/components/seo-pagina";
 import { Passos } from "@/components/passos";
 import { SectionHeading } from "@/components/section-heading";
 import { altFoto } from "@/lib/content/alt-fotos";
 import { faqCurto } from "@/lib/content/faq";
 import { equipe, seasonLabel, site, TOTAL_REFERENCIAS } from "@/lib/site";
 
+const TITULO = "Receba o catálogo de pijamas no atacado";
+const DESCRICAO =
+  "Cadastre sua loja e receba o catálogo digital da Corpo Sensual com a nova coleção de pijamas, camisolas e moda íntima e a tabela de preços de atacado.";
+
 export const metadata: Metadata = {
-  title: "Receba o catálogo de pijamas no atacado",
-  description:
-    "Cadastre sua loja e receba o catálogo digital da Corpo Sensual com a nova coleção de pijamas, camisolas e moda íntima e a tabela de preços de atacado.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/catalogo" },
 };
 
@@ -46,6 +50,8 @@ const DEPOIS = [
 export default function CatalogoPage() {
   return (
     <>
+      <SeoPagina caminho="/catalogo" titulo={TITULO} descricao={DESCRICAO} faq={faqCurto} />
+
       <section className="bg-sky">
         <div className="wrap grid gap-y-6 pb-14 pt-6 md:pb-20 md:pt-12 lg:grid-cols-12 lg:gap-x-10 lg:pb-24 lg:pt-5">
           {/* Sem priority: no celular a foto fica escondida e o carregamento preguiçoso não a baixa. */}

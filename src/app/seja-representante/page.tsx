@@ -2,19 +2,24 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { BlocoCadastro } from "@/components/bloco-cadastro";
-import { Faq, type FaqItem } from "@/components/faq";
+import { Faq } from "@/components/faq";
 import { Figura } from "@/components/figura";
 import { ArrowRight } from "@/components/icons";
 import { Passos } from "@/components/passos";
 import { ProducaoSection } from "@/components/producao-section";
 import { SectionHeading } from "@/components/section-heading";
+import { SeoPagina } from "@/components/seo-pagina";
 import { Trilho } from "@/components/trilho";
 import { altFoto } from "@/lib/content/alt-fotos";
+import { faqRepresentante } from "@/lib/content/faq";
+
+const TITULO = "Seja representante de pijamas e moda íntima";
+const DESCRICAO =
+  "Seja representante comercial da Corpo Sensual, fábrica de pijamas e moda íntima em Muriaé, MG. Cadastre a sua região e a equipe comercial entra em contato.";
 
 export const metadata: Metadata = {
-  title: "Seja representante de pijamas e moda íntima",
-  description:
-    "Seja representante comercial da Corpo Sensual, fábrica de pijamas e moda íntima em Muriaé, MG. Cadastre a sua região e a equipe comercial entra em contato.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/seja-representante" },
 };
 
@@ -97,26 +102,12 @@ const passos = [
   { titulo: "Região combinada", texto: "Com a região acertada, você apresenta as coleções aos lojistas." },
 ];
 
-/** As dúvidas que travam o cadastro. Respostas sem promessa: o resto é com o gestor comercial. */
-const perguntas: FaqItem[] = [
-  {
-    q: "Como é a comissão?",
-    a: "A comissão e as condições de representação são apresentadas pelo nosso gestor comercial, na conversa depois do cadastro.",
-  },
-  {
-    q: "A minha região está disponível?",
-    a: "O gestor comercial confere a cobertura que a fábrica já tem no seu estado e combina a região de atuação com você.",
-  },
-  {
-    q: "Preciso ter CNPJ para representar?",
-    a: "Não para fazer o cadastro. Se ainda não tiver CNPJ, conte na conversa com o gestor comercial: ele avalia cada caso.",
-  },
-];
-
 
 export default function RepresentantePage() {
   return (
     <>
+      <SeoPagina caminho="/seja-representante" titulo={TITULO} descricao={DESCRICAO} faq={faqRepresentante} />
+
       {/* 1. Capa dividida. No celular a foto vem antes, numa faixa (como na home): a
           primeira tela já mostra a marca, com o título e o botão logo abaixo. No desktop o
           texto alinha com a margem do .wrap mesmo em tela mais larga que 1440 px, e a foto
@@ -244,7 +235,7 @@ export default function RepresentantePage() {
           <Passos semNumeros itens={passos} className="mt-8 self-start lg:col-span-5 lg:row-start-2 lg:mt-12" />
           <h2 className="t-titulo mt-16 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:mt-0">Dúvidas de quem quer representar</h2>
           <div className="mt-8 self-start lg:col-span-6 lg:col-start-7 lg:row-start-2 lg:mt-12">
-            <Faq items={perguntas} />
+            <Faq items={faqRepresentante} />
           </div>
         </div>
       </section>

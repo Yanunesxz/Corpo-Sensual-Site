@@ -6,14 +6,18 @@ import { ArrowRight } from "@/components/icons";
 import { Linhas } from "@/components/linhas";
 import { ProducaoSection } from "@/components/producao-section";
 import { SectionHeading } from "@/components/section-heading";
+import { SeoPagina } from "@/components/seo-pagina";
 import { getCategories, getCollections } from "@/lib/data";
 import { site } from "@/lib/site";
 import { altFoto } from "@/lib/content/alt-fotos";
 
+const TITULO = "Sobre a fábrica de pijamas em Muriaé, MG";
+const DESCRICAO =
+  "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do corte ao pijama pronto, nas linhas infantil, juvenil, feminina, masculina, senhora e gestante.";
+
 export const metadata: Metadata = {
-  title: "Sobre a fábrica de pijamas em Muriaé, MG",
-  description:
-    "Fábrica de pijamas no atacado em Muriaé, MG, há mais de 25 anos. Produção verticalizada, do corte ao pijama pronto, nas linhas infantil, juvenil, feminina, masculina, senhora e gestante.",
+  title: TITULO,
+  description: DESCRICAO,
   alternates: { canonical: "/sobre" },
 };
 
@@ -54,6 +58,8 @@ export default async function SobrePage() {
 
   return (
     <>
+      <SeoPagina caminho="/sobre" tipo="AboutPage" titulo={TITULO} descricao={DESCRICAO} />
+
       {/* 1. Capa dividida: texto no azul da marca, foto da Entrelaços ao lado. No celular a
           foto vem antes, numa faixa (como na home): a primeira tela já mostra moda.
           É o gatilho da barra fixa: ela só aparece depois que a capa inteira sai da tela. */}

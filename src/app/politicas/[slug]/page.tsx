@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPolitica, politicas } from "@/lib/content/politicas";
+import { SeoPagina } from "@/components/seo-pagina";
 
 type Props = PageProps<"/politicas/[slug]">;
 
@@ -55,6 +56,15 @@ export default async function PoliticaPage({ params }: Props) {
 
   return (
     <>
+      <SeoPagina
+        caminho={`/politicas/${politica.slug}`}
+        titulo={politica.title}
+        descricao={politica.intro}
+        atualizada={politica.updatedAt}
+        imagem={null}
+        trilha={[[politica.shortTitle, `/politicas/${politica.slug}`]]}
+      />
+
       {/* Topo: título, data e as cinco políticas (a aberta marcada com aria-current). */}
       <section className="bg-sky">
         <div className="wrap pb-10 pt-10 md:pb-14 md:pt-14 lg:pb-16 lg:pt-20">
