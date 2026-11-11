@@ -1012,6 +1012,36 @@ body {
     }
   }
 
+  /* ---------- Cadastro passo a passo (components/lead-form.tsx) ----------
+     Cada pergunta entra deslizando de leve: da direita ao avançar, da esquerda ao voltar.
+     Nunca na primeira tela (o atributo só existe a partir da segunda). */
+  [data-passo] {
+    animation: passo-frente 0.32s var(--ease-saida) both;
+  }
+  [data-passo="tras"] {
+    animation-name: passo-tras;
+  }
+  @keyframes passo-frente {
+    from {
+      opacity: 0;
+      transform: translateX(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes passo-tras {
+    from {
+      opacity: 0;
+      transform: translateX(-16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* ---------- Peça que leva ao cadastro (components/product-card.tsx) ----------
      Só com mouse: a etiqueta "Receber o catálogo" aparece na base da foto no hover. */
   .peca-chamada {
@@ -1079,6 +1109,9 @@ body {
   [data-chamado] {
     animation: none;
     box-shadow: 0 0 0 2px var(--color-ink);
+  }
+  [data-passo] {
+    animation: none;
   }
   .peca-chamada,
   .botao-topo {

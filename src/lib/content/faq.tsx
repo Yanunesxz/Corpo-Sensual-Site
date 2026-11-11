@@ -13,7 +13,7 @@ const link = "text-ink underline underline-offset-4 hover:decoration-2";
 
 const cnpj: FaqItem = {
   q: "Preciso ter CNPJ para comprar?",
-  a: "Não. O CNPJ não é obrigatório. A venda é no atacado. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, marque “Ainda não”.",
+  a: "Não. O CNPJ não é obrigatório. A venda é no atacado. Se você ainda não tem CNPJ, faça o cadastro com o CPF: no formulário, toque em “Ainda não tenho CNPJ”.",
 };
 const pagamento: FaqItem = {
   q: "Quais são as formas de pagamento?",
