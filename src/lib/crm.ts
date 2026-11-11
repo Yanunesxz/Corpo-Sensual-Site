@@ -8,9 +8,13 @@ import type { LeadInsert, LeadSource } from "@/lib/types";
  * ambiente sem o prefixo NEXT_PUBLIC, e nunca chega ao navegador.
  *
  * O CRM procura o cliente por CNPJ, telefone e e-mail; cria o prospecto com a
- * responsável e abre o negócio no funil "Venda Direta — Leads". Reenviar o mesmo
- * lead não duplica nada lá. Contrato e regras: repositório Projeto-CS-SP,
- * central/integracao-site.md.
+ * responsável e abre o negócio no "Funil de Vendas". Reenviar o mesmo lead não
+ * duplica nada lá. Contrato e regras: repositório Projeto-CS-SP,
+ * central/integracao-site.md (a função mora na branch feat/lead-site de lá).
+ *
+ * Quem já é cliente da Corpo Sensual não vira lead (pedido do Yan, 11/11/2026):
+ * o cadastro pergunta ao CRM no passo do CNPJ/CPF (consultarClienteNoCrm) e o
+ * envio leva `travar_cliente`, que faz a mesma conferência do lado de lá.
  */
 
 /**
@@ -43,8 +47,13 @@ const PAGINAS: Record<LeadSource, string> = {
   varejo: "Varejo — onde comprar",
 };
 
+/** Cadastros que perguntam CNPJ/CPF: neles, quem já é cliente é travado. */
+const ORIGENS_COM_TRAVA = new Set<LeadSource>(["catalogo", "fabrica-de-pijamas", "colecao", "contato"]);
+
 export type ResultadoCrm =
   | { status: "enviado"; cliente: string | null; negocio: string | null; clienteNovo: boolean; negocioNovo: boolean }
+  /** O documento é de quem já é cliente: o CRM não gravou nada e a pessoa vai para /ja-e-cliente. */
+  | { status: "ja-cliente" }
   | { status: "pendente"; erro: string };
 
 export function isCrmConfigured(): boolean {
@@ -76,6 +85,7 @@ export async function enviarLeadParaCrm(lead: LeadInsert): Promise<ResultadoCrm>
     cidade: lead.city ?? "",
     uf: lead.state ?? "",
     mensagem: lead.message ?? "",
+    travar_cliente: ORIGENS_COM_TRAVA.has(lead.source) && Boolean(lead.document),
     utm: {
       source: lead.utm_source ?? "",
       medium: lead.utm_medium ?? "",
@@ -106,6 +116,7 @@ export async function enviarLeadParaCrm(lead: LeadInsert): Promise<ResultadoCrm>
       const erro = typeof json.erro === "string" ? json.erro : `HTTP ${r.status}`;
       return { status: "pendente", erro: erro.slice(0, 300) };
     }
+    if (json.jaCliente === true) return { status: "ja-cliente" };
     const cliente = (json.cliente ?? {}) as { codigo?: string | null; novo?: boolean };
     const negocio = (json.negocio ?? {}) as { codigo?: string | null; novo?: boolean };
     return {
@@ -120,5 +131,34 @@ export async function enviarLeadParaCrm(lead: LeadInsert): Promise<ResultadoCrm>
     return { status: "pendente", erro: motivo.slice(0, 300) };
   } finally {
     clearTimeout(timer);
+  }
+}
+
+/** A consulta é rápida (uma linha no CRM); passou disso, o cadastro segue sem ela. */
+const TEMPO_CONSULTA_MS = 5000;
+
+/**
+ * O CNPJ ou CPF (só os dígitos, já validados) é de quem já é cliente da Corpo
+ * Sensual? true/false, ou null quando não deu para saber (sem chave, CRM fora,
+ * tempo esgotado). Quem chama trata null como "não é": na dúvida, o cadastro
+ * segue e o lead nunca se perde. O CRM responde só sim ou não, nenhum dado.
+ */
+export async function consultarClienteNoCrm(documento: string): Promise<boolean | null> {
+  const chave = process.env.LEAD_SITE_CHAVE?.trim();
+  if (!chave) return null;
+  const url = process.env.LEAD_SITE_URL?.trim() || URL_PADRAO;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-chave": chave },
+      body: JSON.stringify({ acao: "consultar", marca: MARCA, documento }),
+      signal: AbortSignal.timeout(TEMPO_CONSULTA_MS),
+      cache: "no-store",
+    });
+    if (!r.ok) return null;
+    const json = (await r.json()) as { ok?: boolean; cliente?: unknown };
+    return json.ok === true && typeof json.cliente === "boolean" ? json.cliente : null;
+  } catch {
+    return null;
   }
 }

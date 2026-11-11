@@ -48,6 +48,7 @@ No fluxo da Web (**Administrador > Coleta e modificação de dados > Fluxos de d
 - `page_view`: uma visita por página. Filtrar a grade de peças (`?categoria=`) não conta como visita nova.
 - `generate_lead` com `lead_source` (catalogo, fabrica-de-pijamas, colecao, contato ou representante). Conta uma vez por cadastro enviado. Recarregar o /obrigado ou abrir um link antigo de obrigado do Wix não conta.
 - `form_inicio` com `lead_source`: a pessoa começou a preencher um formulário (o primeiro toque num campo), uma vez por formulário aberto. Vai só a origem, nada do que foi digitado.
+- `ja_cliente` com `lead_source`: o CNPJ/CPF digitado já está no CRM, o cadastro parou e a pessoa foi para /ja-e-cliente (não vira lead). Vai só a origem, nunca o documento.
 - `clique_whatsapp` com `destino` (vendedora, gerente, sac, financeiro, geral), `contato` (Nicoli, Simone, Fabian) e `local`.
 - `clique_catalogo` com `local`, em todo link que leva a `/catalogo`.
 - **Nunca**: nome, e-mail, WhatsApp, CNPJ, CPF, loja, cidade ou mensagem.

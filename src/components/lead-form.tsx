@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { submitLead, type LeadFormState } from "@/app/actions/leads";
 import { readTracking, UTM_KEYS } from "@/lib/utm";
@@ -56,6 +57,11 @@ type Props = {
  * e a UF; a pessoa confere ("Encontramos a sua loja") e o passo da loja é pulado. Sem
  * CNPJ ("Ainda não tenho CNPJ"), pede o CPF e depois a cidade. No último passo um resumo
  * mostra o que foi reunido, com "corrigir" em cada linha, e o botão de envio.
+ *
+ * Quem já é cliente para no passo do documento: com o CNPJ ou CPF completo, o site
+ * pergunta ao CRM (/api/ja-e-cliente) e, se for de um cliente da Corpo Sensual, o
+ * "Continuar" leva a /ja-e-cliente em vez do passo seguinte. Cliente não vira lead.
+ * Na dúvida (CRM fora, demora), o cadastro segue normalmente.
  *
  * Representante e varejo (consumidor que procura uma loja) têm o cadastro curto, como o
  * das landing pages: nome -> WhatsApp -> cidade e UF -> e-mail. Sem CNPJ nem mensagem:
@@ -152,6 +158,40 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     };
   }, [cnpjCompleto, digitosDoc, recusouEmpresa, respondido]);
 
+  // ---------- Já é cliente? ----------
+  // CNPJ ou CPF completo e válido: pergunta ao CRM, pela rota do site (que tem a chave),
+  // se é de um cliente da Corpo Sensual. A resposta fica guardada por documento, para o
+  // "Continuar" do passo só esperar o que já está a caminho. Erro ou demora = não é.
+  const router = useRouter();
+  const tipoDoc = ehLojista ? "cnpj" : "cpf";
+  const docCompleto = !curto && digitosDoc.length === (ehLojista ? 14 : 11) && documentoValido(digitosDoc, tipoDoc);
+  const conferencia = useRef<{ doc: string; resposta: Promise<boolean> } | null>(null);
+  const [conferindo, setConferindo] = useState(false);
+  const conferirCliente = useCallback((doc: string, tipo: "cnpj" | "cpf"): Promise<boolean> => {
+    if (conferencia.current?.doc === doc) return conferencia.current.resposta;
+    const controle = new AbortController();
+    const limite = window.setTimeout(() => controle.abort(), 6000);
+    const resposta = fetch("/api/ja-e-cliente", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ documento: doc, tipo }),
+      signal: controle.signal,
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { cliente?: boolean } | null) => d?.cliente === true)
+      .catch(() => false)
+      .finally(() => window.clearTimeout(limite));
+    conferencia.current = { doc, resposta };
+    return resposta;
+  }, []);
+
+  useEffect(() => {
+    if (!docCompleto) return;
+    // Um instante de espera, como na consulta do CNPJ: quem cola o número pergunta uma vez só.
+    const timer = window.setTimeout(() => void conferirCliente(digitosDoc, tipoDoc), 250);
+    return () => window.clearTimeout(timer);
+  }, [docCompleto, digitosDoc, tipoDoc, conferirCliente]);
+
   // ---------- Passos ----------
   const listaDePassos = useCallback(
     (lojaAutomatica: boolean): Passo[] => {
@@ -217,9 +257,23 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       focar(falhou);
       return;
     }
-    // CNPJ ainda sendo consultado: espera a resposta (no máximo o limite da rota) para
-    // saber se o passo da loja é preciso.
-    if (passo === "documento" && busca.current) await busca.current;
+    // Passo do documento: espera a conferência de cliente e, com CNPJ, a consulta dele
+    // (no máximo o limite de cada rota), que diz se o passo da loja é preciso.
+    if (passo === "documento") {
+      if (docCompleto) {
+        setConferindo(true);
+        const [jaCliente] = await Promise.all([conferirCliente(digitosDoc, tipoDoc), busca.current]);
+        if (jaCliente) {
+          // Já é cliente: o cadastro para aqui e nada vai para o CRM. Só a origem vai ao GA.
+          enviarEvento("ja_cliente", { lead_source: source });
+          router.push("/ja-e-cliente");
+          return;
+        }
+        setConferindo(false);
+      } else if (busca.current) {
+        await busca.current;
+      }
+    }
     if (retorno.current) {
       const destino = retorno.current;
       retorno.current = null;
@@ -424,7 +478,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       onSubmit={(e) => {
         if (!ultimo) {
           e.preventDefault();
-          void avancar();
+          // Conferindo o cadastro: um segundo toque não pergunta de novo.
+          if (!conferindo) void avancar();
           return;
         }
         if (pending) e.preventDefault();
@@ -749,9 +804,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             {!pending && <ArrowRight width={18} height={18} className="seta hidden @[23.5rem]:block" />}
           </button>
         ) : (
-          <button type="submit" className="btn btn-primary btn-lg w-full @[24rem]:w-auto @[24rem]:min-w-[11rem]">
-            Continuar
-            <ArrowRight width={18} height={18} className="seta" />
+          <button type="submit" className="btn btn-primary btn-lg w-full @[24rem]:w-auto @[24rem]:min-w-[11rem]" aria-disabled={conferindo || undefined}>
+            {conferindo ? "Conferindo..." : "Continuar"}
+            {!conferindo && <ArrowRight width={18} height={18} className="seta" />}
           </button>
         )}
         {indice > 0 && (
