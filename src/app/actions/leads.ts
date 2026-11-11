@@ -101,7 +101,9 @@ function echo(formData: FormData): LeadFormState["values"] {
  *
  * Ordem: primeiro o CRM (cria o prospecto e o negócio no funil de leads), depois
  * a gravação aqui com o resultado. Se o CRM não responder, o lead é gravado
- * como `pendente` e pode ser reenviado depois — nunca se perde.
+ * como `pendente` e pode ser reenviado depois — nunca se perde. Se o CRM disser
+ * que o documento já é de um cliente, nada é gravado e a pessoa vai para
+ * /ja-e-cliente.
  */
 export async function submitLead(_prev: LeadFormState, formData: FormData): Promise<LeadFormState> {
   // Honeypot: bots preenchem o campo escondido. Fingimos sucesso e descartamos.
@@ -144,6 +146,10 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
 
   // CRM (CSP 360): é o destino principal do lead. Falha vira `pendente` na cópia local.
   const crm = await enviarLeadParaCrm(row);
+  // Já é cliente da Corpo Sensual (o CRM conferiu o CNPJ/CPF): não vira lead, nada foi
+  // gravado lá e não há o que reenviar. Normalmente o cadastro já parou no passo do
+  // documento; isto cobre quem chegou ao envio sem essa conferência.
+  if (crm.status === "ja-cliente") redirect("/ja-e-cliente");
   if (crm.status === "pendente") console.warn("[leads] CRM pendente:", crm.erro);
 
   // Cópia local em `leads` (auditoria e fila de reenvio). Sem Supabase do site

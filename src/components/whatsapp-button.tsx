@@ -15,14 +15,14 @@ import { WhatsApp } from "./icons";
  * globals.css), e some no celular enquanto a pessoa digita, para não cobrir o campo.
  * Abaixo de 1024 px, nas páginas com barra fixa ele nem aparece (.wa-com-barra): ali o
  * WhatsApp mora na barra, e o flutuante caía em cima do botão ou do título da capa.
- * Com o aviso de cookies aberto, também espera. Em /ajuda e /obrigado não existe: as
- * duas páginas já são feitas de botões de WhatsApp, cada um para quem resolve.
+ * Com o aviso de cookies aberto, também espera. Em /ajuda, /obrigado e /ja-e-cliente não
+ * existe: as três páginas já são feitas de botões de WhatsApp, cada um para quem resolve.
  * Tudo por atributo do DOM: nenhum estado do React.
  */
 export function WhatsAppButton() {
   const ref = useRef<HTMLAnchorElement>(null);
   const pathname = useRota();
-  const semFlutuante = pathname === "/ajuda" || pathname === "/obrigado";
+  const semFlutuante = pathname === "/ajuda" || pathname === "/obrigado" || pathname === "/ja-e-cliente";
   const ativo = Boolean(site.contact.whatsappUrl) && !semFlutuante;
   // Página com barra fixa: abaixo de 1024 px o WhatsApp mora na barra.
   const comBarra = acaoDa(pathname) !== null;

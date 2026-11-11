@@ -91,6 +91,8 @@ export async function enviarLeadLanding(_prev: EstadoLanding, formData: FormData
   };
 
   const crm = await enviarLeadParaCrm(row);
+  // A landing não pede CNPJ/CPF, então o CRM não tem como travar cliente aqui. Fica por tipo.
+  if (crm.status === "ja-cliente") redirect("/ja-e-cliente");
   if (crm.status === "pendente") console.warn("[leads-landing] CRM pendente:", crm.erro);
 
   const supabase = getSupabase();
