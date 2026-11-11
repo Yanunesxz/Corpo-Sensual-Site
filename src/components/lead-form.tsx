@@ -9,7 +9,7 @@ import { aplicarMascara, EMAIL_SIMPLES, formatarWhatsApp } from "@/lib/mascaras"
 import { guardarLeadLocal } from "@/lib/lead-local";
 import { enviarEvento, marcarLeadEnviado } from "@/lib/analytics";
 import type { LeadSource } from "@/lib/types";
-import { equipe, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import type { Empresa } from "@/lib/cnpj";
 import { ArrowRight, Check, ChevronLeft, Lock } from "./icons";
 
@@ -40,8 +40,6 @@ const ORDEM_DOS_CAMPOS: Campo[] = ["name", "whatsapp", "has_cnpj", "document", "
 
 /** As 27 UFs, para o seletor do passo da loja (a mesma lista do servidor). */
 const UFS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
-
-const [nicoli, simone] = equipe.vendedoras;
 
 type Props = {
   source: LeadSource;
@@ -345,7 +343,6 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   // ---------- Textos de cada passo ----------
   const primeiroNome = v.name.trim().split(/\s+/)[0] ?? "";
   const nomeBonito = primeiroNome ? primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1) : "";
-  const vendedoras = `${nicoli.nome} ou a ${simone.nome}`;
   const ondeComprar = (
     <Link href="/onde-comprar" className="text-ink underline underline-offset-2">
       veja onde comprar
@@ -357,7 +354,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     whatsapp: {
       titulo: nomeBonito ? `Prazer, ${nomeBonito}. Qual é o seu WhatsApp?` : "Qual é o seu WhatsApp?",
       ajuda: ehCompra
-        ? `É por ele que a ${vendedoras} enviam o catálogo e a tabela de preços.`
+        ? "É por ele que as vendedoras enviam o catálogo e a tabela de preços."
         : ehRepresentante
           ? "É por ele que o nosso gestor comercial fala com você."
           : ehVarejo
