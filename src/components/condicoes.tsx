@@ -4,9 +4,9 @@ import { Check } from "./icons";
 
 const { commercial } = site;
 
-/* CNPJ: o próprio formulário resolve ("Ainda não" + CPF). Antes havia um "Fale com a gente"
+/* CNPJ: o próprio formulário resolve ("Ainda não tenho CNPJ" + CPF). Antes havia um "Fale com a gente"
    que mandava a lojista sem CNPJ para o formulário de contato, fora da landing. */
-const cnpj = "No cadastro, marque “Ainda não” e informe o CPF.";
+const cnpj = "No cadastro, toque em “Ainda não tenho CNPJ” e informe o CPF.";
 
 /** Faixa logo abaixo da capa: as quatro perguntas da lojista, na ordem em que ela pergunta. */
 const FAIXA: { rotulo: string; valor: string; detalhe?: string }[] = [

@@ -124,7 +124,7 @@ Animações do Tailwind: `animate-subir` (folha) e `animate-aparecer` (fundo).
 | `ProductCard`, `ProductGrid` | peça (a foto leva ao cadastro, com a etiqueta "Receber o catálogo" no hover); vitrine em trilho com cartão "210" ou grade 2/3/4/5 |
 | `Trilho` | carrossel com scroll-snap; setas a partir de 768 px (avançam uma página); cartões inteiros e fio de progresso a partir de 1024 px |
 | `ProducaoSection`, `NumerosFabrica` | "Da costura à caixa lacrada" e os números da fábrica |
-| `LeadForm`, `BlocoCadastro` | formulário de cadastro (máscara no WhatsApp e no CNPJ/CPF, aviso na saída do campo) e o cartão em volta |
+| `LeadForm`, `BlocoCadastro` | cadastro passo a passo (uma pergunta por tela, CNPJ preenche loja e cidade, resumo antes do envio) e o cartão em volta |
 | `Faq` | perguntas com `<details>` |
 | `Figura` | foto editorial com legenda |
 | `Linhas` | "Compre por linha": três fotos lado a lado em todas as larguras |
@@ -161,6 +161,27 @@ A reclamação que originou este polimento foi "as fotos estão mal recortadas".
   /colecoes cabem inteiros numa janela de 830 px de altura.
 - Capa da home no desktop: a família de corpo inteiro (`colecoes/delicias-1.jpg`,
   ancorada embaixo). Quem vende pijama mostra o conjunto dos pés à cabeça.
+
+### Cadastro passo a passo
+
+O `LeadForm` faz uma pergunta por tela, como num atendimento: nome → WhatsApp → CNPJ →
+(loja e cidade) → e-mail → (mensagem). Representante e varejo têm o cadastro curto:
+nome → WhatsApp → cidade e UF → e-mail, sem CNPJ nem mensagem. No alto, um traço por passo (tinta até o passo
+atual, `line` no resto) e "2 de 5" em `.legenda`; a pergunta em `.t-sub`, a ajuda em
+15 px `body`, um `.field` e o botão `Continuar` (`.btn-primary .btn-lg`, largura toda no
+celular, à direita a partir de 24rem de cartão) com "Voltar" discreto em `muted`. Cada
+passo entra deslizando 16 px (`[data-passo]`, da direita ao avançar e da esquerda ao
+voltar; nunca na primeira tela; nada com `prefers-reduced-motion`).
+
+Ao completar um CNPJ válido, o site consulta `/api/cnpj/<cnpj>` (BrasilAPI, reserva
+minhareceita, cidade com acento pelo IBGE) e mostra um bloco `areia` "Encontramos a sua
+loja" com nome fantasia, razão social e cidade/UF; o passo da loja é pulado. "Não é essa
+loja" e "Ainda não tenho CNPJ" (que troca para CPF) são `.link` de 14 px. O último passo
+traz o resumo "Confira os seus dados" (14 px, uma linha por dado, "corrigir" em cada uma,
+que vai ao passo e volta ao resumo), o botão de envio na largura toda, o cadeado da
+privacidade e o "Prefere falar direto?". O cartão fica com uns 300 px de altura em vez
+dos 700 do formulário antigo: o primeiro campo e o botão cabem na primeira tela de
+qualquer celular.
 
 ### Formulário na primeira tela (desktop)
 

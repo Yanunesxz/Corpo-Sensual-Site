@@ -80,7 +80,7 @@ export default function CatalogoPage() {
             {/* Um nó de texto só: quando a Inter chega, as linhas quebram em outro lugar. Com
                 vários nós ("210", a nota do CNPJ), o começo de cada um muda de lugar e o Chrome
                 conta como deslocamento de layout (CLS). Com um nó, o começo fica parado. */}
-            {/* Só até 1023 px. No desktop o que ele diz já está no cartão ("Ainda não" tem CNPJ),
+            {/* Só até 1023 px. No desktop o que ele diz já está no cartão ("Ainda não tenho CNPJ"),
                 na lista abaixo do botão e em "O que acontece agora". */}
             <p className="lead mt-4 max-w-xl lg:hidden">{LEAD}</p>
 

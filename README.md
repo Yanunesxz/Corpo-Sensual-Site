@@ -46,6 +46,15 @@ As URLs do site antigo (`/catalogo-verao`, `/fabrica-pijamas`, `/privacy-policy`
 
 ### Formulários e leads
 
+O cadastro é passo a passo (`src/components/lead-form.tsx`): uma pergunta por tela, na
+ordem nome → WhatsApp → CNPJ → loja e cidade → e-mail (→ mensagem, no contato).
+Representante e varejo têm o cadastro curto: nome → WhatsApp → cidade e UF → e-mail,
+sem CNPJ nem mensagem. Quando a pessoa completa um CNPJ válido, o site consulta a rota
+`/api/cnpj/[cnpj]` (`src/lib/cnpj.ts`: BrasilAPI, com a minhareceita de reserva e o nome
+da cidade pelo IBGE) e preenche o nome da loja, a cidade e a UF sozinho; quem não tem
+CNPJ informa o CPF e a cidade. Tudo vive num único `<form>`, então o envio é a mesma
+server action de sempre.
+
 Todos os formulários gravam na tabela `leads` do Supabase, com:
 
 - nome, e-mail, WhatsApp, se possui CNPJ, loja, cidade/UF e mensagem;

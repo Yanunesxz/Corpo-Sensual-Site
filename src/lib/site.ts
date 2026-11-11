@@ -102,7 +102,7 @@ export const site = {
   commercial: {
     /** Regra da fábrica: como vendemos. Não é um portão de CNPJ. */
     salesNote: "Venda no atacado para lojistas.",
-    /** Para quem ainda não tem CNPJ: o formulário já resolve ("Ainda não" + CPF). Antes era
+    /** Para quem ainda não tem CNPJ: o formulário já resolve ("Ainda não tenho CNPJ" + CPF). Antes era
         "Ainda não tem CNPJ? Fale com a gente.", um convite sem link no meio da página. */
     noCnpjNote: "CNPJ não é obrigatório.",
     /** Como vendemos. O site não fala de pedido mínimo, nem que tem nem que não tem: isso é com a vendedora. */
