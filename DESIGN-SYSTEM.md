@@ -174,7 +174,7 @@ passo entra deslizando 16 px (`[data-passo]`, da direita ao avançar e da esquer
 voltar; nunca na primeira tela; nada com `prefers-reduced-motion`).
 
 Ao completar um CNPJ válido, o site consulta `/api/cnpj/<cnpj>` (BrasilAPI, reserva
-minhareceita, cidade com acento pelo IBGE) e mostra um bloco `areia` "Encontramos a sua
+minhareceita, cidade com acento pela tabela do IBGE no repositório) e mostra um bloco `areia` "Encontramos a sua
 loja" com nome fantasia, razão social e cidade/UF; o passo da loja é pulado. "Não é essa
 loja" e "Ainda não tenho CNPJ" (que troca para CPF) são `.link` de 14 px. O último passo
 traz o resumo "Confira os seus dados" (14 px, uma linha por dado, "corrigir" em cada uma,

@@ -12,12 +12,6 @@ import { cnpjValido, somenteDigitos } from "@/lib/documento";
  * cache por um dia.
  */
 
-/**
- * A Receita, o IBGE e as lojistas estão no Brasil. Por padrão a Vercel roda a função em
- * Washington (iad1), e de lá o IBGE estourava o tempo limite: a cidade saía sem acento.
- */
-export const preferredRegion = "gru1";
-
 export async function GET(_req: NextRequest, ctx: RouteContext<"/api/cnpj/[cnpj]">) {
   const { cnpj } = await ctx.params;
   const d = somenteDigitos(cnpj);
