@@ -10,6 +10,11 @@ import { cnpjValido, somenteDigitos } from "./documento";
  * que serve a mesma base. As duas devolvem o município em caixa alta e sem acento
  * ("MURIAE"); o nome certo ("Muriaé") vem do IBGE pelo código do município, que as
  * duas também trazem. Qualquer falha devolve null e o formulário pergunta à pessoa.
+ *
+ * A soma dos limites de tempo tem de caber na função da Vercel (10 s): Receita 3 s,
+ * reserva 3 s, IBGE 3,5 s. O IBGE é lento visto de fora do Brasil (a rota pede para
+ * rodar em São Paulo); quando ele não responde, a cidade sai sem acento e a resposta
+ * é provisória, para o cache do CDN não guardar o nome errado por um dia.
  */
 export type Empresa = {
   razaoSocial: string;
@@ -20,8 +25,14 @@ export type Empresa = {
   ativa: boolean;
 };
 
-const TEMPO_LIMITE_MS = 4000;
-const TEMPO_LIMITE_IBGE_MS = 2500;
+const TEMPO_LIMITE_MS = 3000;
+const TEMPO_LIMITE_IBGE_MS = 3500;
+
+export type ConsultaCnpj = {
+  empresa: Empresa;
+  /** A cidade veio do IBGE, com acento. Sem isso, a resposta não deve ficar em cache. */
+  cidadeOficial: boolean;
+};
 
 type RespostaReceita = {
   razao_social?: string | null;
@@ -100,7 +111,7 @@ async function nomeDoMunicipio(codigoIbge: string): Promise<string> {
 }
 
 /** Nunca lança: sem resposta (ou CNPJ inválido) devolve null. */
-export async function consultarCnpj(cnpj: string): Promise<Empresa | null> {
+export async function consultarCnpj(cnpj: string): Promise<ConsultaCnpj | null> {
   const d = somenteDigitos(cnpj);
   if (!cnpjValido(d)) return null;
 
@@ -110,6 +121,9 @@ export async function consultarCnpj(cnpj: string): Promise<Empresa | null> {
   if (!bruto || !bruto.razao_social) return null;
 
   const e = interpretar(bruto);
-  const cidade = (await nomeDoMunicipio(e.codigoIbge)) || e.municipio;
-  return { razaoSocial: e.razaoSocial, nomeFantasia: e.nomeFantasia, cidade, uf: e.uf, ativa: e.ativa };
+  const oficial = await nomeDoMunicipio(e.codigoIbge);
+  return {
+    empresa: { razaoSocial: e.razaoSocial, nomeFantasia: e.nomeFantasia, cidade: oficial || e.municipio, uf: e.uf, ativa: e.ativa },
+    cidadeOficial: oficial !== "",
+  };
 }
