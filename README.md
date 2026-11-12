@@ -51,7 +51,7 @@ ordem nome → WhatsApp → CNPJ → loja e cidade → e-mail (→ mensagem, no 
 Representante e varejo têm o cadastro curto: nome → WhatsApp → cidade e UF → e-mail,
 sem CNPJ nem mensagem. Quando a pessoa completa um CNPJ válido, o site consulta a rota
 `/api/cnpj/[cnpj]` (`src/lib/cnpj.ts`: BrasilAPI, com a minhareceita de reserva e o nome
-da cidade pelo IBGE) e preenche o nome da loja, a cidade e a UF sozinho; quem não tem
+da cidade pela tabela do IBGE em `src/lib/municipios.json`) e preenche o nome da loja, a cidade e a UF sozinho; quem não tem
 CNPJ informa o CPF e a cidade. Tudo vive num único `<form>`, então o envio é a mesma
 server action de sempre.
 

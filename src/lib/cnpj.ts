@@ -1,6 +1,7 @@
 // Só o servidor importa este módulo (a rota /api/cnpj). As fontes são públicas e sem
 // chave, mas a consulta fica no servidor para o navegador falar só com o site.
 import { cnpjValido, somenteDigitos } from "./documento";
+import MUNICIPIOS from "./municipios.json";
 
 /**
  * Consulta pública de CNPJ: o cadastro passo a passo (components/lead-form.tsx)
@@ -8,13 +9,15 @@ import { cnpjValido, somenteDigitos } from "./documento";
  *
  * Fonte principal: BrasilAPI (dados abertos da Receita Federal). Reserva: minhareceita,
  * que serve a mesma base. As duas devolvem o município em caixa alta e sem acento
- * ("MURIAE"); o nome certo ("Muriaé") vem do IBGE pelo código do município, que as
- * duas também trazem. Qualquer falha devolve null e o formulário pergunta à pessoa.
+ * ("MURIAE"); o nome certo ("Muriaé") sai de municipios.json pelo código do IBGE, que
+ * as duas também trazem. Qualquer falha devolve null e o formulário pergunta à pessoa.
  *
- * A soma dos limites de tempo tem de caber na função da Vercel (10 s): Receita 3 s,
- * reserva 3 s, IBGE 3,5 s. O IBGE é lento visto de fora do Brasil (a rota pede para
- * rodar em São Paulo); quando ele não responde, a cidade sai sem acento e a resposta
- * é provisória, para o cache do CDN não guardar o nome errado por um dia.
+ * A tabela de municípios fica no repositório de propósito: a função da Vercel roda nos
+ * EUA e de lá a API do IBGE não respondia a tempo (a cidade chegava sem acento e ainda
+ * ficava um dia no cache do CDN). Para refazê-la, baixe
+ * https://servicodados.ibge.gov.br/api/v1/localidades/municipios e grave
+ * { "<id>": "<nome>" } ordenado pelo id. Os dois limites de tempo (4 s cada fonte da
+ * Receita) cabem nos 10 s da função.
  */
 export type Empresa = {
   razaoSocial: string;
@@ -25,12 +28,11 @@ export type Empresa = {
   ativa: boolean;
 };
 
-const TEMPO_LIMITE_MS = 3000;
-const TEMPO_LIMITE_IBGE_MS = 3500;
+const TEMPO_LIMITE_MS = 4000;
 
 export type ConsultaCnpj = {
   empresa: Empresa;
-  /** A cidade veio do IBGE, com acento. Sem isso, a resposta não deve ficar em cache. */
+  /** O município estava na tabela: a cidade saiu com acento. Sem isso, a resposta não deve ficar em cache. */
   cidadeOficial: boolean;
 };
 
@@ -103,11 +105,9 @@ function interpretar(d: RespostaReceita): Omit<Empresa, "cidade"> & { municipio:
   };
 }
 
-/** Nome oficial do município, com acento, pelo código do IBGE. */
-async function nomeDoMunicipio(codigoIbge: string): Promise<string> {
-  if (codigoIbge.length !== 7) return "";
-  const m = await buscarJson<{ nome?: string }>(`https://servicodados.ibge.gov.br/api/v1/localidades/municipios/${codigoIbge}`, TEMPO_LIMITE_IBGE_MS);
-  return String(m?.nome ?? "").trim();
+/** Nome oficial do município, com acento, pelo código do IBGE (tabela local). */
+function nomeDoMunicipio(codigoIbge: string): string {
+  return (MUNICIPIOS as Record<string, string | undefined>)[codigoIbge] ?? "";
 }
 
 /** Nunca lança: sem resposta (ou CNPJ inválido) devolve null. */
@@ -121,7 +121,7 @@ export async function consultarCnpj(cnpj: string): Promise<ConsultaCnpj | null> 
   if (!bruto || !bruto.razao_social) return null;
 
   const e = interpretar(bruto);
-  const oficial = await nomeDoMunicipio(e.codigoIbge);
+  const oficial = nomeDoMunicipio(e.codigoIbge);
   return {
     empresa: { razaoSocial: e.razaoSocial, nomeFantasia: e.nomeFantasia, cidade: oficial || e.municipio, uf: e.uf, ativa: e.ativa },
     cidadeOficial: oficial !== "",
