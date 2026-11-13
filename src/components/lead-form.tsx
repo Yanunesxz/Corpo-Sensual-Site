@@ -12,16 +12,52 @@ import { enviarEvento, marcarLeadEnviado } from "@/lib/analytics";
 import type { LeadSource } from "@/lib/types";
 import { site } from "@/lib/site";
 import type { Empresa } from "@/lib/cnpj";
+import { CANAL, FAIXA_PRECO, PRIMEIRO_PEDIDO, USO_PROPRIO, VENDE_PIJAMAS, type Pergunta } from "@/lib/qualificacao";
 import { ArrowRight, Check, ChevronLeft, Lock } from "./icons";
 
 const initialLeadState: LeadFormState = { ok: false };
 
-type Campo = "name" | "whatsapp" | "email" | "has_cnpj" | "document" | "company" | "city" | "state" | "message";
+type Campo =
+  | "name"
+  | "whatsapp"
+  | "email"
+  | "has_cnpj"
+  | "document"
+  | "company"
+  | "city"
+  | "state"
+  | "message"
+  // Qualificação do lojista (lib/qualificacao.ts) e a rede social da loja.
+  | "canal"
+  | "vende_pijamas"
+  | "primeiro_pedido"
+  | "faixa_preco"
+  | "instagram";
 type Valores = Record<Campo, string>;
 type Erros = Partial<Record<Campo, string>>;
 
-/** Um passo por pergunta. "loja" só aparece quando o CNPJ não trouxe a loja e a cidade. */
-type Passo = "nome" | "whatsapp" | "documento" | "loja" | "email" | "mensagem";
+/**
+ * Um passo por pergunta. "loja" só aparece quando o CNPJ não trouxe a loja e a cidade.
+ * O cadastro de quem vem comprar tem os seus sete passos (contato ... apresentar).
+ */
+type Passo =
+  | "nome"
+  | "whatsapp"
+  | "documento"
+  | "loja"
+  | "email"
+  | "mensagem"
+  // Cadastro de lojista, em sete passos
+  | "contato"
+  | "cadastro"
+  | "canal"
+  | "pijamas"
+  | "prazo"
+  | "faixa"
+  | "apresentar";
+
+/** Os sete passos do cadastro de quem vem comprar: os dados, as quatro perguntas e a loja. */
+const PASSOS_DE_COMPRA: Passo[] = ["contato", "cadastro", "canal", "pijamas", "prazo", "faixa", "apresentar"];
 
 /** Campo -> passo em que ele é perguntado: um erro do servidor leva a pessoa de volta a ele. */
 const PASSO_DO_CAMPO: Record<Campo, Passo> = {
@@ -34,10 +70,57 @@ const PASSO_DO_CAMPO: Record<Campo, Passo> = {
   state: "loja",
   email: "email",
   message: "mensagem",
+  canal: "canal",
+  vende_pijamas: "pijamas",
+  primeiro_pedido: "prazo",
+  faixa_preco: "faixa",
+  instagram: "apresentar",
+};
+
+/** O mesmo, no cadastro de quem vem comprar. */
+const PASSO_DO_CAMPO_COMPRA: Record<Campo, Passo> = {
+  name: "contato",
+  whatsapp: "contato",
+  email: "contato",
+  has_cnpj: "cadastro",
+  document: "cadastro",
+  city: "cadastro",
+  state: "cadastro",
+  canal: "canal",
+  vende_pijamas: "pijamas",
+  primeiro_pedido: "prazo",
+  faixa_preco: "faixa",
+  company: "apresentar",
+  instagram: "apresentar",
+  message: "apresentar",
 };
 
 /** Ordem em que os campos aparecem: depois de um erro, vale o primeiro que falhou. */
 const ORDEM_DOS_CAMPOS: Campo[] = ["name", "whatsapp", "has_cnpj", "document", "company", "city", "state", "email", "message"];
+const ORDEM_DOS_CAMPOS_COMPRA: Campo[] = [
+  "name",
+  "whatsapp",
+  "email",
+  "has_cnpj",
+  "document",
+  "city",
+  "state",
+  "canal",
+  "vende_pijamas",
+  "primeiro_pedido",
+  "faixa_preco",
+  "company",
+  "instagram",
+  "message",
+];
+
+/** Passo de pergunta com opções -> a pergunta (lib/qualificacao.ts). */
+const PERGUNTA_DO_PASSO: Partial<Record<Passo, Pergunta>> = {
+  canal: CANAL,
+  pijamas: VENDE_PIJAMAS,
+  prazo: PRIMEIRO_PEDIDO,
+  faixa: FAIXA_PRECO,
+};
 
 /** As 27 UFs, para o seletor do passo da loja (a mesma lista do servidor). */
 const UFS = ["AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"];
@@ -62,6 +145,14 @@ type Props = {
  * pergunta ao CRM (/api/ja-e-cliente) e, se for de um cliente da Corpo Sensual, o
  * "Continuar" leva a /ja-e-cliente em vez do passo seguinte. Cliente não vira lead.
  * Na dúvida (CRM fora, demora), o cadastro segue normalmente.
+ *
+ * Quem vem comprar no atacado (catálogo, coleção, landing de lojistas) tem sete passos,
+ * no modelo "uma etapa de cada vez": 1. nome, WhatsApp e e-mail; 2. CPF ou CNPJ, cidade
+ * e UF (com o CNPJ, a loja e a cidade vêm sozinhas); 3. como vende hoje; 4. se já vende
+ * pijamas; 5. quando pretende fazer o primeiro pedido; 6. a faixa de preço das peças que
+ * vende; 7. o nome da loja e o Instagram (opcionais). As perguntas 3 a 6 são o "esquema
+ * de vendas" (lib/qualificacao.ts) e chegam ao CRM na mensagem do lead. O final é o de
+ * sempre: a página de obrigado, com as vendedoras no WhatsApp.
  *
  * Representante e varejo (consumidor que procura uma loja) têm o cadastro curto, como o
  * das landing pages: nome -> WhatsApp -> cidade e UF -> e-mail. Sem CNPJ nem mensagem:
@@ -88,6 +179,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   /** Quem vem comprar no atacado: catálogo, coleção e landing de lojistas. */
   const ehCompra = !ehContato && !curto;
   const c = site.contact;
+  const passoDoCampo = ehCompra ? PASSO_DO_CAMPO_COMPRA : PASSO_DO_CAMPO;
+  const ordemDosCampos = ehCompra ? ORDEM_DOS_CAMPOS_COMPRA : ORDEM_DOS_CAMPOS;
 
   const [v, setV] = useState<Valores>({
     name: "",
@@ -100,6 +193,11 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     city: "",
     state: "",
     message: "",
+    canal: "",
+    vende_pijamas: "",
+    primeiro_pedido: "",
+    faixa_preco: "",
+    instagram: "",
   });
   const por = (k: Campo, valor: string) => setV((a) => ({ ...a, [k]: valor }));
   const ehLojista = v.has_cnpj !== "nao";
@@ -196,13 +294,14 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   const listaDePassos = useCallback(
     (lojaAutomatica: boolean): Passo[] => {
       const mensagem: Passo[] = withMessage ? ["mensagem"] : [];
+      if (ehCompra) return PASSOS_DE_COMPRA;
       if (curto) return ["nome", "whatsapp", "loja", "email", ...mensagem];
       return ["nome", "whatsapp", "documento", ...(lojaAutomatica ? [] : (["loja"] as Passo[])), "email", ...mensagem];
     },
-    [withMessage, curto],
+    [withMessage, curto, ehCompra],
   );
   const passos = listaDePassos(Boolean(empresa) && !recusouEmpresa && !editarLoja);
-  const [passo, setPasso] = useState<Passo>("nome");
+  const [passo, setPasso] = useState<Passo>(ehCompra ? "contato" : "nome");
   const indice = Math.max(0, passos.indexOf(passo));
   const ultimo = indice === passos.length - 1;
   // Só anima a partir da segunda tela: o cartão não pode "entrar" ao carregar a página.
@@ -223,17 +322,19 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   useEffect(() => {
     if (!focarAoTrocar.current) return;
     focarAoTrocar.current = false;
-    form.current?.querySelector<HTMLElement>("[data-passo] .field")?.focus();
+    // Nos passos de opções, a marcada (ou a primeira): as setas trocam a escolha.
+    form.current?.querySelector<HTMLElement>("[data-passo] .field, [data-passo] input[type=radio]:checked, [data-passo] input[type=radio]")?.focus();
   }, [passo]);
 
   const validar = (p: Passo): Erros => {
     const e: Erros = {};
-    if (p === "nome" && v.name.trim().length < 2) e.name = "Informe seu nome.";
-    if (p === "whatsapp") {
+    if ((p === "nome" || p === "contato") && v.name.trim().length < 2) e.name = "Informe seu nome.";
+    if (p === "whatsapp" || p === "contato") {
       const d = somenteDigitos(v.whatsapp);
       if (d.length < 10 || d.length > 11) e.whatsapp = "Informe o WhatsApp com DDD.";
     }
-    if (p === "documento") {
+    // No passo "cadastro", a cidade e a UF são conferidas em avancar(), depois da consulta do CNPJ.
+    if (p === "documento" || p === "cadastro") {
       if (digitosDoc.length === 0) e.document = ehLojista ? "Informe o CNPJ da loja." : "Informe o seu CPF.";
       else if (!documentoValido(v.document, ehLojista ? "cnpj" : "cpf")) e.document = ehLojista ? "CNPJ inválido. Confira os números." : "CPF inválido. Confira os números.";
     }
@@ -241,7 +342,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       if (v.city.trim().length < 2) e.city = "Informe a cidade.";
       if (!UFS.includes(v.state.toUpperCase())) e.state = "Informe a UF.";
     }
-    if (p === "email" && !EMAIL_SIMPLES.test(v.email.trim())) e.email = "Informe um e-mail válido.";
+    if ((p === "email" || p === "contato") && !EMAIL_SIMPLES.test(v.email.trim())) e.email = "Informe um e-mail válido.";
+    const opcoes = PERGUNTA_DO_PASSO[p];
+    if (opcoes && !v[opcoes.campo]) e[opcoes.campo] = "Escolha uma opção.";
     // Mensagem obrigatória só no contato, onde ela é o assunto (a mesma regra do servidor).
     if (p === "mensagem" && ehContato && v.message.trim().length < 3) e.message = "Escreva a sua mensagem.";
     return e;
@@ -251,7 +354,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 
   const avancar = async () => {
     const e = validar(passo);
-    const falhou = ORDEM_DOS_CAMPOS.find((k) => e[k]);
+    const falhou = ordemDosCampos.find((k) => e[k]);
     if (falhou) {
       setErros((a) => ({ ...a, ...e }));
       focar(falhou);
@@ -259,7 +362,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     }
     // Passo do documento: espera a conferência de cliente e, com CNPJ, a consulta dele
     // (no máximo o limite de cada rota), que diz se o passo da loja é preciso.
-    if (passo === "documento") {
+    if (passo === "documento" || passo === "cadastro") {
       if (docCompleto) {
         setConferindo(true);
         const [jaCliente] = await Promise.all([conferirCliente(digitosDoc, tipoDoc), busca.current]);
@@ -272,6 +375,21 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         setConferindo(false);
       } else if (busca.current) {
         await busca.current;
+      }
+    }
+    // Passo "cadastro": sem a loja encontrada pelo CNPJ, a cidade e a UF são da pessoa.
+    if (passo === "cadastro") {
+      const achada = !recusouEmpresa && ehLojista && encontrada.current?.cnpj === digitosDoc ? encontrada.current.empresa : null;
+      if (!achada) {
+        const e: Erros = {};
+        if (v.city.trim().length < 2) e.city = "Informe a cidade.";
+        if (!UFS.includes(v.state.toUpperCase())) e.state = "Informe a UF.";
+        const falhouCidade = e.city ? "city" : e.state ? "state" : null;
+        if (falhouCidade) {
+          setErros((a) => ({ ...a, ...e }));
+          focar(falhouCidade);
+          return;
+        }
       }
     }
     if (retorno.current) {
@@ -318,9 +436,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       const e = resultado.errors;
       if (e) {
         setErros(e as Erros);
-        const primeiro = ORDEM_DOS_CAMPOS.find((k) => e[k]);
+        const primeiro = ordemDosCampos.find((k) => e[k]);
         if (primeiro) {
-          const destino = PASSO_DO_CAMPO[primeiro];
+          const destino = passoDoCampo[primeiro];
           if (destino === "loja") setEditarLoja(true);
           // Um campo que este cadastro nem pergunta (não deve acontecer): volta ao começo.
           const lista = listaDePassos(false);
@@ -445,6 +563,21 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
           : "Para responder por escrito, se você preferir.",
     },
     mensagem: { titulo: ehContato ? "Como podemos ajudar?" : "Quer contar mais alguma coisa?" },
+    // Cadastro de lojista, em sete passos
+    contato: { titulo: "Como podemos falar com você?", ajuda: "Para receber o catálogo e o atendimento das vendedoras." },
+    cadastro: {
+      titulo: "Seus dados de cadastro",
+      ajuda: ehLojista ? (
+        "Com o CNPJ, buscamos o nome da loja e a cidade. Você também pode se cadastrar com CPF."
+      ) : (
+        <>O CNPJ não é obrigatório: vendemos no atacado e avaliamos o seu caso. Se você é consumidor, {ondeComprar}.</>
+      ),
+    },
+    canal: { titulo: CANAL.titulo },
+    pijamas: { titulo: VENDE_PIJAMAS.titulo },
+    prazo: { titulo: PRIMEIRO_PEDIDO.titulo },
+    faixa: { titulo: FAIXA_PRECO.titulo, ajuda: FAIXA_PRECO.ajuda },
+    apresentar: { titulo: "Quer apresentar sua loja?", ajuda: "Essas informações são opcionais." },
   };
   const atual = pergunta[passo];
 
@@ -453,6 +586,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   const lugar = [v.company.trim(), [v.city.trim(), v.state.toUpperCase()].filter(Boolean).join("/")].filter(Boolean).join(" · ");
 
   /** O que o passo atual mostra; o resto viaja em campos escondidos. */
+  // Passo "cadastro": com a loja encontrada pelo CNPJ, a cidade e a UF não aparecem
+  // (viajam escondidas, já preenchidas); sem ela, a pessoa informa as duas.
+  const lojaEncontrada = ehLojista && Boolean(empresa) && !recusouEmpresa;
   const visiveis: Record<Passo, Campo[]> = {
     nome: ["name"],
     whatsapp: ["whatsapp"],
@@ -460,10 +596,121 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     loja: curto ? ["city", "state"] : ["company", "city", "state"],
     email: ["email"],
     mensagem: ["message"],
+    contato: ["name", "whatsapp", "email"],
+    cadastro: lojaEncontrada ? ["has_cnpj", "document"] : ["has_cnpj", "document", "city", "state"],
+    canal: ["canal"],
+    pijamas: ["vende_pijamas"],
+    prazo: ["primeiro_pedido"],
+    faixa: ["faixa_preco"],
+    apresentar: ["company", "instagram"],
   };
   const escondidos = (Object.keys(v) as Campo[]).filter((k) => !visiveis[passo].includes(k));
   // Cadastro curto não pergunta CNPJ: vai em branco, como o formulário antigo mandava.
   const valorEscondido = (k: Campo) => (k === "state" ? v.state.toUpperCase() : k === "has_cnpj" && curto ? "" : v[k]);
+
+
+  // ---------- Peças reaproveitadas pelos passos ----------
+  /** O CPF ou CNPJ, o aviso de busca e a loja encontrada para conferir. */
+  const blocoDocumento = (semRotulo: boolean) => (
+    <>
+    <Campo rotulo={ehLojista ? "CNPJ" : "CPF"} nome="document" erro={erros.document} semRotulo={semRotulo}>
+      <input
+        id="document"
+        className="field tabular-nums"
+        name="document"
+        inputMode="numeric"
+        autoComplete="off"
+        required
+        aria-invalid={Boolean(erros.document)}
+        aria-describedby={erros.document ? "document-error" : undefined}
+        value={v.document}
+        onChange={(e) => {
+          aplicarMascara(e.target, (valor) => formatarDocumento(valor, ehLojista ? "cnpj" : "cpf"), (novo) => por("document", novo));
+          limparErro("document");
+          setRecusouEmpresa(false);
+        }}
+        placeholder={ehLojista ? "00.000.000/0000-00" : "000.000.000-00"}
+        maxLength={ehLojista ? 18 : 14}
+      />
+    </Campo>
+
+    {/* O que o CNPJ trouxe, para a pessoa conferir antes de seguir. */}
+    {ehLojista && buscando && (
+      <p className="legenda" aria-live="polite">
+        Buscando os dados da loja...
+      </p>
+    )}
+    {ehLojista && empresa && !recusouEmpresa && (
+      <div className="bg-areia px-4 py-3.5" aria-live="polite">
+        <p className="flex items-center gap-1.5 text-[13px] text-muted">
+          <Check width={14} height={14} strokeWidth={2} className="text-ink" />
+          Encontramos a sua loja
+        </p>
+        <p className="mt-1 text-[17px] font-medium leading-snug text-ink">{empresa.nomeFantasia || empresa.razaoSocial}</p>
+        <p className="mt-0.5 text-[14px] leading-relaxed text-body">
+          {empresa.nomeFantasia && empresa.razaoSocial ? `${empresa.razaoSocial} · ` : ""}
+          {empresa.cidade}/{empresa.uf}
+        </p>
+        <button
+          type="button"
+          className="link mt-3 text-[13px]"
+          onClick={() => {
+            setRecusouEmpresa(true);
+            setV((a) => ({ ...a, company: "", city: "", state: "" }));
+          }}
+        >
+          Não é essa loja
+        </button>
+      </div>
+    )}
+    </>
+  );
+
+  /** Cidade e UF, lado a lado. */
+  const camposCidade = (
+    <div className="grid grid-cols-[1fr_6.5rem] gap-4">
+      <Campo rotulo="Cidade" nome="city" erro={erros.city}>
+        <input
+          id="city"
+          className="field"
+          name="city"
+          autoComplete="address-level2"
+          required
+          aria-invalid={Boolean(erros.city)}
+          aria-describedby={erros.city ? "city-error" : undefined}
+          value={v.city}
+          onChange={(e) => {
+            por("city", e.target.value);
+            limparErro("city");
+          }}
+          placeholder="Ex: Muriaé"
+        />
+      </Campo>
+      <Campo rotulo="UF" nome="state" erro={erros.state}>
+        <select
+          id="state"
+          className="field"
+          name="state"
+          autoComplete="address-level1"
+          required
+          aria-invalid={Boolean(erros.state)}
+          aria-describedby={erros.state ? "state-error" : undefined}
+          value={v.state.toUpperCase()}
+          onChange={(e) => {
+            por("state", e.target.value);
+            limparErro("state");
+          }}
+        >
+          <option value="">UF</option>
+          {UFS.map((uf) => (
+            <option key={uf} value={uf}>
+              {uf}
+            </option>
+          ))}
+        </select>
+      </Campo>
+    </div>
+  );
 
   return (
     <form
@@ -508,8 +755,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
           ))}
         </ol>
         <p className="legenda tabular-nums">
-          <span className="sr-only">Passo </span>
-          {indice + 1} de {passos.length}
+          Passo {indice + 1} de {passos.length}
         </p>
       </div>
 
@@ -519,8 +765,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
         {atual.ajuda && <p className="mt-2 max-w-md text-[15px] leading-[1.55] text-body">{atual.ajuda}</p>}
 
         <div className="mt-5 space-y-4">
-          {passo === "nome" && (
-            <Campo rotulo="Seu nome" nome="name" erro={erros.name} semRotulo>
+          {(passo === "nome" || passo === "contato") && (
+            <Campo rotulo="Seu nome" nome="name" erro={erros.name} semRotulo={passo === "nome"}>
               <input
                 id="name"
                 className="field"
@@ -539,8 +785,8 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             </Campo>
           )}
 
-          {passo === "whatsapp" && (
-            <Campo rotulo="WhatsApp com DDD" nome="whatsapp" erro={erros.whatsapp} semRotulo>
+          {(passo === "whatsapp" || passo === "contato") && (
+            <Campo rotulo="WhatsApp com DDD" nome="whatsapp" erro={erros.whatsapp} semRotulo={passo === "whatsapp"}>
               <input
                 id="whatsapp"
                 className="field tabular-nums"
@@ -563,56 +809,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
 
           {passo === "documento" && (
             <>
-              <Campo rotulo={ehLojista ? "CNPJ" : "CPF"} nome="document" erro={erros.document} semRotulo>
-                <input
-                  id="document"
-                  className="field tabular-nums"
-                  name="document"
-                  inputMode="numeric"
-                  autoComplete="off"
-                  required
-                  aria-invalid={Boolean(erros.document)}
-                  aria-describedby={erros.document ? "document-error" : undefined}
-                  value={v.document}
-                  onChange={(e) => {
-                    aplicarMascara(e.target, (valor) => formatarDocumento(valor, ehLojista ? "cnpj" : "cpf"), (novo) => por("document", novo));
-                    limparErro("document");
-                    setRecusouEmpresa(false);
-                  }}
-                  placeholder={ehLojista ? "00.000.000/0000-00" : "000.000.000-00"}
-                  maxLength={ehLojista ? 18 : 14}
-                />
-              </Campo>
-
-              {/* O que o CNPJ trouxe, para a pessoa conferir antes de seguir. */}
-              {ehLojista && buscando && (
-                <p className="legenda" aria-live="polite">
-                  Buscando os dados da loja...
-                </p>
-              )}
-              {ehLojista && empresa && !recusouEmpresa && (
-                <div className="bg-areia px-4 py-3.5" aria-live="polite">
-                  <p className="flex items-center gap-1.5 text-[13px] text-muted">
-                    <Check width={14} height={14} strokeWidth={2} className="text-ink" />
-                    Encontramos a sua loja
-                  </p>
-                  <p className="mt-1 text-[17px] font-medium leading-snug text-ink">{empresa.nomeFantasia || empresa.razaoSocial}</p>
-                  <p className="mt-0.5 text-[14px] leading-relaxed text-body">
-                    {empresa.nomeFantasia && empresa.razaoSocial ? `${empresa.razaoSocial} · ` : ""}
-                    {empresa.cidade}/{empresa.uf}
-                  </p>
-                  <button
-                    type="button"
-                    className="link mt-3 text-[13px]"
-                    onClick={() => {
-                      setRecusouEmpresa(true);
-                      setV((a) => ({ ...a, company: "", city: "", state: "" }));
-                    }}
-                  >
-                    Não é essa loja
-                  </button>
-                </div>
-              )}
+              {blocoDocumento(true)}
 
               <p className="text-[14px] text-body">
                 {ehLojista ? (
@@ -663,53 +860,12 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
                   />
                 </Campo>
               )}
-              <div className="grid grid-cols-[1fr_6.5rem] gap-4">
-                <Campo rotulo="Cidade" nome="city" erro={erros.city}>
-                  <input
-                    id="city"
-                    className="field"
-                    name="city"
-                    autoComplete="address-level2"
-                    required
-                    aria-invalid={Boolean(erros.city)}
-                    aria-describedby={erros.city ? "city-error" : undefined}
-                    value={v.city}
-                    onChange={(e) => {
-                      por("city", e.target.value);
-                      limparErro("city");
-                    }}
-                    placeholder="Ex: Muriaé"
-                  />
-                </Campo>
-                <Campo rotulo="UF" nome="state" erro={erros.state}>
-                  <select
-                    id="state"
-                    className="field"
-                    name="state"
-                    autoComplete="address-level1"
-                    required
-                    aria-invalid={Boolean(erros.state)}
-                    aria-describedby={erros.state ? "state-error" : undefined}
-                    value={v.state.toUpperCase()}
-                    onChange={(e) => {
-                      por("state", e.target.value);
-                      limparErro("state");
-                    }}
-                  >
-                    <option value="">UF</option>
-                    {UFS.map((uf) => (
-                      <option key={uf} value={uf}>
-                        {uf}
-                      </option>
-                    ))}
-                  </select>
-                </Campo>
-              </div>
+              {camposCidade}
             </>
           )}
 
-          {passo === "email" && (
-            <Campo rotulo="E-mail" nome="email" erro={erros.email} semRotulo>
+          {(passo === "email" || passo === "contato") && (
+            <Campo rotulo="E-mail" nome="email" erro={erros.email} semRotulo={passo === "email"}>
               <input
                 id="email"
                 className="field"
@@ -728,6 +884,91 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
                 placeholder={curto ? "voce@email.com" : "compras@sualoja.com"}
               />
             </Campo>
+          )}
+
+          {passo === "cadastro" && (
+            <>
+              {/* CPF ou CNPJ em dois botões, como no modelo. Trocar apaga o que não serve mais. */}
+              <fieldset>
+                <legend className="sr-only">Cadastrar com</legend>
+                <div className="seg">
+                  {[
+                    { valor: "nao", rotulo: "CPF" },
+                    { valor: "sim", rotulo: "CNPJ" },
+                  ].map((o) => (
+                    <label key={o.valor}>
+                      <input
+                        type="radio"
+                        name="has_cnpj"
+                        value={o.valor}
+                        checked={v.has_cnpj === o.valor}
+                        onChange={() => {
+                          setV((a) => ({ ...a, has_cnpj: o.valor, document: "", company: "", city: "", state: "" }));
+                          setRecusouEmpresa(false);
+                          limparErro("document");
+                        }}
+                      />
+                      <span>{o.rotulo}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              {blocoDocumento(false)}
+              {!lojaEncontrada && camposCidade}
+            </>
+          )}
+
+          {PERGUNTA_DO_PASSO[passo] && (
+            <Opcoes
+              pergunta={PERGUNTA_DO_PASSO[passo]!}
+              valor={v[PERGUNTA_DO_PASSO[passo]!.campo]}
+              erro={erros[PERGUNTA_DO_PASSO[passo]!.campo]}
+              onEscolher={(campo, valor) => {
+                por(campo, valor);
+                limparErro(campo);
+              }}
+            />
+          )}
+
+          {/* "Uso próprio" é consumidor final: a fábrica só vende no atacado. */}
+          {passo === "canal" && v.canal === USO_PROPRIO && (
+            <p className="bg-areia px-4 py-3 text-[14px] leading-relaxed text-ink">
+              A Corpo Sensual vende só no atacado, para lojas e revendedoras. Para comprar para você, {ondeComprar}: indicamos a loja mais perto.
+            </p>
+          )}
+
+          {passo === "apresentar" && (
+            <>
+              <Campo rotulo="Nome da loja" nome="company" erro={erros.company}>
+                <input
+                  id="company"
+                  className="field"
+                  name="company"
+                  autoComplete="organization"
+                  value={v.company}
+                  onChange={(e) => {
+                    por("company", e.target.value);
+                    limparErro("company");
+                  }}
+                  placeholder="Nome comercial"
+                />
+              </Campo>
+              <Campo rotulo="Instagram ou site" nome="instagram" erro={erros.instagram}>
+                <input
+                  id="instagram"
+                  className="field"
+                  name="instagram"
+                  autoComplete="url"
+                  autoCapitalize="none"
+                  value={v.instagram}
+                  onChange={(e) => {
+                    por("instagram", e.target.value);
+                    limparErro("instagram");
+                  }}
+                  placeholder="@sualoja ou endereço do site"
+                />
+              </Campo>
+            </>
           )}
 
           {passo === "mensagem" && (
@@ -750,7 +991,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
           )}
 
           {/* Resumo no último passo: o que foi reunido, com "corrigir" em cada linha. */}
-          {ultimo && (
+          {ultimo && !ehCompra && (
             <div className="border-t border-line pt-4">
               <p className="legenda">Confira os seus dados</p>
               <ul className="mt-2 space-y-1.5 text-[14px] leading-[1.5] text-body">
@@ -800,7 +1041,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       <div className={`mt-6 flex flex-col gap-3 ${ultimo ? "" : "@[24rem]:flex-row-reverse @[24rem]:items-center @[24rem]:justify-between"}`}>
         {ultimo ? (
           <button type="submit" className="btn btn-primary btn-lg w-full px-2.5 text-[15px] @[21rem]:px-6 @[21rem]:text-base" aria-disabled={pending || undefined}>
-            {pending ? "Enviando..." : submitLabel}
+            {pending ? "Enviando..." : ehCompra ? "Concluir cadastro" : submitLabel}
             {!pending && <ArrowRight width={18} height={18} className="seta hidden @[23.5rem]:block" />}
           </button>
         ) : (
@@ -879,5 +1120,45 @@ function Linha({ rotulo, onCorrigir, children }: { rotulo: string; onCorrigir: (
         corrigir
       </button>
     </li>
+  );
+}
+
+/** Pergunta de opções (lib/qualificacao.ts): uma escolha, em cartões grandes, fáceis de tocar. */
+function Opcoes({
+  pergunta,
+  valor,
+  erro,
+  onEscolher,
+}: {
+  pergunta: Pergunta;
+  valor: string;
+  erro?: string;
+  onEscolher: (campo: Pergunta["campo"], valor: string) => void;
+}) {
+  return (
+    <div>
+      {pergunta.selo && <p className="tag tag-sky mb-3">{pergunta.selo}</p>}
+      {/* O <legend> do passo já é a pergunta: o grupo de rádios fica dentro dele. */}
+      <div className="opcoes" data-invalido={erro ? "" : undefined} aria-describedby={erro ? `${pergunta.campo}-error` : undefined}>
+        {pergunta.opcoes.map((o, i) => (
+          <label key={o}>
+            <input
+              type="radio"
+              id={i === 0 ? pergunta.campo : undefined}
+              name={pergunta.campo}
+              value={o}
+              checked={valor === o}
+              onChange={() => onEscolher(pergunta.campo, o)}
+            />
+            <span>{o}</span>
+          </label>
+        ))}
+      </div>
+      {erro && (
+        <p id={`${pergunta.campo}-error`} className="mt-1.5 text-[13px] text-erro">
+          {erro}
+        </p>
+      )}
+    </div>
   );
 }
