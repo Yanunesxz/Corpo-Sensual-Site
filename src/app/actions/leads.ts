@@ -6,8 +6,18 @@ import { getSupabase } from "@/lib/supabase/client";
 import { enviarLeadParaCrm } from "@/lib/crm";
 import { documentoValido, somenteDigitos } from "@/lib/documento";
 import type { LeadInsert, LeadRow, LeadSource } from "@/lib/types";
+import { PERGUNTAS, resumoDaQualificacao } from "@/lib/qualificacao";
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
+
+/**
+ * Resposta de uma pergunta de qualificação (lib/qualificacao.ts): vazia ou um dos textos
+ * da lista. Opcional no servidor: um formulário antigo aberto num celular continua
+ * enviando sem elas. O formulário novo não deixa seguir sem resposta.
+ */
+const resposta = (opcoes: readonly string[]) =>
+  optionalText(120).refine((v) => v === "" || opcoes.includes(v), "Escolha uma opção.");
+const [canal, vendePijamas, primeiroPedido, faixaPreco] = PERGUNTAS;
 
 /** As 27 UFs. A cidade e a UF decidem o representante da região no CRM. */
 const UFS = [
@@ -34,6 +44,12 @@ const leadSchema = z.object({
     .transform((v) => v.toUpperCase())
     .refine((v) => UFS.includes(v), "Informe a UF."),
   message: optionalText(1000),
+  // Cadastro de lojista: o "esquema de vendas" e a rede social da loja.
+  canal: resposta(canal.opcoes),
+  vende_pijamas: resposta(vendePijamas.opcoes),
+  primeiro_pedido: resposta(primeiroPedido.opcoes),
+  faixa_preco: resposta(faixaPreco.opcoes),
+  instagram: optionalText(200),
   source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante", "varejo"]),
   page_url: optionalText(600),
   referrer: optionalText(600),
@@ -123,6 +139,16 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
 
   const d = parsed.data;
   const source = d.source as LeadSource;
+  // As respostas do cadastro de lojista vão na mensagem: é o campo que o CRM mostra à
+  // vendedora. Uma por linha, antes do que a pessoa tiver escrito.
+  const qualificacao = resumoDaQualificacao({
+    canal: d.canal,
+    vende_pijamas: d.vende_pijamas,
+    primeiro_pedido: d.primeiro_pedido,
+    faixa_preco: d.faixa_preco,
+    instagram: d.instagram,
+  });
+  const mensagem = [qualificacao, d.message].filter(Boolean).join("\n\n");
 
   const row: LeadInsert = {
     name: d.name,
@@ -133,7 +159,7 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     company: nullIfEmpty(d.company),
     city: nullIfEmpty(d.city),
     state: nullIfEmpty(d.state),
-    message: nullIfEmpty(d.message),
+    message: nullIfEmpty(mensagem),
     source,
     page_url: nullIfEmpty(d.page_url),
     referrer: nullIfEmpty(d.referrer),

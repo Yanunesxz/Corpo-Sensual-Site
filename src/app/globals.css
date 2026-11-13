@@ -582,6 +582,73 @@ body {
     border-color: var(--color-erro);
   }
 
+  /* Perguntas de opção do cadastro (lib/qualificacao.ts): uma opção por linha, com o
+     círculo do rádio desenhado no <span> (input:checked + span), como o .seg. */
+  .opcoes {
+    display: grid;
+    gap: 0.5rem;
+  }
+  .opcoes label {
+    position: relative;
+    display: grid;
+    cursor: pointer;
+  }
+  .opcoes input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+  .opcoes span {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-height: 52px;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-field);
+    background: #fff;
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease;
+  }
+  .opcoes span::before {
+    content: "";
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: #fff;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+  .opcoes label:hover span {
+    border-color: var(--color-ink);
+  }
+  .opcoes input:checked + span {
+    border-color: var(--color-noite);
+    background: var(--color-sky);
+  }
+  .opcoes input:checked + span::before {
+    border-color: var(--color-noite);
+    box-shadow: inset 0 0 0 4px #fff, inset 0 0 0 10px var(--color-noite);
+  }
+  .opcoes input:focus-visible + span {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  .opcoes[data-invalido] span {
+    border-color: var(--color-erro);
+  }
+
   /* ---------- Filtro ---------- */
   .chip {
     display: inline-flex;
