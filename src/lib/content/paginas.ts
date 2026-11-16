@@ -65,7 +65,7 @@ export const PAGINAS: Record<string, PaginaFixa> = {
   "/seja-representante": {
     nome: "Seja representante",
     resumo: "Captação de representantes comerciais: motivos, estrutura de apoio da fábrica, passos e cadastro.",
-    atualizada: "2026-10-09",
+    atualizada: "2026-11-16",
     imagem: "/images/colecoes/delicias-1.jpg",
     prioridade: 0.7,
     frequencia: "monthly",
@@ -73,7 +73,7 @@ export const PAGINAS: Record<string, PaginaFixa> = {
   "/onde-comprar": {
     nome: "Onde comprar",
     resumo: "Para o consumidor final: cadastro curto para a fábrica indicar a loja mais perto que vende Corpo Sensual.",
-    atualizada: "2026-10-09",
+    atualizada: "2026-11-16",
     prioridade: 0.5,
     frequencia: "yearly",
   },

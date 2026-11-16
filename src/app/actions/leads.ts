@@ -59,10 +59,8 @@ const leadSchema = z.object({
   utm_term: optionalText(200),
   utm_content: optionalText(200),
 }).superRefine((d, ctx) => {
-  // Representante e varejo (consumidor que procura uma loja): formulário curto (nome,
-  // WhatsApp, e-mail, cidade e UF), como o das landing pages. Sem CNPJ nem mensagem.
-  if (d.source === "representante" || d.source === "varejo") return;
-
+  // CPF ou CNPJ é obrigatório em todos os cadastros, inclusive representante e varejo
+  // (pedido do dono, 16/11/2026). Só a mensagem continua sendo exclusiva do contato.
   if (d.has_cnpj !== "sim" && d.has_cnpj !== "nao") {
     ctx.addIssue({ code: "custom", path: ["has_cnpj"], message: "Escolha uma opção." });
   }
@@ -77,7 +75,8 @@ const leadSchema = z.object({
   // Sem escolha no select, a tela mostra o campo como CNPJ, então vale CNPJ aqui.
   const tipo = d.has_cnpj === "nao" ? "cpf" : "cnpj";
   if (somenteDigitos(d.document).length === 0) {
-    ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? "Informe o CNPJ da loja." : "Informe o seu CPF." });
+    const compra = d.source === "catalogo" || d.source === "fabrica-de-pijamas" || d.source === "colecao";
+    ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? (compra ? "Informe o CNPJ da loja." : "Informe o CNPJ.") : "Informe o seu CPF." });
     return;
   }
   if (!documentoValido(d.document, tipo)) {
