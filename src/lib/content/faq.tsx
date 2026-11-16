@@ -76,7 +76,7 @@ export const faqRepresentante: FaqItem[] = [
   },
   {
     q: "Preciso ter CNPJ para representar?",
-    a: "Não para fazer o cadastro. Se ainda não tiver CNPJ, conte na conversa com o gestor comercial: ele avalia cada caso.",
+    a: "Não. Quem ainda não tem CNPJ se cadastra com o CPF, e o gestor comercial avalia cada caso.",
   },
 ];
 

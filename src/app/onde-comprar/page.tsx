@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 
 /*
  * Para o consumidor final (varejo), que quer comprar e não é lojista. A fábrica só
- * vende no atacado: aqui a pessoa deixa um cadastro curto (nome, WhatsApp, e-mail,
- * cidade e UF) e o lead cai no CRM com a página "Varejo — onde comprar", separado
+ * vende no atacado: aqui a pessoa deixa um cadastro curto (nome, WhatsApp, CPF, cidade,
+ * UF e e-mail) e o lead cai no CRM com a página "Varejo — onde comprar", separado
  * dos lojistas e dos representantes, para a equipe indicar a loja mais perto.
  */
 export default function OndeComprarPage() {

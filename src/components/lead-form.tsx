@@ -154,9 +154,10 @@ type Props = {
  * de vendas" (lib/qualificacao.ts) e chegam ao CRM na mensagem do lead. O final é o de
  * sempre: a página de obrigado, com as vendedoras no WhatsApp.
  *
- * Representante e varejo (consumidor que procura uma loja) têm o cadastro curto, como o
- * das landing pages: nome -> WhatsApp -> cidade e UF -> e-mail. Sem CNPJ nem mensagem:
- * isso fica para a conversa depois (o servidor também não pede).
+ * Representante e varejo (consumidor que procura uma loja) têm o cadastro curto: nome ->
+ * WhatsApp -> CPF ou CNPJ -> cidade e UF -> e-mail. CPF ou CNPJ é obrigatório em todos os
+ * cadastros dos dois sites (pedido do dono, 16/11/2026); o varejo começa pelo CPF. Sem
+ * loja nem mensagem, e sem a consulta do CNPJ nem a trava de cliente: isso é da compra.
  *
  * Tudo vive num único <form>: os passos anteriores viram campos escondidos, então o
  * envio é o mesmo de sempre (server action submitLead, com UTM, URL e referrer). O Enter
@@ -174,7 +175,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
   const ehContato = source === "contato";
   const ehRepresentante = source === "representante";
   const ehVarejo = source === "varejo";
-  /** Representante e varejo: cadastro curto, sem CNPJ, loja nem mensagem. */
+  /** Representante e varejo: cadastro curto (sem loja nem mensagem), mas com CPF ou CNPJ. */
   const curto = ehRepresentante || ehVarejo;
   /** Quem vem comprar no atacado: catálogo, coleção e landing de lojistas. */
   const ehCompra = !ehContato && !curto;
@@ -186,8 +187,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     name: "",
     whatsapp: "",
     email: "",
-    // Sem escolha ainda, o campo nasce como CNPJ: quem se cadastra costuma ser lojista.
-    has_cnpj: "sim",
+    // Sem escolha ainda, o campo nasce como CNPJ: quem se cadastra costuma ser lojista. O
+    // consumidor (varejo) quase nunca tem CNPJ: começa pelo CPF.
+    has_cnpj: ehVarejo ? "nao" : "sim",
     document: "",
     company: "",
     city: "",
@@ -295,7 +297,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     (lojaAutomatica: boolean): Passo[] => {
       const mensagem: Passo[] = withMessage ? ["mensagem"] : [];
       if (ehCompra) return PASSOS_DE_COMPRA;
-      if (curto) return ["nome", "whatsapp", "loja", "email", ...mensagem];
+      if (curto) return ["nome", "whatsapp", "documento", "loja", "email", ...mensagem];
       return ["nome", "whatsapp", "documento", ...(lojaAutomatica ? [] : (["loja"] as Passo[])), "email", ...mensagem];
     },
     [withMessage, curto, ehCompra],
@@ -335,7 +337,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     }
     // No passo "cadastro", a cidade e a UF são conferidas em avancar(), depois da consulta do CNPJ.
     if (p === "documento" || p === "cadastro") {
-      if (digitosDoc.length === 0) e.document = ehLojista ? "Informe o CNPJ da loja." : "Informe o seu CPF.";
+      if (digitosDoc.length === 0) e.document = ehLojista ? (ehCompra ? "Informe o CNPJ da loja." : "Informe o CNPJ.") : "Informe o seu CPF.";
       else if (!documentoValido(v.document, ehLojista ? "cnpj" : "cpf")) e.document = ehLojista ? "CNPJ inválido. Confira os números." : "CPF inválido. Confira os números.";
     }
     if (p === "loja") {
@@ -535,10 +537,16 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     },
     documento: ehLojista
       ? {
-          titulo: ehCompra ? "Qual é o CNPJ da sua loja?" : "Qual é o seu CNPJ?",
-          ajuda: "Com ele, buscamos o nome da loja e a cidade: você não precisa digitar.",
+          titulo: ehCompra ? "Qual é o CNPJ da sua loja?" : ehRepresentante ? "Qual é o CNPJ da sua representação?" : "Qual é o seu CNPJ?",
+          ajuda: ehCompra
+            ? "Com ele, buscamos o nome da loja e a cidade: você não precisa digitar."
+            : "Se ainda não tiver CNPJ, informe o CPF.",
         }
-      : {
+      : ehVarejo
+        ? { titulo: "Qual é o seu CPF?", ajuda: "Só para o seu cadastro. Seus dados ficam com a nossa equipe." }
+        : ehRepresentante
+          ? { titulo: "Então informe o seu CPF", ajuda: "O gestor comercial avalia cada caso." }
+          : {
           titulo: "Então informe o seu CPF",
           // Sem "pedido mínimo" nem condição nenhuma: isso é com a vendedora.
           ajuda: ehCompra ? (
@@ -605,8 +613,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     apresentar: ["company", "instagram"],
   };
   const escondidos = (Object.keys(v) as Campo[]).filter((k) => !visiveis[passo].includes(k));
-  // Cadastro curto não pergunta CNPJ: vai em branco, como o formulário antigo mandava.
-  const valorEscondido = (k: Campo) => (k === "state" ? v.state.toUpperCase() : k === "has_cnpj" && curto ? "" : v[k]);
+  const valorEscondido = (k: Campo) => (k === "state" ? v.state.toUpperCase() : v[k]);
 
 
   // ---------- Peças reaproveitadas pelos passos ----------
@@ -1001,11 +1008,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
                 <Linha onCorrigir={() => corrigir("whatsapp")} rotulo="WhatsApp">
                   WhatsApp <span className="tabular-nums text-ink">{v.whatsapp}</span>
                 </Linha>
-                {!curto && (
-                  <Linha onCorrigir={() => corrigir("documento")} rotulo={ehLojista ? "CNPJ" : "CPF"}>
-                    {ehLojista ? "CNPJ" : "CPF"} <span className="tabular-nums text-ink">{docFormatado}</span>
-                  </Linha>
-                )}
+                <Linha onCorrigir={() => corrigir("documento")} rotulo={ehLojista ? "CNPJ" : "CPF"}>
+                  {ehLojista ? "CNPJ" : "CPF"} <span className="tabular-nums text-ink">{docFormatado}</span>
+                </Linha>
                 {lugar && (
                   <Linha onCorrigir={() => corrigir("loja")} rotulo={curto ? "cidade" : "loja e cidade"}>
                     <span className="text-ink">{lugar}</span>

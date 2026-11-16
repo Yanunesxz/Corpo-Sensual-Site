@@ -94,7 +94,7 @@ const campanha = [
 ];
 
 const passos = [
-  { titulo: "Cadastro", texto: "Deixe o seu nome, o WhatsApp e a cidade onde você atua." },
+  { titulo: "Cadastro", texto: "Deixe o seu nome, o WhatsApp, o CNPJ ou CPF e a cidade onde você atua." },
   {
     titulo: "Conversa com o gestor comercial",
     texto: "Ele fala com você pelo WhatsApp e apresenta as coleções, a tabela de preços, as condições de representação e a estrutura de apoio.",
