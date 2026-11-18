@@ -6,14 +6,13 @@ import { getSupabase } from "@/lib/supabase/client";
 import { enviarLeadParaCrm } from "@/lib/crm";
 import { documentoValido, somenteDigitos } from "@/lib/documento";
 import type { LeadInsert, LeadRow, LeadSource } from "@/lib/types";
-import { PERGUNTAS, resumoDaQualificacao } from "@/lib/qualificacao";
+import { OUTRA_FAIXA, PERGUNTAS, resumoDaQualificacao } from "@/lib/qualificacao";
 
 const optionalText = (max: number) => z.string().trim().max(max).optional().default("");
 
 /**
  * Resposta de uma pergunta de qualificação (lib/qualificacao.ts): vazia ou um dos textos
- * da lista. Opcional no servidor: um formulário antigo aberto num celular continua
- * enviando sem elas. O formulário novo não deixa seguir sem resposta.
+ * da lista. A obrigatoriedade fica no superRefine: só o cadastro de compra pergunta.
  */
 const resposta = (opcoes: readonly string[]) =>
   optionalText(120).refine((v) => v === "" || opcoes.includes(v), "Escolha uma opção.");
@@ -49,6 +48,8 @@ const leadSchema = z.object({
   vende_pijamas: resposta(vendePijamas.opcoes),
   primeiro_pedido: resposta(primeiroPedido.opcoes),
   faixa_preco: resposta(faixaPreco.opcoes),
+  /** A faixa escrita pela pessoa, quando ela escolhe "Outra faixa de preço". */
+  faixa_outra: optionalText(80),
   instagram: optionalText(200),
   source: z.enum(["catalogo", "fabrica-de-pijamas", "colecao", "contato", "representante", "varejo"]),
   page_url: optionalText(600),
@@ -65,6 +66,18 @@ const leadSchema = z.object({
     ctx.addIssue({ code: "custom", path: ["has_cnpj"], message: "Escolha uma opção." });
   }
 
+  // Cadastro de compra (os sete passos): as quatro perguntas são obrigatórias; só o
+  // último passo (nome da loja e Instagram) é opcional.
+  const compra = d.source === "catalogo" || d.source === "fabrica-de-pijamas" || d.source === "colecao";
+  if (compra) {
+    for (const campo of ["canal", "vende_pijamas", "primeiro_pedido", "faixa_preco"] as const) {
+      if (!d[campo]) ctx.addIssue({ code: "custom", path: [campo], message: "Escolha uma opção." });
+    }
+  }
+  if (d.faixa_preco === OUTRA_FAIXA && d.faixa_outra.length < 2) {
+    ctx.addIssue({ code: "custom", path: ["faixa_outra"], message: "Escreva a sua faixa de preço." });
+  }
+
   // Mensagem: obrigatória onde o formulário não diz "(opcional)": no contato é o assunto.
   if (d.source === "contato" && d.message.length < 3) {
     ctx.addIssue({ code: "custom", path: ["message"], message: "Escreva a sua mensagem." });
@@ -75,7 +88,6 @@ const leadSchema = z.object({
   // Sem escolha no select, a tela mostra o campo como CNPJ, então vale CNPJ aqui.
   const tipo = d.has_cnpj === "nao" ? "cpf" : "cnpj";
   if (somenteDigitos(d.document).length === 0) {
-    const compra = d.source === "catalogo" || d.source === "fabrica-de-pijamas" || d.source === "colecao";
     ctx.addIssue({ code: "custom", path: ["document"], message: tipo === "cnpj" ? (compra ? "Informe o CNPJ da loja." : "Informe o CNPJ.") : "Informe o seu CPF." });
     return;
   }
@@ -145,6 +157,7 @@ export async function submitLead(_prev: LeadFormState, formData: FormData): Prom
     vende_pijamas: d.vende_pijamas,
     primeiro_pedido: d.primeiro_pedido,
     faixa_preco: d.faixa_preco,
+    faixa_outra: d.faixa_outra,
     instagram: d.instagram,
   });
   const mensagem = [qualificacao, d.message].filter(Boolean).join("\n\n");

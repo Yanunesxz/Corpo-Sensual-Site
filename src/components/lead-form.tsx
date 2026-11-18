@@ -12,7 +12,7 @@ import { enviarEvento, marcarLeadEnviado } from "@/lib/analytics";
 import type { LeadSource } from "@/lib/types";
 import { site } from "@/lib/site";
 import type { Empresa } from "@/lib/cnpj";
-import { CANAL, FAIXA_PRECO, PRIMEIRO_PEDIDO, USO_PROPRIO, VENDE_PIJAMAS, type Pergunta } from "@/lib/qualificacao";
+import { CANAL, FAIXA_PRECO, OUTRA_FAIXA, PRIMEIRO_PEDIDO, USO_PROPRIO, VENDE_PIJAMAS, perguntaDaFaixa, type Pergunta } from "@/lib/qualificacao";
 import { ArrowRight, Check, ChevronLeft, Lock } from "./icons";
 
 const initialLeadState: LeadFormState = { ok: false };
@@ -32,6 +32,7 @@ type Campo =
   | "vende_pijamas"
   | "primeiro_pedido"
   | "faixa_preco"
+  | "faixa_outra"
   | "instagram";
 type Valores = Record<Campo, string>;
 type Erros = Partial<Record<Campo, string>>;
@@ -74,6 +75,7 @@ const PASSO_DO_CAMPO: Record<Campo, Passo> = {
   vende_pijamas: "pijamas",
   primeiro_pedido: "prazo",
   faixa_preco: "faixa",
+  faixa_outra: "faixa",
   instagram: "apresentar",
 };
 
@@ -90,6 +92,7 @@ const PASSO_DO_CAMPO_COMPRA: Record<Campo, Passo> = {
   vende_pijamas: "pijamas",
   primeiro_pedido: "prazo",
   faixa_preco: "faixa",
+  faixa_outra: "faixa",
   company: "apresentar",
   instagram: "apresentar",
   message: "apresentar",
@@ -109,12 +112,16 @@ const ORDEM_DOS_CAMPOS_COMPRA: Campo[] = [
   "vende_pijamas",
   "primeiro_pedido",
   "faixa_preco",
+  "faixa_outra",
   "company",
   "instagram",
   "message",
 ];
 
-/** Passo de pergunta com opções -> a pergunta (lib/qualificacao.ts). */
+/**
+ * Passo de pergunta com opções -> a pergunta (lib/qualificacao.ts). A da faixa muda com a
+ * resposta de "Você já vende pijamas?": use perguntaDe() dentro do formulário.
+ */
 const PERGUNTA_DO_PASSO: Partial<Record<Passo, Pergunta>> = {
   canal: CANAL,
   pijamas: VENDE_PIJAMAS,
@@ -199,6 +206,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     vende_pijamas: "",
     primeiro_pedido: "",
     faixa_preco: "",
+    faixa_outra: "",
     instagram: "",
   });
   const por = (k: Campo, valor: string) => setV((a) => ({ ...a, [k]: valor }));
@@ -328,6 +336,10 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     form.current?.querySelector<HTMLElement>("[data-passo] .field, [data-passo] input[type=radio]:checked, [data-passo] input[type=radio]")?.focus();
   }, [passo]);
 
+  /** A pergunta do passo: quem ainda não vende pijamas responde a faixa que pretende vender. */
+  const perguntaDe = (p: Passo) => (p === "faixa" ? perguntaDaFaixa(v.vende_pijamas) : PERGUNTA_DO_PASSO[p]);
+  const outraFaixa = v.faixa_preco === OUTRA_FAIXA;
+
   const validar = (p: Passo): Erros => {
     const e: Erros = {};
     if ((p === "nome" || p === "contato") && v.name.trim().length < 2) e.name = "Informe seu nome.";
@@ -345,8 +357,9 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
       if (!UFS.includes(v.state.toUpperCase())) e.state = "Informe a UF.";
     }
     if ((p === "email" || p === "contato") && !EMAIL_SIMPLES.test(v.email.trim())) e.email = "Informe um e-mail válido.";
-    const opcoes = PERGUNTA_DO_PASSO[p];
+    const opcoes = perguntaDe(p);
     if (opcoes && !v[opcoes.campo]) e[opcoes.campo] = "Escolha uma opção.";
+    if (p === "faixa" && outraFaixa && v.faixa_outra.trim().length < 2) e.faixa_outra = "Escreva a sua faixa de preço.";
     // Mensagem obrigatória só no contato, onde ela é o assunto (a mesma regra do servidor).
     if (p === "mensagem" && ehContato && v.message.trim().length < 3) e.message = "Escreva a sua mensagem.";
     return e;
@@ -584,7 +597,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     canal: { titulo: CANAL.titulo },
     pijamas: { titulo: VENDE_PIJAMAS.titulo },
     prazo: { titulo: PRIMEIRO_PEDIDO.titulo },
-    faixa: { titulo: FAIXA_PRECO.titulo, ajuda: FAIXA_PRECO.ajuda },
+    faixa: { titulo: perguntaDaFaixa(v.vende_pijamas).titulo, ajuda: FAIXA_PRECO.ajuda },
     apresentar: { titulo: "Quer apresentar sua loja?", ajuda: "Essas informações são opcionais." },
   };
   const atual = pergunta[passo];
@@ -609,7 +622,7 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
     canal: ["canal"],
     pijamas: ["vende_pijamas"],
     prazo: ["primeiro_pedido"],
-    faixa: ["faixa_preco"],
+    faixa: outraFaixa ? ["faixa_preco", "faixa_outra"] : ["faixa_preco"],
     apresentar: ["company", "instagram"],
   };
   const escondidos = (Object.keys(v) as Campo[]).filter((k) => !visiveis[passo].includes(k));
@@ -925,16 +938,37 @@ export function LeadForm({ source, submitLabel = "Continuar", withMessage = fals
             </>
           )}
 
-          {PERGUNTA_DO_PASSO[passo] && (
+          {perguntaDe(passo) && (
             <Opcoes
-              pergunta={PERGUNTA_DO_PASSO[passo]!}
-              valor={v[PERGUNTA_DO_PASSO[passo]!.campo]}
-              erro={erros[PERGUNTA_DO_PASSO[passo]!.campo]}
+              pergunta={perguntaDe(passo)!}
+              valor={v[perguntaDe(passo)!.campo]}
+              erro={erros[perguntaDe(passo)!.campo]}
               onEscolher={(campo, valor) => {
                 por(campo, valor);
                 limparErro(campo);
               }}
             />
+          )}
+
+          {/* "Outra faixa de preço": a pessoa escreve a faixa dela. */}
+          {passo === "faixa" && outraFaixa && (
+            <Campo rotulo="Qual é a sua faixa de preço?" nome="faixa_outra" erro={erros.faixa_outra}>
+              <input
+                id="faixa_outra"
+                name="faixa_outra"
+                autoFocus
+                maxLength={80}
+                aria-invalid={Boolean(erros.faixa_outra)}
+                aria-describedby={erros.faixa_outra ? "faixa_outra-error" : undefined}
+                value={v.faixa_outra}
+                onChange={(e) => {
+                  por("faixa_outra", e.target.value);
+                  limparErro("faixa_outra");
+                }}
+                placeholder="Ex.: de R$ 25 a R$ 35"
+                className="field"
+              />
+            </Campo>
           )}
 
           {/* "Uso próprio" é consumidor final: a fábrica só vende no atacado. */}

@@ -1,7 +1,8 @@
 /**
  * Perguntas de qualificação do cadastro de lojista (o "esquema de vendas"): como a
  * pessoa vende hoje, se já vende pijamas, quando pretende fazer o primeiro pedido e a
- * faixa de preço das peças que ela vende. Ajudam a vendedora a saber com quem fala antes
+ * faixa de preço das peças que ela vende (ou pretende vender, para quem ainda não vende
+ * pijamas; "Outra faixa de preço" abre um campo para ela escrever). Ajudam a vendedora a saber com quem fala antes
  * da primeira mensagem.
  *
  * O formulário (components/lead-form.tsx) e o servidor (app/actions/leads.ts) leem as
@@ -32,11 +33,14 @@ export const CANAL: Pergunta = {
 /** A opção de quem é consumidor final: o passo mostra o caminho para /onde-comprar. */
 export const USO_PROPRIO = "Quero comprar para uso próprio";
 
+/** A primeira opção de "Você já vende pijamas?": as outras duas são de quem ainda vai vender. */
+export const JA_VENDE_PIJAMAS = "Sim, já vendo pijamas";
+
 export const VENDE_PIJAMAS: Pergunta = {
   campo: "vende_pijamas",
   rotulo: "Já vende pijamas",
   titulo: "Você já vende pijamas?",
-  opcoes: ["Sim, já vendo pijamas", "Vendo outros produtos e quero incluir pijamas", "Vou começar minha primeira revenda"],
+  opcoes: [JA_VENDE_PIJAMAS, "Vendo outros produtos e quero incluir pijamas", "Vou começar minha primeira revenda"],
 };
 
 export const PRIMEIRO_PEDIDO: Pergunta = {
@@ -46,19 +50,39 @@ export const PRIMEIRO_PEDIDO: Pergunta = {
   opcoes: ["Nos próximos 7 dias", "Entre 8 e 30 dias", "Depois de 30 dias", "Ainda não tenho previsão"],
 };
 
+/** A última opção da faixa de preço: abre um campo para a pessoa escrever a faixa dela. */
+export const OUTRA_FAIXA = "Outra faixa de preço";
+
 export const FAIXA_PRECO: Pergunta = {
   campo: "faixa_preco",
   rotulo: "Faixa de preço na loja",
   titulo: "Qual é a faixa de preço das peças que você vende?",
   ajuda: "Preço de venda ao consumidor, por peça.",
-  opcoes: ["Até R$ 39,99", "De R$ 40 a R$ 69,99", "De R$ 70 a R$ 99,99", "De R$ 100 a R$ 149,99", "R$ 150 ou mais", "Ainda não vendo"],
+  opcoes: ["Até R$ 39,99", "De R$ 40 a R$ 69,99", "De R$ 70 a R$ 99,99", "De R$ 100 a R$ 149,99", "R$ 150 ou mais", OUTRA_FAIXA],
 };
+
+/** A mesma pergunta para quem ainda não vende pijamas: a faixa em que pretende vender. */
+export const FAIXA_PRETENDIDA: Pergunta = {
+  ...FAIXA_PRECO,
+  rotulo: "Faixa de preço que pretende vender",
+  titulo: "Qual faixa de preço você pretende vender?",
+};
+
+/** A pergunta da faixa conforme a resposta de "Você já vende pijamas?". */
+export const perguntaDaFaixa = (vendePijamas: string): Pergunta =>
+  vendePijamas && vendePijamas !== JA_VENDE_PIJAMAS ? FAIXA_PRETENDIDA : FAIXA_PRECO;
 
 export const PERGUNTAS = [CANAL, VENDE_PIJAMAS, PRIMEIRO_PEDIDO, FAIXA_PRECO] as const;
 
 /** As respostas em texto, para a mensagem do lead no CRM: uma por linha. */
-export function resumoDaQualificacao(respostas: Partial<Record<Pergunta["campo"] | "instagram", string>>): string {
-  const linhas = PERGUNTAS.filter((p) => respostas[p.campo]).map((p) => `${p.rotulo}: ${respostas[p.campo]}`);
+export function resumoDaQualificacao(respostas: Partial<Record<Pergunta["campo"] | "faixa_outra" | "instagram", string>>): string {
+  const texto = (p: Pergunta) => {
+    const r = respostas[p.campo];
+    return p.campo === "faixa_preco" && r === OUTRA_FAIXA && respostas.faixa_outra ? respostas.faixa_outra : r;
+  };
+  const linhas = PERGUNTAS.filter((p) => respostas[p.campo])
+    .map((p) => (p.campo === "faixa_preco" ? perguntaDaFaixa(respostas.vende_pijamas ?? "") : p))
+    .map((p) => `${p.rotulo}: ${texto(p)}`);
   if (respostas.instagram) linhas.push(`Instagram ou site: ${respostas.instagram}`);
   return linhas.join("\n");
 }
